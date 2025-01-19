@@ -24,4 +24,3 @@ fun File.findAllPotentialModuleDirs(): Sequence<File> = listFiles()!!.asSequence
     .filterNot { it.name == "build" }
     .filterNot { it.name == "src" }
     .flatMap { sequenceOf(it) + it.findAllPotentialModuleDirs() }
-

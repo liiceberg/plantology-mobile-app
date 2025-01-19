@@ -1,15 +1,12 @@
 object Libs {
-    private const val gradleVersion = "8.5.2"
+    private const val gradleVersion = "8.7.3"
     private const val kotlinVersion = "2.0.0"
 
     private const val supportVersion = "1.6.0"
-    private const val constraintVersion = "1.1.3"
-    private const val recyclerViewVersion = "1.2.1"
     private const val architectureComponentVersion = "2.5.0"
 
-    private const val composeBomVersion = "2024.04.01"
     private const val materialVersion = "1.3.0"
-    private const val composeVersion = "1.7.3"
+    private const val composeUiVersion = "1.7.3"
 
     private const val lifecycleVersion = "2.8.4"
     private const val navigationVersion = "2.7.7"
@@ -32,6 +29,10 @@ object Libs {
     private const val analyticsVersion = "21.5.1"
     private const val messagingVersion = "23.4.1"
     private const val configVersion = "21.6.2"
+    private const val firestoreVersion = "25.1.1"
+    private const val storageVersion = "21.0.1"
+    private const val authVersion = "23.1.0"
+    private const val databaseVersion = "21.0.0"
 
     private const val splashScreenVersion = "1.0.0"
     private const val serializationVersion = "1.7.1"
@@ -46,6 +47,12 @@ object Libs {
 
     const val kotlinCompilerExtensionVersion = "1.5.15"
 
+    const val composeVersion = "2.0.0"
+
+    const val googleServicesVersion = "4.4.2"
+
+    const val crashlyticsPlaginVersion = "3.0.2"
+
     object plugin {
         const val application = "com.android.application"
         const val library = "com.android.library"
@@ -58,6 +65,9 @@ object Libs {
         const val hilt = "com.google.dagger.hilt.android"
         const val lint = "org.jmailen.kotlinter"
         const val gradleVersionsPlugin = "com.github.ben-manes.versions"
+        const val google_services = "com.google.gms.google-services"
+        const val compose = "org.jetbrains.kotlin.plugin.compose"
+        const val crashlytics = "com.google.firebase.crashlytics"
     }
 
     object classpath {
@@ -73,6 +83,7 @@ object Libs {
         const val ruler = "com.spotify.ruler:ruler-gradle-plugin:$rulerVersion"
         const val gradleVersionsPlugin =
             "com.github.ben-manes:gradle-versions-plugin:$gradleVersionsPluginVersion"
+        const val google_services = "com.google.gms:google-services:$googleServicesVersion"
     }
 
     object bundle {
@@ -82,15 +93,15 @@ object Libs {
         )
         val compose = arrayOf(
             "androidx.compose.material3:material3:$materialVersion",
-            "androidx.compose.ui:ui-tooling-preview:$composeVersion",
-            "androidx.compose.ui:ui:$composeVersion",
+            "androidx.compose.ui:ui-tooling-preview:$composeUiVersion",
+            "androidx.compose.ui:ui:$composeUiVersion",
             "androidx.compose.material:material-icons-extended",
         )
 
-        val googleFonts = arrayOf("androidx.compose.ui:ui-text-google-fonts:$composeVersion")
+        val googleFonts = arrayOf("androidx.compose.ui:ui-text-google-fonts:$composeUiVersion")
 
         val composeUiTooling = arrayOf(
-            "androidx.compose.ui:ui-tooling:$composeVersion"
+            "androidx.compose.ui:ui-tooling:$composeUiVersion"
         )
 
         val coroutines = arrayOf(
@@ -133,6 +144,14 @@ object Libs {
             "com.google.firebase:firebase-messaging-ktx:$messagingVersion",
             "com.google.firebase:firebase-config-ktx:$configVersion"
         )
+
+        val firebase_auth = arrayOf(
+            "com.google.firebase:firebase-auth-ktx:$authVersion",
+            "com.google.firebase:firebase-storage:$storageVersion",
+            "com.google.firebase:firebase-firestore:$firestoreVersion"
+        )
+
+        val firebase_db = arrayOf("com.google.firebase:firebase-database-ktx:$databaseVersion")
 
         val network = arrayOf(
             "com.squareup.okhttp3:okhttp:$okHttpVersion",

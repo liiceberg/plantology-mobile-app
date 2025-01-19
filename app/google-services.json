@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "128952633573",
+    "project_id": "plantology-mobile-app",
+    "storage_bucket": "plantology-mobile-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128952633573:android:7c859afbb0d332387cac0c",
+        "android_client_info": {
+          "package_name": "ru.itis.liiceberg.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128952633573-lsk1s4fg9tuj6e7jch1oqiao5m9742t6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.itis.liiceberg.app",
+            "certificate_hash": "665c387b8faa4c20ecafc5e8aa5df1aa008e7185"
+          }
+        },
+        {
+          "client_id": "128952633573-g6823tvm2uv1r9dqgkia72iamnn34cj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfBWhRbWJUcjlMbOHQp3iaQjLNegRoXL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128952633573-g6823tvm2uv1r9dqgkia72iamnn34cj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

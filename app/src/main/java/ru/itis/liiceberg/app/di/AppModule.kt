@@ -13,4 +13,6 @@ object AppModule {
     @Provides
     fun provideNavigator(auth: AuthNavProvider) : Navigator = Navigator(auth)
 
+
+
 }

@@ -1,6 +1,6 @@
 plugins {
     id(Libs.plugin.gradleVersionsPlugin) version (Libs.gradleVersionsPluginVersion)
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id(Libs.plugin.compose) version (Libs.composeVersion)
 }
 
 buildscript {
@@ -15,6 +15,8 @@ buildscript {
         classpath(Libs.classpath.kotlinter)
         classpath(Libs.classpath.hilt_gradle)
         classpath(Libs.classpath.kotlin_serialization)
+        classpath(Libs.classpath.google_services)
+        classpath(Libs.classpath.crashlytics_gradle)
     }
 }
 

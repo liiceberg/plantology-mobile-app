@@ -1,7 +1,6 @@
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.fileTree
 
@@ -14,7 +13,7 @@ fun Project.common(namespace: String) {
         apply(Libs.plugin.kotlin_kapt)
         apply(Libs.plugin.lint)
         apply(Libs.plugin.hilt)
-        apply("org.jetbrains.kotlin.plugin.compose")
+        apply(Libs.plugin.compose)
     }
 
     android.apply {
