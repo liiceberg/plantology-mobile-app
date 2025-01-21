@@ -2,13 +2,10 @@ package ru.itis.liiceberg.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -19,12 +16,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
-fun TitleText(text: String, modifier: Modifier = Modifier) {
+fun TitleLargeText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.titleLarge)
 }
 
 @Composable
-fun BodyText(text: String, modifier: Modifier = Modifier) {
+fun TitleMediumText(text: String, modifier: Modifier = Modifier) {
+    Text(text = text, modifier = modifier, style = MaterialTheme.typography.titleMedium)
+}
+
+@Composable
+fun TitleSmallText(text: String, modifier: Modifier = Modifier) {
+    Text(text = text, modifier = modifier, style = MaterialTheme.typography.titleSmall)
+}
+
+@Composable
+fun BodyMediumText(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+}
+
+@Composable
+fun BodySmallText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         modifier = modifier,
@@ -60,8 +77,18 @@ fun BodyTextWithLink(text: String, link: String, modifier: Modifier = Modifier, 
     Text(
         text = annotatedString,
         modifier = modifier,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onBackground,
+    )
+}
+
+@Composable
+fun ErrorMediumText(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onError
     )
 }
 
@@ -70,8 +97,9 @@ fun BodyTextWithLink(text: String, link: String, modifier: Modifier = Modifier, 
 private fun PreviewText() {
     AppTheme {
         Column(Modifier.fillMaxSize()) {
-            TitleText("example 2")
-            BodyText("example")
+            TitleLargeText("example 2")
+            TitleSmallText("example 2")
+            BodyMediumText("example")
             BodyTextWithLink("text", "link") {}
         }
     }

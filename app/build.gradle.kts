@@ -11,9 +11,11 @@ dependencies {
     implementation(projects.coreData)
     implementation(projects.coreUi)
     implementation(projects.featureAuthImpl)
+    implementation(projects.featureMyplantsImpl)
 
     implementation(*Libs.bundle.navigation)
     implementation(*Libs.bundle.splashScreen)
     implementation(*Libs.bundle.network)
     implementation(*Libs.bundle.firebase_auth)
+    implementation(*Libs.bundle.coil)
 }

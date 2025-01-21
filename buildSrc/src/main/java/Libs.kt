@@ -33,6 +33,7 @@ object Libs {
     private const val storageVersion = "21.0.1"
     private const val authVersion = "23.1.0"
     private const val databaseVersion = "21.0.0"
+    private const val coilVersion = "3.0.4"
 
     private const val splashScreenVersion = "1.0.0"
     private const val serializationVersion = "1.7.1"
@@ -171,5 +172,7 @@ object Libs {
             "junit:junit:$junitVersion",
             "org.mockito:mockito-inline:$mockitoVersion"
         )
+
+        val coil = arrayOf("io.coil-kt.coil3:coil-compose:$coilVersion", "io.coil-kt.coil3:coil-network-okhttp:$coilVersion")
     }
 }

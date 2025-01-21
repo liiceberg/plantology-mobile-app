@@ -12,6 +12,4 @@ import ru.itis.liiceberg.auth_impl.data.AuthRepositoryImpl
 interface AuthModule {
     @Binds
     fun bindAuthRepositoryToAuthRepositoryImpl(repository: AuthRepositoryImpl) : AuthRepository
-
-
 }

@@ -21,14 +21,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.auth_impl.R
 import ru.itis.liiceberg.common.validation.ValidationResult
 import ru.itis.liiceberg.ui.components.AppPrimaryIcon
-import ru.itis.liiceberg.ui.components.BodyText
+import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.SimpleTextField
-import ru.itis.liiceberg.ui.components.TitleText
+import ru.itis.liiceberg.ui.components.TitleLargeText
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
@@ -106,7 +106,7 @@ private fun SignUpView(
             AppPrimaryIcon(28.dp)
         }
 
-        TitleText(
+        TitleLargeText(
             text = stringResource(id = R.string.sign_up_title_text),
             Modifier.padding(top = 72.dp)
         )
@@ -151,7 +151,7 @@ private fun SignUpView(
         ) {
             onSignUpClicked()
         }
-        BodyText(
+        BodyMediumText(
             text = stringResource(id = R.string.or),
             modifier = Modifier.padding(vertical = 4.dp)
         )

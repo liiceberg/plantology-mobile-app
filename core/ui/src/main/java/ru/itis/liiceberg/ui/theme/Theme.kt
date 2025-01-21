@@ -10,7 +10,8 @@ private val LightColorScheme = lightColorScheme(
     outline = Neutral200,
     onSurfaceVariant = Neutral400,
     onError = Destructive600,
-    onBackground = Neutral500
+    onBackground = Neutral500,
+    surface = Primary50,
 )
 
 @Composable

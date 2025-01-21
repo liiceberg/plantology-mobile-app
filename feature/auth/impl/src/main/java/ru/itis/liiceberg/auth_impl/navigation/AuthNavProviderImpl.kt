@@ -11,14 +11,19 @@ import javax.inject.Inject
 
 class AuthNavProviderImpl @Inject constructor() : AuthNavProvider {
 
-    override fun NavGraphBuilder.registerGraph(controller: NavHostController) {
+    override fun NavGraphBuilder.registerGraph(
+        controller: NavHostController,
+        onBottomBarVisibilityChanged: (Boolean) -> Unit
+    ) {
         composable<Route.Auth.SignIn> {
+            onBottomBarVisibilityChanged(false)
             SignInView(
                 toSignUp = { controller.navigate(Route.Auth.SignUp) },
-                toMainPage = { controller.navigate(Route.BottomMenu.Main) }
+                toMainPage = { controller.navigate(Route.BottomMenu.MyPlants) }
             )
         }
         composable<Route.Auth.SignUp> {
+            onBottomBarVisibilityChanged(false)
             SignUpView {
                 controller.navigateUp()
             }

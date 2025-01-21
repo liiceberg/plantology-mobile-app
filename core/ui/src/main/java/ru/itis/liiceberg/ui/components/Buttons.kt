@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,7 +80,6 @@ fun PreviewButton() {
                 icon = R.drawable.app_icon_primary,
             ) {}
             SimpleIconButton(icon = Icons.AutoMirrored.Filled.ArrowBack, size = 54.dp) {
-                
             }
         }
     }

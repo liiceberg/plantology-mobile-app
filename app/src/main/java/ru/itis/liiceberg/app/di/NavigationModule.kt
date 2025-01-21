@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.itis.liiceberg.auth_impl.navigation.AuthNavProviderImpl
 import ru.itis.liiceberg.common.navigation.AuthNavProvider
+import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
+import ru.itis.liiceberg.myplants_impl.navigation.MyPlantsNavProviderImpl
 import javax.inject.Singleton
 
 @Module
@@ -15,5 +17,9 @@ interface NavigationModule {
     @Binds
     @Singleton
     fun bindAuthNavProviderToAuthNavProviderImpl(impl: AuthNavProviderImpl): AuthNavProvider
+
+    @Binds
+    @Singleton
+    fun bindMyPlantsNavProviderToMyPlantsNavProviderImpl(impl: MyPlantsNavProviderImpl): MyPlantsNavProvider
 
 }

@@ -8,4 +8,5 @@ dependencies {
     implementation(projects.coreCommon)
 
     implementation(*Libs.bundle.googleFonts)
+    implementation(*Libs.bundle.coil)
 }

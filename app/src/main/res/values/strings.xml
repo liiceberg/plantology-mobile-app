@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Plantology</string>
+
+    <string name="label_my_plants">My Plants</string>
 </resources>

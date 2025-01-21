@@ -6,7 +6,7 @@ sealed class Route {
 
     object BottomMenu {
         @Serializable
-        data object Main : Route()
+        data object MyPlants : Route()
     }
 
     object Auth {
