@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.itis.liiceberg.app.navigation.Navigator
 import ru.itis.liiceberg.common.navigation.AuthNavProvider
+import ru.itis.liiceberg.common.navigation.ExploreNavProvider
 import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
 
 @Module
@@ -13,8 +14,12 @@ import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
 object AppModule {
 
     @Provides
-    fun provideNavigator(auth: AuthNavProvider, myPlants: MyPlantsNavProvider): Navigator {
-        return Navigator(auth, myPlants)
+    fun provideNavigator(
+        auth: AuthNavProvider,
+        explore: ExploreNavProvider,
+        myPlants: MyPlantsNavProvider
+    ): Navigator {
+        return Navigator(auth, explore, myPlants)
     }
 
 }

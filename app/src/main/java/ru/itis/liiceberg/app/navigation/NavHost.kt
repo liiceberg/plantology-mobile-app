@@ -15,9 +15,12 @@ fun NavHostContainer(
 
     NavHost(
         navController = navController,
-        startDestination = Route.BottomMenu.MyPlants,
+        startDestination = Route.BottomMenu.Explore,
         ) {
             with(navigator.auth) {
+                registerGraph(navController, onBottomBarVisibilityChanged)
+            }
+            with(navigator.explore) {
                 registerGraph(navController, onBottomBarVisibilityChanged)
             }
             with(navigator.myPlants) {

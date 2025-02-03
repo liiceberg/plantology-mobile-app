@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,11 +19,11 @@ import ru.itis.liiceberg.common.validation.ValidationResult
 import ru.itis.liiceberg.ui.components.AppLightIcon
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
+import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleTextField
-import ru.itis.liiceberg.ui.components.TitleLargeText
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
@@ -74,7 +75,7 @@ private fun SignInView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AppLightIcon(72.dp, Modifier.padding(top = 72.dp))
-        TitleLargeText(
+        HeadlineLargeText(
             text = stringResource(id = R.string.sign_in_title_text),
             Modifier.padding(top = 72.dp)
         )
@@ -109,7 +110,7 @@ private fun SignInView(
         )
         SimpleButtonWithStartIcon(
             text = stringResource(id = R.string.sign_in_with_google),
-            icon = R.drawable.icons8_google,
+            icon = painterResource(id = R.drawable.icons8_google),
             enabled = enableButtons
         ) {
             onSignInWithGoogleClicked()

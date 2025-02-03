@@ -32,6 +32,7 @@ val fontFamilyW500 = FontFamily(
         style = FontStyle.Normal
     )
 )
+
 val fontFamilyW600 = FontFamily(
     Font(
         googleFont = fontName,

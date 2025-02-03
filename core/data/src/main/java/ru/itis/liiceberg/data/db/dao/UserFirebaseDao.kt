@@ -19,17 +19,17 @@ class UserFirebaseDao @Inject constructor(
         }
     }
 
-    fun createUserWithEmailAndPassword(email: String, password: String) {
+    fun createUserWithEmailAndPassword(email: String, password: String, username: String) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
 
                 auth.currentUser?.run {
                     saveToDatabase(
                         id = uid,
+                        username = username,
                         email = email,
                         password = password
                     )
-                    println("sign up success")
                 }
 
             } else {
@@ -38,8 +38,8 @@ class UserFirebaseDao @Inject constructor(
         }
     }
 
-    private fun saveToDatabase(id: String, email: String, password: String) {
-        val userCreated = User(id = id, email = email, password = password)
+    private fun saveToDatabase(id: String, username: String, email: String, password: String) {
+        val userCreated = User(id = id, username = username, email = email, password = password)
         dbReference.child(id).setValue(userCreated)
     }
 }

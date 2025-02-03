@@ -6,6 +6,8 @@ sealed class Route {
 
     object BottomMenu {
         @Serializable
+        data object Explore : Route()
+        @Serializable
         data object MyPlants : Route()
     }
 
@@ -15,5 +17,9 @@ sealed class Route {
 
         @Serializable
         data object SignUp : Route()
+    }
+
+    @Serializable
+    data class PlantDetails(val plantId: String) : Route() {
     }
 }

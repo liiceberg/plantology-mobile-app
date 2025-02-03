@@ -14,4 +14,6 @@ sealed interface NavProvider {
 
 interface AuthNavProvider : NavProvider
 
+interface ExploreNavProvider : NavProvider
+
 interface MyPlantsNavProvider : NavProvider

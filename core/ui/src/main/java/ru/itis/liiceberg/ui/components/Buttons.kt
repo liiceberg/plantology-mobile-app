@@ -1,19 +1,21 @@
 package ru.itis.liiceberg.ui.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,29 +32,28 @@ fun SimpleButton(
     onClick: () -> Unit
 ) {
     Button(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
-        Text(text = text)
+        TitleSmallText(text = text)
     }
 }
 
 @Composable
 fun SimpleButtonWithStartIcon(
     text: String,
-    @DrawableRes icon: Int,
+    icon: Painter,
     modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
     enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Button(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
-        Icon(
-            painter = painterResource(id = icon),
+        Icon(painter = icon,
             contentDescription = null,
             modifier = Modifier
                 .padding(end = 8.dp)
                 .size(24.dp),
-            tint = Color.Unspecified
+            tint = tint
         )
         Text(text = text)
-
     }
 }
 
@@ -68,6 +69,13 @@ fun SimpleIconButton(
     }
 }
 
+@Composable
+fun SimpleFloatingActionButton(icon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    FloatingActionButton(onClick = onClick, shape = CircleShape, modifier = modifier) {
+        SimpleIcon(icon = icon, size = 40.dp,)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewButton() {
@@ -77,9 +85,12 @@ fun PreviewButton() {
             SimpleButton(text = "Example") {}
             SimpleButtonWithStartIcon(
                 text = "Example",
-                icon = R.drawable.app_icon_primary,
+                icon = painterResource(id = R.drawable.app_icon_primary),
             ) {}
             SimpleIconButton(icon = Icons.AutoMirrored.Filled.ArrowBack, size = 54.dp) {
+            }
+            SimpleFloatingActionButton(icon = Icons.AutoMirrored.Filled.ArrowBack,) {
+
             }
         }
     }

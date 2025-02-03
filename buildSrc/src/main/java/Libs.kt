@@ -52,8 +52,6 @@ object Libs {
 
     const val googleServicesVersion = "4.4.2"
 
-    const val crashlyticsPlaginVersion = "3.0.2"
-
     object plugin {
         const val application = "com.android.application"
         const val library = "com.android.library"
@@ -149,10 +147,9 @@ object Libs {
         val firebase_auth = arrayOf(
             "com.google.firebase:firebase-auth-ktx:$authVersion",
             "com.google.firebase:firebase-storage:$storageVersion",
-            "com.google.firebase:firebase-firestore:$firestoreVersion"
+            "com.google.firebase:firebase-firestore:$firestoreVersion",
+            "com.google.firebase:firebase-database-ktx:$databaseVersion"
         )
-
-        val firebase_db = arrayOf("com.google.firebase:firebase-database-ktx:$databaseVersion")
 
         val network = arrayOf(
             "com.squareup.okhttp3:okhttp:$okHttpVersion",
@@ -173,6 +170,9 @@ object Libs {
             "org.mockito:mockito-inline:$mockitoVersion"
         )
 
-        val coil = arrayOf("io.coil-kt.coil3:coil-compose:$coilVersion", "io.coil-kt.coil3:coil-network-okhttp:$coilVersion")
+        val coil = arrayOf(
+            "io.coil-kt.coil3:coil-compose:$coilVersion",
+            "io.coil-kt.coil3:coil-network-okhttp:$coilVersion"
+        )
     }
 }

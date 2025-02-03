@@ -19,7 +19,7 @@ class AuthNavProviderImpl @Inject constructor() : AuthNavProvider {
             onBottomBarVisibilityChanged(false)
             SignInView(
                 toSignUp = { controller.navigate(Route.Auth.SignUp) },
-                toMainPage = { controller.navigate(Route.BottomMenu.MyPlants) }
+                toMainPage = { controller.navigate(Route.BottomMenu.Explore) }
             )
         }
         composable<Route.Auth.SignUp> {

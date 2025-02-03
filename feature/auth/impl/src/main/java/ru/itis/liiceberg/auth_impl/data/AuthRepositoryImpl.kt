@@ -9,7 +9,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun register(username: String, email: String, password: String) {
-        userFirebaseDao.createUserWithEmailAndPassword(email, password)
+        userFirebaseDao.createUserWithEmailAndPassword(username, email, password)
     }
 
     override suspend fun login(email: String, password: String) {

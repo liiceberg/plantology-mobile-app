@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="scientific_name">Scientific name</string>
+    <string name="family">Family</string>
+    <string name="rank">Rank</string>
+    <string name="higher_classification">Higher classification</string>
+    <string name="kingdom">Kingdom</string>
+    <string name="order">Order</string>
+    <string name="conditions">Conditions</string>
+    <string name="care_guide">Care guide</string>
+    <string name="toxicity">Toxicity</string>
+    <string name="water">Water</string>
+    <string name="sunlight">Sunlight</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="hardiness_zone">Hardiness Zone</string>
+    <string name="add_to_my_plants">Add to my plants</string>
+    <string name="temperature_range">%1$s°/%2$s°</string>
+    <string name="toxicity_toxic">Toxic</string>
+    <string name="toxicity_non_toxic">Non toxic</string>
+</resources>

@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.coreData)
     implementation(projects.coreUi)
     implementation(projects.featureAuthImpl)
+    implementation(projects.featureExploreImpl)
     implementation(projects.featureMyplantsImpl)
 
     implementation(*Libs.bundle.navigation)
