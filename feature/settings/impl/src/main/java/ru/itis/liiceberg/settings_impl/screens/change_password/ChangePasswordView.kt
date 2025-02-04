@@ -1,0 +1,124 @@
+package ru.itis.liiceberg.settings_impl.screens.change_password
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.itis.liiceberg.settings_impl.R
+import ru.itis.liiceberg.ui.components.DarkTopAppBar
+import ru.itis.liiceberg.ui.components.PasswordTextField
+import ru.itis.liiceberg.ui.components.SimpleButton
+import ru.itis.liiceberg.ui.theme.AppTheme
+
+@Composable
+fun ChangePasswordView(
+    viewModel: ChangePasswordViewModel = hiltViewModel(),
+    goBack: () -> Unit,
+) {
+    val state by viewModel.viewStates().collectAsStateWithLifecycle()
+
+    ChangePasswordView(
+        state = state,
+        onCurrentPasswordFilled = {
+            viewModel.obtainEvent(ChangePasswordEvent.OnCurrentPasswordFilled(it))
+        },
+        onNewPasswordFilled = {
+            viewModel.obtainEvent(ChangePasswordEvent.OnNewPasswordFilled(it))
+        },
+        onNewPasswordConfirmFilled = {
+            viewModel.obtainEvent(ChangePasswordEvent.OnConfirmNewPasswordFilled(it))
+        },
+        onConfirm = {
+            viewModel.obtainEvent(ChangePasswordEvent.OnConfirm)
+        },
+        goBack = goBack
+    )
+
+    LaunchedEffect(Unit) {
+        viewModel.viewActions().collect { action ->
+            when (action) {
+                else -> {}
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChangePasswordView(
+    state: ChangePasswordState,
+    onCurrentPasswordFilled: (password: String) -> Unit,
+    onNewPasswordFilled: (password: String) -> Unit,
+    onNewPasswordConfirmFilled: (password: String) -> Unit,
+    onConfirm: () -> Unit,
+    goBack: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            DarkTopAppBar(
+                title = stringResource(R.string.change_password_top_bar_text),
+                onNavigate = goBack
+            )
+        },
+    ) { innerPadding ->
+        with(state) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(16.dp)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    PasswordTextField(
+                        value = currentPassword,
+                        label = stringResource(id = R.string.current_password_text_field),
+                        supportingText = currentPasswordValidation.error,
+                    ) {
+                        onCurrentPasswordFilled.invoke(it)
+                    }
+                    PasswordTextField(
+                        value = newPassword,
+                        label = stringResource(id = R.string.new_password_text_field),
+                        supportingText = newPasswordValidation.error,
+                    ) {
+                        onNewPasswordFilled.invoke(it)
+                    }
+                    PasswordTextField(
+                        value = confirmNewPassword,
+                        label = stringResource(id = R.string.confirm_new_password_text_field),
+                        supportingText = confirmNewPasswordValidation.error,
+                    ) {
+                        onNewPasswordConfirmFilled.invoke(it)
+                    }
+                }
+                SimpleButton(
+                    text = stringResource(R.string.confirm_button),
+                    modifier = Modifier.padding(top = 24.dp),
+                    enabled = currentPasswordValidation.isValid
+                            && newPasswordValidation.isValid
+                            && confirmNewPasswordValidation.isValid
+                ) {
+                    onConfirm.invoke()
+                }
+            }
+        }
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ChangePasswordPreview() {
+    AppTheme {
+        ChangePasswordView(ChangePasswordState(), {}, {}, {}, {}, {})
+    }
+}

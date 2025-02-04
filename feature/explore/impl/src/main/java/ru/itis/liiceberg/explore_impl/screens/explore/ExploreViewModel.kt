@@ -4,13 +4,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.data.db.model.FloraCategory
-import ru.itis.liiceberg.explore_api.domain.ExploreInteractor
+import ru.itis.liiceberg.explore_api.domain.usecase.GetPlantsUseCase
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val exploreInteractor: ExploreInteractor,
+    private val getPlantsUseCase: GetPlantsUseCase,
 ) : BaseViewModel<ExploreState, ExploreEvent, ExploreAction>(ExploreState()) {
 
     init {
@@ -20,7 +20,7 @@ class ExploreViewModel @Inject constructor(
     private fun getPlants(category: FloraCategory) {
         viewModelScope.launch {
             viewState = viewState.copy(
-                items = exploreInteractor.getPlantsByCategory(category.stringValue())
+                items = getPlantsUseCase.invoke(category.stringValue())
             )
         }
     }

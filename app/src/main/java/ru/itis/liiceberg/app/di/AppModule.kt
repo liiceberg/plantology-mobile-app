@@ -8,6 +8,7 @@ import ru.itis.liiceberg.app.navigation.Navigator
 import ru.itis.liiceberg.common.navigation.AuthNavProvider
 import ru.itis.liiceberg.common.navigation.ExploreNavProvider
 import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
+import ru.itis.liiceberg.common.navigation.SettingsNavProvider
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -17,9 +18,10 @@ object AppModule {
     fun provideNavigator(
         auth: AuthNavProvider,
         explore: ExploreNavProvider,
-        myPlants: MyPlantsNavProvider
+        myPlants: MyPlantsNavProvider,
+        settings: SettingsNavProvider,
     ): Navigator {
-        return Navigator(auth, explore, myPlants)
+        return Navigator(auth, explore, myPlants, settings)
     }
 
 }

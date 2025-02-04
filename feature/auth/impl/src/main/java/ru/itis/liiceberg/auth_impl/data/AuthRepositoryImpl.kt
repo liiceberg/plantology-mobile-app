@@ -1,6 +1,6 @@
 package ru.itis.liiceberg.auth_impl.data
 
-import ru.itis.liiceberg.auth_api.domain.AuthRepository
+import ru.itis.liiceberg.auth_api.domain.repository.AuthRepository
 import ru.itis.liiceberg.data.db.dao.UserFirebaseDao
 import javax.inject.Inject
 

@@ -19,4 +19,5 @@
     <string name="temperature_range">%1$s°/%2$s°</string>
     <string name="toxicity_toxic">Toxic</string>
     <string name="toxicity_non_toxic">Non toxic</string>
+    <string name="explore_top_bar_text">Explore</string>
 </resources>

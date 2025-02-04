@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -46,14 +47,28 @@ fun SimpleButtonWithStartIcon(
     onClick: () -> Unit,
 ) {
     Button(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
-        Icon(painter = icon,
+        Icon(
+            painter = icon,
             contentDescription = null,
             modifier = Modifier
                 .padding(end = 8.dp)
                 .size(24.dp),
             tint = tint
         )
-        Text(text = text)
+        TitleSmallText(text = text)
+    }
+}
+
+@Composable
+fun SimpleIconButton(
+    icon: Painter,
+    size: Dp,
+    modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
+    onClick: () -> Unit,
+) {
+    IconButton(onClick = onClick) {
+        SimpleIcon(painter = icon, size = size, modifier = modifier, tint = tint)
     }
 }
 
@@ -62,17 +77,26 @@ fun SimpleIconButton(
     icon: ImageVector,
     size: Dp,
     modifier: Modifier = Modifier,
+    tint: Color = Color.Unspecified,
     onClick: () -> Unit,
 ) {
-    IconButton(onClick = onClick) {
-        SimpleIcon(icon = icon, size = size, modifier = modifier)
-    }
+    SimpleIconButton(
+        icon = rememberVectorPainter(image = icon),
+        size = size,
+        modifier = modifier,
+        tint = tint,
+        onClick = onClick
+    )
 }
 
 @Composable
-fun SimpleFloatingActionButton(icon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun SimpleFloatingActionButton(
+    icon: ImageVector,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     FloatingActionButton(onClick = onClick, shape = CircleShape, modifier = modifier) {
-        SimpleIcon(icon = icon, size = 40.dp,)
+        SimpleIcon(icon = icon, size = 40.dp)
     }
 }
 
@@ -89,7 +113,7 @@ fun PreviewButton() {
             ) {}
             SimpleIconButton(icon = Icons.AutoMirrored.Filled.ArrowBack, size = 54.dp) {
             }
-            SimpleFloatingActionButton(icon = Icons.AutoMirrored.Filled.ArrowBack,) {
+            SimpleFloatingActionButton(icon = Icons.AutoMirrored.Filled.ArrowBack) {
 
             }
         }

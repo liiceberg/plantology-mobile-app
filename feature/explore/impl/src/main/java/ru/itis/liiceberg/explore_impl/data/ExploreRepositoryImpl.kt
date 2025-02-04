@@ -2,7 +2,7 @@ package ru.itis.liiceberg.explore_impl.data
 
 import ru.itis.liiceberg.data.db.dao.PlantFirebaseDao
 import ru.itis.liiceberg.data.db.model.FloraCategory
-import ru.itis.liiceberg.explore_api.domain.ExploreRepository
+import ru.itis.liiceberg.explore_api.domain.repository.ExploreRepository
 import ru.itis.liiceberg.explore_api.domain.model.ExplorePlantModel
 import ru.itis.liiceberg.explore_api.domain.model.PlantModel
 import javax.inject.Inject

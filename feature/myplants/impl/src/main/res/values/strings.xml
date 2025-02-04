@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="my_plants_top_bar_text">My Plants</string>
+    <string name="remove_plant">Remove plant</string>
 
 </resources>

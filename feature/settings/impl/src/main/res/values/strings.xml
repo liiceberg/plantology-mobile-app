@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="current_password_text_field">Current password</string>
+    <string name="new_password_text_field">New Password</string>
+    <string name="confirm_new_password_text_field">Confirm new password</string>
+    <string name="confirm_button">Confirm</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="change_password">Change password</string>
+    <string name="log_out">Log Out</string>
+    <string name="change_password_top_bar_text">Change password</string>
+    <string name="settings_top_bar_text">Settings</string>
+</resources>

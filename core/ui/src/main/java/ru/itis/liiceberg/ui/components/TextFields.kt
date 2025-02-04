@@ -35,7 +35,9 @@ fun SimpleTextField(
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
         label = { Text(label) },
-        supportingText = { supportingText?.let { Text(it) } },
+        supportingText = if (supportingText != null) {
+            @Composable { Text(supportingText) }
+        } else null,
         isError = supportingText != null,
         shape = RoundedCornerShape(8.dp),
         singleLine = true
@@ -57,7 +59,9 @@ fun PasswordTextField(
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
         label = { Text(label) },
-        supportingText = { supportingText?.let { Text(it) } },
+        supportingText = if (supportingText != null) {
+            @Composable { Text(supportingText) }
+        } else null,
         isError = supportingText != null,
         shape = RoundedCornerShape(8.dp),
         singleLine = true,
@@ -90,7 +94,7 @@ private fun PreviewTextInput() {
     AppTheme {
         Column {
             SimpleTextField(value = "", label = "Email", onValueChange = {})
-            SimpleTextField(value = "hello", label = "Password", onValueChange = {})
+            PasswordTextField(value = "", label = "Email", onValueChange = {})
         }
     }
 }

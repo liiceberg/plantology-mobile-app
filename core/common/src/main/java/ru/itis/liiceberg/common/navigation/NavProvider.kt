@@ -17,3 +17,5 @@ interface AuthNavProvider : NavProvider
 interface ExploreNavProvider : NavProvider
 
 interface MyPlantsNavProvider : NavProvider
+
+interface SettingsNavProvider : NavProvider

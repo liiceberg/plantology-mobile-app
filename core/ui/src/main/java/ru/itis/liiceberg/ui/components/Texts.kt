@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -21,10 +22,12 @@ import ru.itis.liiceberg.ui.theme.AppTheme
 fun DisplayLargeText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.displayLarge)
 }
+
 @Composable
 fun DisplayMediumText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.displayMedium)
 }
+
 @Composable
 fun DisplaySmallText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.displaySmall)
@@ -34,10 +37,12 @@ fun DisplaySmallText(text: String, modifier: Modifier = Modifier) {
 fun HeadlineLargeText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.headlineLarge)
 }
+
 @Composable
 fun HeadlineMediumText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.headlineMedium)
 }
+
 @Composable
 fun HeadlineSmallText(text: String, modifier: Modifier = Modifier) {
     Text(text = text, modifier = modifier, style = MaterialTheme.typography.headlineSmall)
@@ -54,8 +59,13 @@ fun TitleMediumText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TitleSmallText(text: String, modifier: Modifier = Modifier) {
-    Text(text = text, modifier = modifier, style = MaterialTheme.typography.titleSmall)
+fun TitleSmallText(text: String, modifier: Modifier = Modifier, color: Color? = null) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.titleSmall,
+        color = color ?: Color.Unspecified
+    )
 }
 
 @Composable

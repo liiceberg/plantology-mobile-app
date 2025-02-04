@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.featureAuthImpl)
     implementation(projects.featureExploreImpl)
     implementation(projects.featureMyplantsImpl)
+    implementation(projects.featureSettingsImpl)
 
     implementation(*Libs.bundle.navigation)
     implementation(*Libs.bundle.splashScreen)

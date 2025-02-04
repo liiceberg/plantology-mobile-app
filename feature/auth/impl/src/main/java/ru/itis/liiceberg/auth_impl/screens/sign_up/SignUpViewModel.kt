@@ -3,7 +3,7 @@ package ru.itis.liiceberg.auth_impl.screens.sign_up
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.itis.liiceberg.auth_api.domain.AuthInteractor
+import ru.itis.liiceberg.auth_api.domain.usecase.RegisterUseCase
 import ru.itis.liiceberg.common.validation.Validator
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val validator: Validator,
-    private val authInteractor: AuthInteractor,
+    private val registerUseCase: RegisterUseCase,
 ) : BaseViewModel<SignUpState, SignUpEvent, SignUpAction>(
     SignUpState()
 ) {
@@ -53,7 +53,7 @@ class SignUpViewModel @Inject constructor(
     private fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
             runCatching {
-                authInteractor.register(username, email, password)
+                registerUseCase.invoke(username, email, password)
             }.onSuccess {
                 viewAction = SignUpAction.GoToSignIn
             }.onFailure {

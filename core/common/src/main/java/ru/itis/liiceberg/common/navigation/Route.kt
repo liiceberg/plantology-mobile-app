@@ -20,6 +20,14 @@ sealed class Route {
     }
 
     @Serializable
-    data class PlantDetails(val plantId: String) : Route() {
+    data class PlantDetails(val plantId: String) : Route()
+
+    object Settings {
+
+        @Serializable
+        data object Main : Route()
+
+        @Serializable
+        data object ChangePassword : Route()
     }
 }

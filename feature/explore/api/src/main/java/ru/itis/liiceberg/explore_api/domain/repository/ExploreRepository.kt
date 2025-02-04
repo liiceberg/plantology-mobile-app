@@ -1,4 +1,4 @@
-package ru.itis.liiceberg.explore_api.domain
+package ru.itis.liiceberg.explore_api.domain.repository
 
 import ru.itis.liiceberg.explore_api.domain.model.ExplorePlantModel
 import ru.itis.liiceberg.explore_api.domain.model.PlantModel
