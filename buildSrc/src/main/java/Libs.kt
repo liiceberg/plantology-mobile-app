@@ -38,6 +38,8 @@ object Libs {
     private const val splashScreenVersion = "1.0.0"
     private const val serializationVersion = "1.7.1"
 
+    private const val dataStoreVersion = "1.1.2"
+
     const val navVersion = "2.8.2"
 
     const val junitVersion = "4.12"
@@ -159,6 +161,8 @@ object Libs {
         )
 
         val splashScreen = arrayOf("androidx.core:core-splashscreen:$splashScreenVersion")
+
+        val dataStore = arrayOf("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
         val serializationJson =
             arrayOf("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")

@@ -42,13 +42,16 @@ fun SettingsView(
     SettingsView(
         state,
         toChangePassword,
-        onLogOut,
+        viewModel::logout,
         onBack
     )
 
     LaunchedEffect(Unit) {
+        viewModel.init()
+
         viewModel.viewActions().collect { action ->
             when (action) {
+                is SettingsAction.GoToSignIn -> onLogOut()
                 else -> {}
             }
         }
@@ -59,7 +62,7 @@ fun SettingsView(
 private fun SettingsView(
     state: SettingsState,
     onChangePassword: () -> Unit,
-    onLogOut: () -> Unit,
+    logOut: () -> Unit,
     onBack: () -> Unit,
 ) {
     Scaffold(
@@ -85,7 +88,9 @@ private fun SettingsView(
                 SettingsItem(
                     stringResource(R.string.log_out),
                     additionalInfo = email,
-                    onClick = onLogOut
+                    onClick = {
+                        logOut()
+                    }
                 )
             }
         }
@@ -121,7 +126,7 @@ private fun SettingsItem(
                 value?.let {
                     TitleSmallText(
                         text = value,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 onClick?.let {

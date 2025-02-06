@@ -1,8 +1,10 @@
 package ru.itis.liiceberg.myplants_impl.screens
 
-import ru.itis.liiceberg.myplants_impl.model.MyPlant
+import androidx.compose.runtime.Immutable
+import ru.itis.liiceberg.myplants_api.domain.model.MyPlant
 import ru.itis.liiceberg.ui.model.UiState
 
+@Immutable
 data class MyPlantsState(
     val myPlants: List<MyPlant> = emptyList()
 ) : UiState

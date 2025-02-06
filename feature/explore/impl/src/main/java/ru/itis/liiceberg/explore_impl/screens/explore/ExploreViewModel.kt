@@ -13,15 +13,19 @@ class ExploreViewModel @Inject constructor(
     private val getPlantsUseCase: GetPlantsUseCase,
 ) : BaseViewModel<ExploreState, ExploreEvent, ExploreAction>(ExploreState()) {
 
-    init {
-        getPlants(FloraCategory.PLANT)
+    override fun init() {
+        getPlants()
     }
 
-    private fun getPlants(category: FloraCategory) {
+    private fun getPlants() {
         viewModelScope.launch {
-            viewState = viewState.copy(
-                items = getPlantsUseCase.invoke(category.stringValue())
-            )
+            runCatching {
+                getPlantsUseCase.invoke(FloraCategory.PLANT.stringValue())
+            }.onSuccess {
+                viewState = viewState.copy(
+                    items = it
+                )
+            }
         }
     }
 

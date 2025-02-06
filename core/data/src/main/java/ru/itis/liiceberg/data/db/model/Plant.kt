@@ -11,7 +11,6 @@ data class Plant(
     val description: String? = null,
     val family: String? = null,
     val water: String? = null,
-    val fertilization: String? = null,
     val hardinessZones: String? = null,
     val higherClassification: String? = null,
     val humidity: String? = null,

@@ -46,11 +46,12 @@ fun ExploreView(
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
 
     ExploreView(
-        state.items,
+        state,
         navigateToDetails
     )
 
     LaunchedEffect(Unit) {
+        viewModel.init()
         viewModel.viewActions().collect { action ->
             when (action) {
 
@@ -61,7 +62,7 @@ fun ExploreView(
 }
 
 @Composable
-fun ExploreView(plants: List<ExplorePlantModel>, navigateToDetails: (plantId: String) -> Unit) {
+fun ExploreView(state: ExploreState, navigateToDetails: (plantId: String) -> Unit) {
     Scaffold(
         topBar = {
             LightTopAppBar(
@@ -77,9 +78,12 @@ fun ExploreView(plants: List<ExplorePlantModel>, navigateToDetails: (plantId: St
             )
         },
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding).padding(16.dp)) {
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .padding(16.dp)) {
             SearchView(onSearch = {}, Modifier.padding(bottom = 36.dp))
-            AllPlantsList(plants, navigateToDetails)
+            AllPlantsList(state.items, navigateToDetails)
         }
     }
 }
@@ -149,10 +153,12 @@ private fun ExplorePreview() {
                 ""
             )
             ExploreView(
-                listOf(
-                    item, item, item, item
-                ), {}
-            )
+                ExploreState(
+                    listOf(
+                        item, item, item, item
+                    )
+                )
+            ) {}
         }
     }
 }

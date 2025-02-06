@@ -10,4 +10,5 @@
     <string name="log_out">Log Out</string>
     <string name="change_password_top_bar_text">Change password</string>
     <string name="settings_top_bar_text">Settings</string>
+    <string name="invalid_current_password">Current password is incorrect</string>
 </resources>

@@ -10,12 +10,13 @@ import ru.itis.liiceberg.common.navigation.Route
 fun NavHostContainer(
     navController: NavHostController,
     navigator: Navigator,
+    startDestination: Route,
     onBottomBarVisibilityChanged: (Boolean) -> Unit,
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = Route.BottomMenu.MyPlants,
+        startDestination = startDestination,
         ) {
             with(navigator.auth) {
                 registerGraph(navController, onBottomBarVisibilityChanged)

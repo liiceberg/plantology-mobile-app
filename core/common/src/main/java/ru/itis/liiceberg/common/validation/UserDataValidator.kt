@@ -5,8 +5,8 @@ import ru.itis.liiceberg.common.R
 import ru.itis.liiceberg.common.resources.ResourceManager
 import javax.inject.Inject
 
-class Validator @Inject constructor(
-    private val resourceManager: ResourceManager
+class UserDataValidator @Inject constructor(
+    private val resourceManager: ResourceManager,
 ) {
     fun validateName(name: String): ValidationResult {
         if (name.isBlank()) {

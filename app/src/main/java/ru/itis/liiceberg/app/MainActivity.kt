@@ -3,11 +3,13 @@ package ru.itis.liiceberg.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,18 +36,14 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var navigator: Navigator
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContent {
             AppTheme {
-                val imageLoader = ImageLoader.Builder(LocalContext.current)
-                    .logger(DebugLogger())
-                    .build()
-                setSingletonImageLoaderFactory {
-                    imageLoader
-                }
-                FirebaseFirestore.setLoggingEnabled(true);
+                Loggers()
 
                 val navController = rememberNavController()
                 var bottomBarVisible by remember { mutableStateOf(true) }
@@ -57,7 +55,10 @@ class MainActivity : ComponentActivity() {
                         },
                         bottomBar = {
                             if (bottomBarVisible) {
-                                BottomNavigationBar(navController = navController, items = bottomNavItems)
+                                BottomNavigationBar(
+                                    navController = navController,
+                                    items = bottomNavItems
+                                )
                             }
                         },
                         content = { paddingValues ->
@@ -65,6 +66,7 @@ class MainActivity : ComponentActivity() {
                                 NavHostContainer(
                                     navController = navController,
                                     navigator = navigator,
+                                    startDestination = viewModel.getStartDestination(),
                                 ) { isVisible ->
                                     bottomBarVisible = isVisible
                                 }
@@ -74,6 +76,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    @Composable
+    fun Loggers() {
+        val imageLoader = ImageLoader.Builder(LocalContext.current)
+            .logger(DebugLogger())
+            .build()
+        setSingletonImageLoaderFactory {
+            imageLoader
+        }
+        FirebaseFirestore.setLoggingEnabled(true)
     }
 
 }

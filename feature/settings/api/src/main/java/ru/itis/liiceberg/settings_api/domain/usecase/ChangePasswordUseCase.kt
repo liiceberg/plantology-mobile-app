@@ -10,9 +10,9 @@ class ChangePasswordUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
 ) {
 
-    suspend operator fun invoke() {
+    suspend operator fun invoke(newPassword: String) {
         withContext(dispatcher) {
-            settingsRepository
+            settingsRepository.updatePassword(newPassword)
         }
     }
 

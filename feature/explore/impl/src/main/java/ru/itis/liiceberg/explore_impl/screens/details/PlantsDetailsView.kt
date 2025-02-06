@@ -58,16 +58,14 @@ fun PlantsDetailsView(
     onBackClick: () -> Unit
 ) {
 
-    LaunchedEffect(Unit) {
-        viewModel.loadInfo(plantId)
-    }
-
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    state.plantModel?.let {
-        PlantsDetailsView(it, onBackClick)
-    }
+
+    PlantsDetailsView(state, onBackClick, viewModel::addFavourite)
 
     LaunchedEffect(Unit) {
+
+        viewModel.loadInfo(plantId)
+
         viewModel.viewActions().collect { action ->
             when (action) {
 
@@ -79,10 +77,11 @@ fun PlantsDetailsView(
 
 @Composable
 fun PlantsDetailsView(
-    plantModel: PlantModel,
-    onBackClick: () -> Unit
+    state: PlantsDetailsState,
+    onBackClick: () -> Unit,
+    addToFavorite: (String) -> Unit,
 ) {
-    with(plantModel) {
+    state.plantModel?.run {
         Column {
 
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart) {
@@ -91,7 +90,7 @@ fun PlantsDetailsView(
                     icon = Icons.AutoMirrored.Filled.ArrowBack,
                     modifier = Modifier.padding(16.dp)
                 ) {
-                   onBackClick.invoke()
+                    onBackClick.invoke()
                 }
             }
 
@@ -205,7 +204,7 @@ fun PlantsDetailsView(
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
                     ) {
-
+                        addToFavorite(id)
                     }
                 }
             }
@@ -288,7 +287,7 @@ private fun PlantsDetailsPreview() {
                 minTemperature = 10,
                 saved = false
             )
-            PlantsDetailsView(plant) {}
+            PlantsDetailsView(PlantsDetailsState(plant), {}) {}
         }
     }
 }

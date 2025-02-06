@@ -2,5 +2,10 @@
 <resources>
     <string name="my_plants_top_bar_text">My Plants</string>
     <string name="remove_plant">Remove plant</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="water_in_days">in %1$s days</string>
+    <string name="fertilizer">Fertilizer</string>
+    <string name="water">Water</string>
+    <string name="fertilizer_in_week">in %1$s week</string>
 
 </resources>

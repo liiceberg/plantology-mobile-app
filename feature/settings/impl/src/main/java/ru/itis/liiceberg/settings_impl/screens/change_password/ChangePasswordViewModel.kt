@@ -3,16 +3,22 @@ package ru.itis.liiceberg.settings_impl.screens.change_password
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import ru.itis.liiceberg.common.resources.ResourceManager
+import ru.itis.liiceberg.common.validation.UserDataValidator
 import ru.itis.liiceberg.common.validation.ValidationResult
-import ru.itis.liiceberg.common.validation.Validator
 import ru.itis.liiceberg.settings_api.domain.usecase.ChangePasswordUseCase
+import ru.itis.liiceberg.settings_api.domain.usecase.VerifyCredentialsUseCase
+import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
-    private val validator: Validator,
+    private val validator: UserDataValidator,
+    private val verifyCredentialsUseCase: VerifyCredentialsUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
+    private val resManager: ResourceManager,
 ) : BaseViewModel<ChangePasswordState, ChangePasswordEvent, ChangePasswordAction>(
     ChangePasswordState()
 ) {
@@ -41,7 +47,7 @@ class ChangePasswordViewModel @Inject constructor(
     private fun changePassword() {
         viewModelScope.launch {
             runCatching {
-                changePasswordUseCase.invoke()
+                changePasswordUseCase.invoke(viewState.newPassword)
             }.onSuccess {
                 viewAction = ChangePasswordAction.ShowPasswordChangedResults(true)
             }.onFailure {
@@ -50,13 +56,20 @@ class ChangePasswordViewModel @Inject constructor(
         }
     }
 
-
-    private fun validateCurrentPassword(password: String): Boolean {
-        viewState = viewState.copy(
-            currentPassword = password,
-            currentPasswordValidation = ValidationResult.empty()
-        )
-        return true
+    private fun validateCurrentPassword(password: String) {
+        runBlocking {
+            runCatching {
+                verifyCredentialsUseCase.invoke(password)
+            }.onSuccess { isValid ->
+                viewState = viewState.copy(
+                    currentPassword = password,
+                    currentPasswordValidation = ValidationResult(
+                        isValid = isValid,
+                        error = if (isValid) null else resManager.getString(R.string.invalid_current_password),
+                    )
+                )
+            }
+        }
     }
 
     private fun validateNewPassword(password: String): Boolean {
@@ -80,7 +93,8 @@ class ChangePasswordViewModel @Inject constructor(
     }
 
     private fun validateAll(): Boolean {
-        return validateCurrentPassword(viewState.currentPassword)
+        validateCurrentPassword(viewState.currentPassword)
+        return viewState.currentPasswordValidation.isValid
                 && validateNewPassword(viewState.newPassword)
                 && validateConfirmNewPassword(viewState.confirmNewPassword)
     }

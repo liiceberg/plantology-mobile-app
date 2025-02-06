@@ -12,7 +12,7 @@ class RegisterUseCase @Inject constructor(
 
     suspend operator fun invoke(username: String, email: String, password: String) {
         withContext(dispatcher) {
-            authRepository.register(username, email, password)
+            authRepository.register(username = username, email = email, password = password)
         }
     }
 

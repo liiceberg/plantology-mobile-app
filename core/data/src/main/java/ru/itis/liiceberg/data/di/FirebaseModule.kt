@@ -21,9 +21,6 @@ class FirebaseModule {
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
-    fun provideFirebaseDatabaseReference(): DatabaseReference = FirebaseDatabase.getInstance().reference
-
-    @Provides
     @Singleton
     fun provideFirestore(): FirebaseFirestore = Firebase.firestore
 }
