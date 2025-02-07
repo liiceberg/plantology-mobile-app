@@ -3,7 +3,7 @@ package ru.itis.liiceberg.myplants_impl.data
 import ru.itis.liiceberg.data.db.dao.FavouritesFirebaseDao
 import ru.itis.liiceberg.data.db.dao.PlantFirebaseDao
 import ru.itis.liiceberg.data.storage.UserDataStore
-import ru.itis.liiceberg.myplants_api.domain.MyPlantsRepository
+import ru.itis.liiceberg.myplants_api.domain.repository.MyPlantsRepository
 import ru.itis.liiceberg.myplants_api.domain.model.MyPlant
 import javax.inject.Inject
 
