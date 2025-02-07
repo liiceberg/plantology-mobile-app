@@ -2,8 +2,8 @@ package ru.itis.liiceberg.explore_api.domain.usecase
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import ru.itis.liiceberg.explore_api.domain.repository.ExploreRepository
 import ru.itis.liiceberg.explore_api.domain.model.ExplorePlantModel
+import ru.itis.liiceberg.explore_api.domain.repository.ExploreRepository
 import javax.inject.Inject
 
 class GetPlantsUseCase @Inject constructor(
@@ -11,9 +11,9 @@ class GetPlantsUseCase @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
 ) {
 
-    suspend operator fun invoke(category: String): List<ExplorePlantModel> {
+    suspend operator fun invoke(): List<ExplorePlantModel> {
         return withContext(dispatcher) {
-            exploreRepository.getPlantsByCategory(category)
+            exploreRepository.getAllPlants()
         }
     }
 

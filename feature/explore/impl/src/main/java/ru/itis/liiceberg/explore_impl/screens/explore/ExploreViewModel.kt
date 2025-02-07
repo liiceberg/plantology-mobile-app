@@ -5,7 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
-import ru.itis.liiceberg.data.db.model.FloraCategory
 import ru.itis.liiceberg.explore_api.domain.usecase.GetPlantsUseCase
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
@@ -23,7 +22,7 @@ class ExploreViewModel @Inject constructor(
     private fun getPlants() {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
-                getPlantsUseCase.invoke(FloraCategory.PLANT.stringValue())
+                getPlantsUseCase.invoke()
             }.onSuccess {
                 viewState = viewState.copy(
                     items = it

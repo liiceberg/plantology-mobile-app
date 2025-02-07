@@ -3,7 +3,6 @@ package ru.itis.liiceberg.data.db.dao
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import ru.itis.liiceberg.data.db.FirestoreCollections
-import ru.itis.liiceberg.data.db.model.FloraCategory
 import ru.itis.liiceberg.data.db.model.Plant
 import javax.inject.Inject
 
@@ -11,7 +10,7 @@ class PlantFirebaseDao @Inject constructor(
     private val firestore: FirebaseFirestore,
 ) {
 
-    suspend fun getPlantsByCategory(category: FloraCategory): List<Plant> {
+    suspend fun getAllPlants(): List<Plant> {
         val items = mutableListOf<Plant>()
         val result = firestore.collection(FirestoreCollections.PLANTS)
             .get()
@@ -31,10 +30,6 @@ class PlantFirebaseDao @Inject constructor(
         val plant = result.toObject(Plant::class.java)
         plant?.id = id
         return plant
-    }
-
-    companion object {
-        const val FLORA_CATEGORY_FIELD = "flora_category"
     }
 
 }
