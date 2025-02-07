@@ -1,6 +1,7 @@
 package ru.itis.liiceberg.settings_impl.screens.change_password
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
+import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.theme.AppTheme
@@ -26,6 +28,7 @@ fun ChangePasswordView(
     goBack: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+    val error by viewModel.error().collectAsStateWithLifecycle()
 
     ChangePasswordView(
         state = state,
@@ -41,7 +44,8 @@ fun ChangePasswordView(
         onConfirm = {
             viewModel.obtainEvent(ChangePasswordEvent.OnConfirm)
         },
-        goBack = goBack
+        goBack = goBack,
+        error = error,
     )
 
     LaunchedEffect(Unit) {
@@ -61,57 +65,63 @@ private fun ChangePasswordView(
     onNewPasswordConfirmFilled: (password: String) -> Unit,
     onConfirm: () -> Unit,
     goBack: () -> Unit,
+    error: String?,
 ) {
-    Scaffold(
-        topBar = {
-            DarkTopAppBar(
-                title = stringResource(R.string.change_password_top_bar_text),
-                onNavigate = goBack
-            )
-        },
-    ) { innerPadding ->
-        with(state) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp)
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    PasswordTextField(
-                        value = currentPassword,
-                        label = stringResource(id = R.string.current_password_text_field),
-                        supportingText = currentPasswordValidation.error,
-                    ) {
-                        onCurrentPasswordFilled.invoke(it)
-                    }
-                    PasswordTextField(
-                        value = newPassword,
-                        label = stringResource(id = R.string.new_password_text_field),
-                        supportingText = newPasswordValidation.error,
-                    ) {
-                        onNewPasswordFilled.invoke(it)
-                    }
-                    PasswordTextField(
-                        value = confirmNewPassword,
-                        label = stringResource(id = R.string.confirm_new_password_text_field),
-                        supportingText = confirmNewPasswordValidation.error,
-                    ) {
-                        onNewPasswordConfirmFilled.invoke(it)
-                    }
-                }
-                SimpleButton(
-                    text = stringResource(R.string.confirm_button),
-                    modifier = Modifier.padding(top = 24.dp),
-                    enabled = currentPasswordValidation.isValid
-                            && newPasswordValidation.isValid
-                            && confirmNewPasswordValidation.isValid
+    Box(Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                DarkTopAppBar(
+                    title = stringResource(R.string.change_password_top_bar_text),
+                    onNavigate = goBack
+                )
+            },
+        ) { innerPadding ->
+            with(state) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(16.dp)
                 ) {
-                    onConfirm.invoke()
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        PasswordTextField(
+                            value = currentPassword,
+                            label = stringResource(id = R.string.current_password_text_field),
+                            supportingText = currentPasswordValidation.error,
+                        ) {
+                            onCurrentPasswordFilled.invoke(it)
+                        }
+                        PasswordTextField(
+                            value = newPassword,
+                            label = stringResource(id = R.string.new_password_text_field),
+                            supportingText = newPasswordValidation.error,
+                        ) {
+                            onNewPasswordFilled.invoke(it)
+                        }
+                        PasswordTextField(
+                            value = confirmNewPassword,
+                            label = stringResource(id = R.string.confirm_new_password_text_field),
+                            supportingText = confirmNewPasswordValidation.error,
+                        ) {
+                            onNewPasswordConfirmFilled.invoke(it)
+                        }
+                    }
+                    SimpleButton(
+                        text = stringResource(R.string.confirm_button),
+                        modifier = Modifier.padding(top = 24.dp),
+                        enabled = currentPasswordValidation.isValid
+                                && newPasswordValidation.isValid
+                                && confirmNewPasswordValidation.isValid
+                    ) {
+                        onConfirm.invoke()
+                    }
                 }
             }
-        }
 
+        }
+        error?.let {
+            ErrorMessage(errorText = it)
+        }
     }
 }
 
@@ -119,6 +129,6 @@ private fun ChangePasswordView(
 @Composable
 private fun ChangePasswordPreview() {
     AppTheme {
-        ChangePasswordView(ChangePasswordState(), {}, {}, {}, {}, {})
+        ChangePasswordView(ChangePasswordState(), {}, {}, {}, {}, {}, null)
     }
 }

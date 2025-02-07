@@ -1,5 +1,6 @@
 package ru.itis.liiceberg.auth_impl.screens.sign_in
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import ru.itis.liiceberg.auth_impl.R
 import ru.itis.liiceberg.ui.components.AppLightIcon
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
+import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
@@ -32,6 +34,7 @@ fun SignInView(
     toMainPage: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+    val error by viewModel.error().collectAsStateWithLifecycle()
 
     SignInView(
         state = state,
@@ -40,11 +43,12 @@ fun SignInView(
         onSignInClicked = { viewModel.obtainEvent(SignInEvent.OnSignIn) },
         onSignInWithGoogleClicked = { viewModel.obtainEvent(SignInEvent.OnSignInWithGoogle) },
         toSignUp = toSignUp,
+        error = error,
     )
 
     LaunchedEffect(Unit) {
         viewModel.viewActions().collect { action ->
-            when(action) {
+            when (action) {
                 is SignInAction.GoToMainPage -> toMainPage()
                 else -> {}
             }
@@ -60,61 +64,67 @@ private fun SignInView(
     onSignInClicked: () -> Unit,
     onSignInWithGoogleClicked: () -> Unit,
     toSignUp: () -> Unit,
+    error: String?,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Box(Modifier.fillMaxSize()) {
         with(state) {
-            AppLightIcon(72.dp, Modifier.padding(top = 72.dp))
-            HeadlineLargeText(
-                text = stringResource(id = R.string.sign_in_title_text),
-                Modifier.padding(top = 72.dp)
-            )
-            SimpleTextField(
-                value = email,
-                label = stringResource(id = R.string.email_label),
-                supportingText = emailValidation.error,
-                modifier = Modifier.padding(top = 72.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                onEmailFilled(it)
-            }
-            PasswordTextField(
-                value = password,
-                label = stringResource(id = R.string.password_label),
-                supportingText = passwordValidation.error
-            ) {
-                onPasswordFilled(it)
-            }
+                AppLightIcon(72.dp, Modifier.padding(top = 72.dp))
+                HeadlineLargeText(
+                    text = stringResource(id = R.string.sign_in_title_text),
+                    Modifier.padding(top = 72.dp)
+                )
+                SimpleTextField(
+                    value = email,
+                    label = stringResource(id = R.string.email_label),
+                    supportingText = emailValidation.error,
+                    modifier = Modifier.padding(top = 72.dp)
+                ) {
+                    onEmailFilled(it)
+                }
+                PasswordTextField(
+                    value = password,
+                    label = stringResource(id = R.string.password_label),
+                    supportingText = passwordValidation.error
+                ) {
+                    onPasswordFilled(it)
+                }
 
-            val enableButtons = emailValidation.isValid && passwordValidation.isValid
+                val enableButtons = emailValidation.isValid && passwordValidation.isValid
 
-            SimpleButton(
-                text = stringResource(id = R.string.sign_in),
-                enabled = enableButtons,
-                modifier = Modifier.padding(top = 32.dp)
-            ) {
-                onSignInClicked()
+                SimpleButton(
+                    text = stringResource(id = R.string.sign_in),
+                    enabled = enableButtons,
+                    modifier = Modifier.padding(top = 32.dp)
+                ) {
+                    onSignInClicked()
+                }
+                BodyMediumText(
+                    text = stringResource(id = R.string.or),
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+                SimpleButtonWithStartIcon(
+                    text = stringResource(id = R.string.sign_in_with_google),
+                    icon = painterResource(id = R.drawable.icons8_google),
+                    enabled = enableButtons
+                ) {
+                    onSignInWithGoogleClicked()
+                }
+                BodyTextWithLink(
+                    stringResource(id = R.string.no_account),
+                    stringResource(id = R.string.sign_up),
+                    modifier = Modifier.padding(top = 48.dp)
+                ) {
+                    toSignUp()
+                }
             }
-            BodyMediumText(
-                text = stringResource(id = R.string.or),
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-            SimpleButtonWithStartIcon(
-                text = stringResource(id = R.string.sign_in_with_google),
-                icon = painterResource(id = R.drawable.icons8_google),
-                enabled = enableButtons
-            ) {
-                onSignInWithGoogleClicked()
-            }
-            BodyTextWithLink(
-                stringResource(id = R.string.no_account),
-                stringResource(id = R.string.sign_up),
-                modifier = Modifier.padding(top = 48.dp)
-            ) {
-                toSignUp()
+            error?.let {
+                ErrorMessage(errorText = error)
             }
         }
     }
@@ -124,6 +134,6 @@ private fun SignInView(
 @Composable
 private fun SignInPreview() {
     AppTheme {
-        SignInView(SignInState(), {}, {}, {}, {}, {})
+        SignInView(SignInState(), {}, {}, {}, {}, {}, null)
     }
 }

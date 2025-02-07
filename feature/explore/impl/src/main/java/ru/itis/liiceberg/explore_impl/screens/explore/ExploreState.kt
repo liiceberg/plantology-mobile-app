@@ -6,5 +6,5 @@ import ru.itis.liiceberg.ui.model.UiState
 
 @Immutable
 data class ExploreState(
-    val items: List<ExplorePlantModel> = emptyList()
+    val items: List<ExplorePlantModel> = emptyList(),
 ) : UiState

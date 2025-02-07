@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -38,6 +39,7 @@ import ru.itis.liiceberg.explore_impl.R
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.DarkIcon
+import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.HeadlineSmallText
 import ru.itis.liiceberg.ui.components.KeyValueText
@@ -59,8 +61,9 @@ fun PlantsDetailsView(
 ) {
 
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+    val error by viewModel.error().collectAsStateWithLifecycle()
 
-    PlantsDetailsView(state, onBackClick, viewModel::addFavourite)
+    PlantsDetailsView(state, error, onBackClick, viewModel::addFavourite)
 
     LaunchedEffect(Unit) {
 
@@ -68,7 +71,6 @@ fun PlantsDetailsView(
 
         viewModel.viewActions().collect { action ->
             when (action) {
-
                 else -> {}
             }
         }
@@ -78,135 +80,146 @@ fun PlantsDetailsView(
 @Composable
 fun PlantsDetailsView(
     state: PlantsDetailsState,
+    error: String?,
     onBackClick: () -> Unit,
     addToFavorite: (String) -> Unit,
 ) {
     state.plantModel?.run {
-        Column {
+        Box(Modifier.fillMaxSize()) {
+            Column {
 
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart) {
-                SimpleImage(url = image.firstOrNull() ?: "")
-                SimpleFloatingActionButton(
-                    icon = Icons.AutoMirrored.Filled.ArrowBack,
-                    modifier = Modifier.padding(16.dp)
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart) {
+                    SimpleImage(url = image.firstOrNull() ?: "")
+                    SimpleFloatingActionButton(
+                        icon = Icons.AutoMirrored.Filled.ArrowBack,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        onBackClick.invoke()
+                    }
+                }
+
+                Column(
+                    Modifier
+                        .offset(y = (-20).dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.secondary)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    onBackClick.invoke()
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        HeadlineLargeText(text = name)
+                        Column {
+                            KeyValueText(
+                                key = stringResource(R.string.scientific_name),
+                                value = scientificName
+                            )
+                            KeyValueText(key = stringResource(R.string.family), value = family)
+                            KeyValueText(key = stringResource(R.string.rank), value = rank)
+                            KeyValueText(
+                                key = stringResource(R.string.higher_classification),
+                                value = higherClassification
+                            )
+                            KeyValueText(key = stringResource(R.string.kingdom), value = kingdom)
+                            KeyValueText(key = stringResource(R.string.order), value = order)
+                        }
+                        BodyMediumText(text = description)
+                    }
+
+                    LazyRow(
+                        Modifier.padding(start = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(image.subList(1, image.lastIndex + 1)) { url ->
+                            RoundedImage(url = url, Modifier.height(128.dp))
+                        }
+
+                    }
+
+                    HeadlineSmallText(
+                        text = stringResource(R.string.conditions),
+                        modifier = Modifier.padding(start = 16.dp, top = 28.dp, bottom = 16.dp),
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surface)
+                            .padding(start = 16.dp)
+                            .padding(vertical = 24.dp)
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        ConditionCard(
+                            R_UI.drawable.thermometer, stringResource(R.string.temperature),
+                            stringResource(
+                                R.string.temperature_range,
+                                minTemperature ?: "",
+                                maxTemperature ?: ""
+                            )
+                        )
+                        ConditionCard(
+                            R_UI.drawable.humidity,
+                            stringResource(R.string.humidity),
+                            humidity
+                        )
+                        ConditionCard(
+                            R_UI.drawable.globe,
+                            stringResource(R.string.hardiness_zone),
+                            hardinessZones
+                        )
+                    }
+
+                    HeadlineLargeText(
+                        text = stringResource(R.string.care_guide),
+                        modifier = Modifier.padding(start = 16.dp, top = 28.dp, bottom = 16.dp),
+                    )
+                    Column(
+                        Modifier.padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        val toxicity = when (toxicity) {
+                            true -> stringResource(R.string.toxicity_toxic)
+                            false -> stringResource(R.string.toxicity_non_toxic)
+                            else -> ""
+                        }
+                        CareGuideItem(
+                            R_UI.drawable.skull,
+                            stringResource(R.string.toxicity),
+                            toxicity
+                        )
+                        CareGuideItem(
+                            R_UI.drawable.water_drops,
+                            stringResource(R.string.water),
+                            water
+                        )
+                        CareGuideItem(
+                            R_UI.drawable.sunny,
+                            stringResource(R.string.sunlight),
+                            sunlight
+                        )
+                        CareGuideItem(
+                            R_UI.drawable.themperature,
+                            stringResource(R.string.temperature),
+                            temperature
+                        )
+                    }
+                    if (saved.not()) {
+                        SimpleButtonWithStartIcon(
+                            stringResource(R.string.add_to_my_plants),
+                            painterResource(id = R_UI.drawable.save),
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
+                        ) {
+                            addToFavorite(id)
+                        }
+                    }
                 }
             }
 
-            Column(
-                Modifier
-                    .offset(y = (-20).dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.secondary)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    HeadlineLargeText(text = name)
-                    Column {
-                        KeyValueText(
-                            key = stringResource(R.string.scientific_name),
-                            value = scientificName
-                        )
-                        KeyValueText(key = stringResource(R.string.family), value = family)
-                        KeyValueText(key = stringResource(R.string.rank), value = rank)
-                        KeyValueText(
-                            key = stringResource(R.string.higher_classification),
-                            value = higherClassification
-                        )
-                        KeyValueText(key = stringResource(R.string.kingdom), value = kingdom)
-                        KeyValueText(key = stringResource(R.string.order), value = order)
-                    }
-                    BodyMediumText(text = description)
-                }
-
-                LazyRow(
-                    Modifier.padding(start = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(image.subList(1, image.lastIndex + 1)) { url ->
-                        RoundedImage(url = url, Modifier.height(128.dp))
-                    }
-
-                }
-
-                HeadlineSmallText(
-                    text = stringResource(R.string.conditions),
-                    modifier = Modifier.padding(start = 16.dp, top = 28.dp, bottom = 16.dp),
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(start = 16.dp)
-                        .padding(vertical = 24.dp)
-                        .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    ConditionCard(
-                        R_UI.drawable.thermometer, stringResource(R.string.temperature),
-                        stringResource(
-                            R.string.temperature_range,
-                            minTemperature ?: "",
-                            maxTemperature ?: ""
-                        )
-                    )
-                    ConditionCard(
-                        R_UI.drawable.humidity,
-                        stringResource(R.string.humidity),
-                        humidity
-                    )
-                    ConditionCard(
-                        R_UI.drawable.globe,
-                        stringResource(R.string.hardiness_zone),
-                        hardinessZones
-                    )
-                }
-
-                HeadlineLargeText(
-                    text = stringResource(R.string.care_guide),
-                    modifier = Modifier.padding(start = 16.dp, top = 28.dp, bottom = 16.dp),
-                )
-                Column(
-                    Modifier.padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    val toxicity = when (toxicity) {
-                        true -> stringResource(R.string.toxicity_toxic)
-                        false -> stringResource(R.string.toxicity_non_toxic)
-                        else -> ""
-                    }
-                    CareGuideItem(R_UI.drawable.skull, stringResource(R.string.toxicity), toxicity)
-                    CareGuideItem(
-                        R_UI.drawable.water_drops,
-                        stringResource(R.string.water),
-                        water
-                    )
-                    CareGuideItem(
-                        R_UI.drawable.sunny,
-                        stringResource(R.string.sunlight),
-                        sunlight
-                    )
-                    CareGuideItem(
-                        R_UI.drawable.themperature,
-                        stringResource(R.string.temperature),
-                        temperature
-                    )
-                }
-                if (saved.not()) {
-                    SimpleButtonWithStartIcon(
-                        stringResource(R.string.add_to_my_plants),
-                        painterResource(id = R_UI.drawable.save),
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
-                    ) {
-                        addToFavorite(id)
-                    }
-                }
+            error?.let {
+                ErrorMessage(errorText = it)
             }
         }
     }
@@ -287,7 +300,7 @@ private fun PlantsDetailsPreview() {
                 minTemperature = 10,
                 saved = false
             )
-            PlantsDetailsView(PlantsDetailsState(plant), {}) {}
+            PlantsDetailsView(PlantsDetailsState(plant), null, {}) {}
         }
     }
 }

@@ -2,14 +2,14 @@ package ru.itis.liiceberg.settings_impl.screens.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
+import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.TitleSmallText
 import ru.itis.liiceberg.ui.theme.AppTheme
@@ -38,12 +39,14 @@ fun SettingsView(
     onBack: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+    val error by viewModel.error().collectAsStateWithLifecycle()
 
     SettingsView(
         state,
         toChangePassword,
         viewModel::logout,
-        onBack
+        onBack,
+        error,
     )
 
     LaunchedEffect(Unit) {
@@ -64,38 +67,46 @@ private fun SettingsView(
     onChangePassword: () -> Unit,
     logOut: () -> Unit,
     onBack: () -> Unit,
+    error: String?,
 ) {
-    Scaffold(
-        topBar = {
-            DarkTopAppBar(
-                title = stringResource(R.string.settings_top_bar_text),
-                onNavigate = onBack
-            )
-        },
-    ) { innerPadding ->
-        with(state) {
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Column {
-                    SettingsItem(stringResource(R.string.email), value = email)
-                    SettingsItem(stringResource(R.string.username), value = username)
-                }
-                SettingsItem(stringResource(R.string.change_password), onClick = onChangePassword)
-                SettingsItem(
-                    stringResource(R.string.log_out),
-                    additionalInfo = email,
-                    onClick = {
-                        logOut()
-                    }
+    Box(Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                DarkTopAppBar(
+                    title = stringResource(R.string.settings_top_bar_text),
+                    onNavigate = onBack
                 )
+            },
+        ) { innerPadding ->
+            with(state) {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Column {
+                        SettingsItem(stringResource(R.string.email), value = email)
+                        SettingsItem(stringResource(R.string.username), value = username)
+                    }
+                    SettingsItem(
+                        stringResource(R.string.change_password),
+                        onClick = onChangePassword
+                    )
+                    SettingsItem(
+                        stringResource(R.string.log_out),
+                        additionalInfo = email,
+                        onClick = {
+                            logOut()
+                        }
+                    )
+                }
             }
         }
+        error?.let {
+            ErrorMessage(errorText = it)
+        }
     }
-
 }
 
 @Composable
@@ -147,7 +158,7 @@ private fun SettingsItem(
 private fun SettingsPreview() {
     AppTheme {
         Column {
-            SettingsView(SettingsState("a@gmail.com", "Aisylu"), {}, {}, {})
+            SettingsView(SettingsState("a@gmail.com", "Aisylu"), {}, {}, {}, null)
         }
 
     }

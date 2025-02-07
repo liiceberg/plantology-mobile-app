@@ -1,12 +1,14 @@
 package ru.itis.liiceberg.data.db.dao
 
-import android.util.Log
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import ru.itis.liiceberg.data.db.FirestoreCollections
 import ru.itis.liiceberg.data.db.model.User
+import ru.itis.liiceberg.common.exceptions.AppException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,18 +20,36 @@ class UserFirebaseDao @Inject constructor(
 
     private var currentUser: User? = null
 
-    fun signInUser(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
+    suspend fun signInUser(email: String, password: String) {
+        runCatching {
+            auth.signInWithEmailAndPassword(email, password).await()
+        }.getOrElse { ex ->
+            throw when (ex) {
+                is FirebaseAuthInvalidCredentialsException -> {
+                    AppException.InvalidCredentials(ex.message ?: "")
+                }
+                else -> ex
+            }
+        }
     }
 
-    fun createUserWithEmailAndPassword(email: String, password: String, username: String) {
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                getCurrentUserId()?.let { id ->
-                    saveUser(userId = id, email = email, password = password, username = username)
+    suspend fun createUserWithEmailAndPassword(email: String, password: String, username: String) {
+        runCatching {
+            auth.createUserWithEmailAndPassword(email, password).await()
+            getCurrentUserId()?.let { id ->
+                saveUser(
+                    userId = id,
+                    email = email,
+                    password = password,
+                    username = username
+                )
+            }
+        }.getOrElse { ex ->
+            when (ex) {
+                is FirebaseAuthUserCollisionException -> {
+                    AppException.SuchEmailAlreadyRegistered(ex.message ?: "")
                 }
-            } else {
-                Log.d("exc", task.exception.toString())
+                else -> throw ex
             }
         }
     }

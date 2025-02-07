@@ -11,6 +11,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = Secondary00,
     onSecondary = Secondary100,
     outline = Neutral200,
+    error = Destructive500,
     onError = Destructive600,
     onBackground = Neutral500,
     surface = Primary50,

@@ -50,8 +50,9 @@ class ChangePasswordViewModel @Inject constructor(
                 changePasswordUseCase.invoke(viewState.newPassword)
             }.onSuccess {
                 viewAction = ChangePasswordAction.ShowPasswordChangedResults(true)
-            }.onFailure {
+            }.onFailure { ex ->
                 viewAction = ChangePasswordAction.ShowPasswordChangedResults(false)
+                showError(ex.message)
             }
         }
     }

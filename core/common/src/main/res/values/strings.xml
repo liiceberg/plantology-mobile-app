@@ -1,7 +1,7 @@
 <resources>
     <string name="common_ok">Ok</string>
     <string name="common_error_general_title">Error</string>
-    <string name="common_error_network">Please, check internet connection and try again later.</string>
+    <string name="common_error_network">Please, check internet connection and try again.</string>
     <string name="common_error_general_message">We are working hard to fix the problem. Please, try again later.</string>
 
     <string name="empty_username_error">Enter a username</string>

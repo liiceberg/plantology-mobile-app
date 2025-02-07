@@ -32,8 +32,8 @@ class MyPlantsViewModel @Inject constructor(
                 getMyPlantsUseCase.invoke()
             }.onSuccess {
                 viewState = viewState.copy(myPlants = it)
-            }.onFailure {
-
+            }.onFailure { ex ->
+                showError(ex.message)
             }
         }
     }
@@ -45,8 +45,8 @@ class MyPlantsViewModel @Inject constructor(
             }.onSuccess {
                 val newList = viewState.myPlants.filter { it.id != id }.toList()
                 viewState = viewState.copy(myPlants = newList)
-            }.onFailure {
-
+            }.onFailure { ex ->
+                showError(ex.message)
             }
         }
     }

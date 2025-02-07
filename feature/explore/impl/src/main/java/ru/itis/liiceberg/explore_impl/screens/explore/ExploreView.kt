@@ -30,6 +30,7 @@ import ru.itis.liiceberg.explore_api.domain.model.ExplorePlantModel
 import ru.itis.liiceberg.explore_impl.R
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.CardWithImageAndInfo
+import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.LightTopAppBar
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SearchView
@@ -44,17 +45,18 @@ fun ExploreView(
     navigateToDetails: (plantId: String) -> Unit
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+    val error by viewModel.error().collectAsStateWithLifecycle()
 
     ExploreView(
         state,
-        navigateToDetails
+        navigateToDetails,
+        error,
     )
 
     LaunchedEffect(Unit) {
         viewModel.init()
         viewModel.viewActions().collect { action ->
             when (action) {
-
                 else -> {}
             }
         }
@@ -62,28 +64,39 @@ fun ExploreView(
 }
 
 @Composable
-fun ExploreView(state: ExploreState, navigateToDetails: (plantId: String) -> Unit) {
-    Scaffold(
-        topBar = {
-            LightTopAppBar(
-                title = stringResource(R.string.explore_top_bar_text),
-                action = {
-                    SimpleIconButton(
-                        icon = painterResource(id = R_UI.drawable.notifications),
-                        size = 24.dp,
-                        tint = MaterialTheme.colorScheme.onSecondary,
-                        onClick = {}
-                    )
-                }
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            Modifier
-                .padding(innerPadding)
-                .padding(16.dp)) {
-            SearchView(onSearch = {}, Modifier.padding(bottom = 36.dp))
-            AllPlantsList(state.items, navigateToDetails)
+fun ExploreView(
+    state: ExploreState,
+    navigateToDetails: (plantId: String) -> Unit,
+    error: String?,
+) {
+    Box(Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                LightTopAppBar(
+                    title = stringResource(R.string.explore_top_bar_text),
+                    action = {
+                        SimpleIconButton(
+                            icon = painterResource(id = R_UI.drawable.notifications),
+                            size = 24.dp,
+                            tint = MaterialTheme.colorScheme.onSecondary,
+                            onClick = {}
+                        )
+                    }
+                )
+            },
+        ) { innerPadding ->
+            Column(
+                Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp)
+            ) {
+                SearchView(onSearch = {}, Modifier.padding(bottom = 36.dp))
+                AllPlantsList(state.items, navigateToDetails)
+            }
+        }
+
+        error?.let {
+            ErrorMessage(errorText = it)
         }
     }
 }
@@ -152,13 +165,7 @@ private fun ExplorePreview() {
                 "some name",
                 ""
             )
-            ExploreView(
-                ExploreState(
-                    listOf(
-                        item, item, item, item
-                    )
-                )
-            ) {}
+            ExploreView(ExploreState(listOf(item, item, item, item)), {}, null)
         }
     }
 }

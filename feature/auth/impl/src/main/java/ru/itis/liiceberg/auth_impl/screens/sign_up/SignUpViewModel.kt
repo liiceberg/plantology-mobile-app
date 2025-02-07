@@ -1,11 +1,16 @@
 package ru.itis.liiceberg.auth_impl.screens.sign_up
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.auth_api.domain.usecase.RegisterUseCase
+import ru.itis.liiceberg.auth_impl.R
+import ru.itis.liiceberg.common.exceptions.AppException
+import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
+import ru.itis.liiceberg.common.exceptions.runCatching
+import ru.itis.liiceberg.common.resources.ResourceManager
 import ru.itis.liiceberg.common.validation.UserDataValidator
+import ru.itis.liiceberg.common.validation.ValidationResult
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
 
@@ -13,6 +18,8 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val validator: UserDataValidator,
     private val registerUseCase: RegisterUseCase,
+    private val exceptionHandler: ExceptionHandlerDelegate,
+    private val resManager: ResourceManager,
 ) : BaseViewModel<SignUpState, SignUpEvent, SignUpAction>(
     SignUpState()
 ) {
@@ -44,20 +51,27 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpEvent.OnSignUpWithGoogle -> {
-                if (validateAll()) {
-
-                }
             }
         }
     }
 
     private fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
-            runCatching {
+            runCatching(exceptionHandler) {
                 registerUseCase.invoke(username, email, password)
             }.onSuccess {
                 viewAction = SignUpAction.GoToSignIn
-            }.onFailure {
+            }.onFailure { ex ->
+                if (ex is AppException.SuchEmailAlreadyRegistered) {
+                    viewState = viewState.copy(
+                        emailValidation = ValidationResult(
+                            isValid = false,
+                            error = resManager.getString(R.string.invalid_email_error)
+                        )
+                    )
+                } else {
+                    showError(ex.message)
+                }
             }
         }
     }

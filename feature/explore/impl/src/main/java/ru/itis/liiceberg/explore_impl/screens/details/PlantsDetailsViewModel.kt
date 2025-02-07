@@ -12,7 +12,7 @@ import javax.inject.Inject
 class PlantsDetailsViewModel @Inject constructor(
     private val getPlantByIdUseCase: GetPlantByIdUseCase,
     private val addFavouriteUseCase: AddFavouriteUseCase,
-) : BaseViewModel<PlantsDetailsState, PlantsDetailsEvent, PlantsDetailsAction>(PlantsDetailsState(null)) {
+) : BaseViewModel<PlantsDetailsState, PlantsDetailsEvent, PlantsDetailsAction>(PlantsDetailsState()) {
 
     fun addFavourite(plantId: String) {
         viewModelScope.launch {
@@ -20,8 +20,8 @@ class PlantsDetailsViewModel @Inject constructor(
                 addFavouriteUseCase.invoke(plantId)
             }.onSuccess {
 
-            }.onFailure {
-
+            }.onFailure { ex ->
+                showError(ex.message)
             }
         }
     }
@@ -34,6 +34,8 @@ class PlantsDetailsViewModel @Inject constructor(
                 viewState = viewState.copy(
                     plantModel = it
                 )
+            }.onFailure { ex ->
+                showError(ex.message)
             }
         }
     }

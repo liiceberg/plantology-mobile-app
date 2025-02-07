@@ -4,7 +4,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.auth_api.domain.usecase.LoginUseCase
+import ru.itis.liiceberg.auth_impl.R
+import ru.itis.liiceberg.common.resources.ResourceManager
 import ru.itis.liiceberg.common.validation.UserDataValidator
+import ru.itis.liiceberg.common.validation.ValidationResult
+import ru.itis.liiceberg.common.exceptions.AppException
+import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
+import ru.itis.liiceberg.common.exceptions.runCatching
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
 
@@ -12,6 +18,8 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val validator: UserDataValidator,
     private val loginUseCase: LoginUseCase,
+    private val exceptionHandler: ExceptionHandlerDelegate,
+    private val resManager: ResourceManager,
 ) : BaseViewModel<SignInState, SignInEvent, SignInAction>(
     SignInState()
 ) {
@@ -33,21 +41,27 @@ class SignInViewModel @Inject constructor(
             }
 
             is SignInEvent.OnSignInWithGoogle -> {
-                if (validateAll()) {
-
-                }
             }
         }
     }
 
     private fun login(email: String, password: String) {
         viewModelScope.launch {
-            runCatching {
+            runCatching(exceptionHandler) {
                 loginUseCase.invoke(email, password)
             }.onSuccess {
                 viewAction = SignInAction.GoToMainPage
-            }.onFailure {
-
+            }.onFailure { ex ->
+                if (ex is AppException.InvalidCredentials) {
+                    viewState = viewState.copy(
+                        emailValidation = ValidationResult(
+                            isValid = false,
+                            error = resManager.getString(R.string.invalid_credentials_error)
+                        )
+                    )
+                } else {
+                    showError(ex.message)
+                }
             }
         }
     }

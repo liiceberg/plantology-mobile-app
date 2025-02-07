@@ -27,8 +27,8 @@ class SettingsViewModel @Inject constructor(
                 logOutUseCase.invoke()
             }.onSuccess {
                 viewAction = SettingsAction.GoToSignIn
-            }.onFailure {
-
+            }.onFailure { ex ->
+                showError(ex.message)
             }
         }
     }
@@ -42,8 +42,8 @@ class SettingsViewModel @Inject constructor(
                     username = it.username,
                     email = it.email
                 )
-            }.onFailure {
-
+            }.onFailure { ex ->
+                showError(ex.message)
             }
         }
     }

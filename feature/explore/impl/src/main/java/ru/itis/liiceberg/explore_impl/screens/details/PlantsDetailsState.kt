@@ -6,5 +6,5 @@ import ru.itis.liiceberg.ui.model.UiState
 
 @Immutable
 data class PlantsDetailsState(
-    val plantModel: PlantModel?,
+    val plantModel: PlantModel? = null,
 ) : UiState

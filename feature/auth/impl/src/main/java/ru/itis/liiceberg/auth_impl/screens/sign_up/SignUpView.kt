@@ -1,6 +1,7 @@
 package ru.itis.liiceberg.auth_impl.screens.sign_up
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import ru.itis.liiceberg.auth_impl.R
 import ru.itis.liiceberg.ui.components.AppPrimaryIcon
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
+import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
@@ -37,6 +39,7 @@ fun SignUpView(
     toSignIn: () -> Unit
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+    val error by viewModel.error().collectAsStateWithLifecycle()
 
     SignUpView(
         state = state,
@@ -47,6 +50,7 @@ fun SignUpView(
         onSignUpClicked = { viewModel.obtainEvent(SignUpEvent.OnSignUp) },
         onSignUpWithGoogleClicked = { viewModel.obtainEvent(SignUpEvent.OnSignUpWithGoogle) },
         toSignIn = toSignIn,
+        error = error,
     )
 
     LaunchedEffect(Unit) {
@@ -66,96 +70,102 @@ private fun SignUpView(
     onEmailFilled: (email: String) -> Unit,
     onPasswordFilled: (password: String) -> Unit,
     onConfirmPasswordFilled: (password: String) -> Unit,
+    error: String?,
     onSignUpClicked: () -> Unit,
     onSignUpWithGoogleClicked: () -> Unit,
     toSignIn: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        with(state) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SimpleIconButton(
-                    icon = Icons.AutoMirrored.Filled.ArrowBack,
-                    size = 24.dp
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            with(state) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    SimpleIconButton(
+                        icon = Icons.AutoMirrored.Filled.ArrowBack,
+                        size = 24.dp
+                    ) {
+                        toSignIn()
+                    }
+                    AppPrimaryIcon(28.dp)
+                }
+
+                HeadlineLargeText(
+                    text = stringResource(id = R.string.sign_up_title_text),
+                    Modifier.padding(top = 72.dp)
+                )
+                SimpleTextField(
+                    value = username,
+                    label = stringResource(id = R.string.username_label),
+                    supportingText = usernameValidation.error,
+                    modifier = Modifier.padding(top = 72.dp)
+                ) {
+                    onUsernameFilled(it)
+                }
+
+                SimpleTextField(
+                    value = email,
+                    label = stringResource(id = R.string.email_label),
+                    supportingText = emailValidation.error
+                ) {
+                    onEmailFilled(it)
+                }
+                PasswordTextField(
+                    value = password,
+                    label = stringResource(id = R.string.password_label),
+                    supportingText = passwordValidation.error
+                ) {
+                    onPasswordFilled(it)
+                }
+                PasswordTextField(
+                    value = confirmPassword,
+                    label = stringResource(id = R.string.confirm_password_label),
+                    supportingText = confirmPasswordValidation.error
+                ) {
+                    onConfirmPasswordFilled(it)
+                }
+
+                val enableButtons = usernameValidation.isValid && emailValidation.isValid
+                        && passwordValidation.isValid && confirmPasswordValidation.isValid
+
+                SimpleButton(
+                    text = stringResource(id = R.string.sign_up),
+                    modifier = Modifier.padding(top = 32.dp),
+                    enabled = enableButtons,
+                ) {
+                    onSignUpClicked()
+                }
+                BodyMediumText(
+                    text = stringResource(id = R.string.or),
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+                SimpleButtonWithStartIcon(
+                    text = stringResource(id = R.string.sign_up_with_google),
+                    icon = painterResource(id = R.drawable.icons8_google),
+                    enabled = enableButtons,
+                ) {
+                    onSignUpWithGoogleClicked()
+                }
+                BodyTextWithLink(
+                    stringResource(id = R.string.have_account),
+                    stringResource(id = R.string.sign_in),
+                    modifier = Modifier.padding(top = 48.dp)
                 ) {
                     toSignIn()
                 }
-                AppPrimaryIcon(28.dp)
             }
-
-            HeadlineLargeText(
-                text = stringResource(id = R.string.sign_up_title_text),
-                Modifier.padding(top = 72.dp)
-            )
-            SimpleTextField(
-                value = username,
-                label = stringResource(id = R.string.username_label),
-                supportingText = usernameValidation.error,
-                modifier = Modifier.padding(top = 72.dp)
-            ) {
-                onUsernameFilled(it)
-            }
-
-            SimpleTextField(
-                value = email,
-                label = stringResource(id = R.string.email_label),
-                supportingText = emailValidation.error
-            ) {
-                onEmailFilled(it)
-            }
-            PasswordTextField(
-                value = password,
-                label = stringResource(id = R.string.password_label),
-                supportingText = passwordValidation.error
-            ) {
-                onPasswordFilled(it)
-            }
-            PasswordTextField(
-                value = confirmPassword,
-                label = stringResource(id = R.string.confirm_password_label),
-                supportingText = confirmPasswordValidation.error
-            ) {
-                onConfirmPasswordFilled(it)
-            }
-
-            val enableButtons = usernameValidation.isValid && emailValidation.isValid
-                    && passwordValidation.isValid && confirmPasswordValidation.isValid
-
-            SimpleButton(
-                text = stringResource(id = R.string.sign_up),
-                modifier = Modifier.padding(top = 32.dp),
-                enabled = enableButtons,
-            ) {
-                onSignUpClicked()
-            }
-            BodyMediumText(
-                text = stringResource(id = R.string.or),
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-            SimpleButtonWithStartIcon(
-                text = stringResource(id = R.string.sign_up_with_google),
-                icon = painterResource(id = R.drawable.icons8_google),
-                enabled = enableButtons,
-            ) {
-                onSignUpWithGoogleClicked()
-            }
-            BodyTextWithLink(
-                stringResource(id = R.string.have_account),
-                stringResource(id = R.string.sign_in),
-                modifier = Modifier.padding(top = 48.dp)
-            ) {
-                toSignIn()
-            }
+        }
+        error?.let {
+            ErrorMessage(errorText = error)
         }
     }
 }
@@ -170,8 +180,10 @@ private fun SigUpPreview() {
             {},
             {},
             {},
+            null,
             {},
             {},
-            {})
+            {},
+        )
     }
 }
