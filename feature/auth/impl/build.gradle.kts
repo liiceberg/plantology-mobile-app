@@ -9,6 +9,4 @@ dependencies {
     implementation(projects.coreData)
     implementation(projects.coreUi)
     implementation(projects.featureAuthApi)
-
-    testImplementation(*Libs.bundle.unitTests)
 }

@@ -6,13 +6,10 @@ plugins {
 android("ru.itis.liiceberg.common")
 
 dependencies {
-    implementation(*Libs.bundle.network)
-    implementation(*Libs.bundle.firebase)
     implementation(*Libs.bundle.navigation)
     implementation(*Libs.bundle.serializationJson)
     implementation(*Libs.bundle.splashScreen)
-
-    testImplementation(*Libs.bundle.unitTests)
+    implementation(*Libs.bundle.firebase_common)
 }
 repositories {
     google()

@@ -24,6 +24,7 @@ object Libs {
     private const val hiltVersion = "2.51"
     private const val hiltJetpackVersion = "1.2.0"
 
+    private const val firebaseCommonVersion = "21.0.0"
     private const val crashlyticsGradleVersion = "2.9.9"
     private const val crashlyticsVersion = "18.6.2"
     private const val analyticsVersion = "21.5.1"
@@ -33,6 +34,9 @@ object Libs {
     private const val storageVersion = "21.0.1"
     private const val authVersion = "23.1.0"
     private const val databaseVersion = "21.0.0"
+    private const val performanceVersion = "21.0.4"
+    private const val performancePluginVersion = "1.4.2"
+
     private const val coilVersion = "3.0.4"
 
     private const val splashScreenVersion = "1.0.0"
@@ -69,6 +73,7 @@ object Libs {
         const val google_services = "com.google.gms.google-services"
         const val compose = "org.jetbrains.kotlin.plugin.compose"
         const val crashlytics = "com.google.firebase.crashlytics"
+        const val performance = "com.google.firebase.firebase-perf"
     }
 
     object classpath {
@@ -77,6 +82,7 @@ object Libs {
         const val kotlin_serialization = "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         const val crashlytics_gradle =
             "com.google.firebase:firebase-crashlytics-gradle:$crashlyticsGradleVersion"
+        const val performance = "com.google.firebase:perf-plugin:$performancePluginVersion"
         const val hilt_gradle = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         const val navigation_safeArgs_gradle =
             "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
@@ -139,11 +145,14 @@ object Libs {
             "androidx.navigation:navigation-compose:$navVersion"
         )
 
+        val firebase_common = arrayOf("com.google.firebase:firebase-common-ktx:$firebaseCommonVersion")
+
         val firebase = arrayOf(
             "com.google.firebase:firebase-crashlytics-ktx:$crashlyticsVersion",
             "com.google.firebase:firebase-analytics-ktx:$analyticsVersion",
             "com.google.firebase:firebase-messaging-ktx:$messagingVersion",
-            "com.google.firebase:firebase-config-ktx:$configVersion"
+            "com.google.firebase:firebase-config-ktx:$configVersion",
+            "com.google.firebase:firebase-perf-ktx:$performanceVersion"
         )
 
         val firebase_auth = arrayOf(

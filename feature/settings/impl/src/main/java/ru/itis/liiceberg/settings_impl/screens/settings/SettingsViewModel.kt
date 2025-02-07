@@ -1,6 +1,5 @@
 package ru.itis.liiceberg.settings_impl.screens.settings
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

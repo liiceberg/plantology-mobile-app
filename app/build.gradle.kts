@@ -2,6 +2,7 @@ plugins {
     id(Libs.plugin.application)
     id(Libs.plugin.google_services)
     id(Libs.plugin.crashlytics)
+    id(Libs.plugin.performance)
 }
 
 android("ru.itis.liiceberg.app")
@@ -17,7 +18,7 @@ dependencies {
 
     implementation(*Libs.bundle.navigation)
     implementation(*Libs.bundle.splashScreen)
-    implementation(*Libs.bundle.network)
     implementation(*Libs.bundle.firebase_auth)
+    implementation(*Libs.bundle.firebase)
     implementation(*Libs.bundle.coil)
 }

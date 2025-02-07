@@ -34,13 +34,13 @@ fun SearchView(
                 query = textFieldState.text.toString(),
                 expanded = expanded,
                 leadingIcon = { SimpleIcon(Icons.Default.Search, 24.dp, tint = Neutral600) },
-                onExpandedChange = {expanded = expanded.not()},
+                onExpandedChange = {},
                 onQueryChange = { query -> query.also { textFieldState.setTextAndPlaceCursorAtEnd(it) } },
                 onSearch = onSearch,
             )
         },
         expanded = expanded,
-        onExpandedChange = {expanded = expanded.not()},
+        onExpandedChange = {},
         modifier = modifier
     ) {
     }
