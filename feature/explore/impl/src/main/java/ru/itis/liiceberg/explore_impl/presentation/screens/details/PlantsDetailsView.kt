@@ -28,12 +28,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.itis.liiceberg.common.util.showShortToast
 import ru.itis.liiceberg.explore_api.domain.model.PlantModel
 import ru.itis.liiceberg.explore_impl.R
 import ru.itis.liiceberg.ui.components.BodyMediumText
@@ -65,12 +67,16 @@ fun PlantsDetailsView(
 
     PlantsDetailsView(state, error, onBackClick, viewModel::addFavourite)
 
+    val ctx = LocalContext.current
     LaunchedEffect(Unit) {
 
         viewModel.loadInfo(plantId)
 
         viewModel.viewActions().collect { action ->
             when (action) {
+                is PlantsDetailsAction.ShowSuccessAddToFavoriteMessage -> {
+                    ctx.showShortToast(R.string.success_add_favourite)
+                }
                 else -> {}
             }
         }

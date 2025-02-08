@@ -11,7 +11,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,40 @@ fun SimpleButton(
     onClick: () -> Unit
 ) {
     Button(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
+        TitleSmallText(text = text)
+    }
+}
+
+@Composable
+fun SimpleOutlinedButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    OutlinedButton(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
+        TitleSmallText(text = text)
+    }
+}
+
+@Composable
+fun SimpleOutlinedButtonWithStartIcon(
+    text: String,
+    icon: Painter,
+    modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colorScheme.outline,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    OutlinedButton(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(18.dp),
+            tint = tint
+        )
         TitleSmallText(text = text)
     }
 }
@@ -107,7 +142,12 @@ fun PreviewButton() {
     AppTheme {
         Column {
             SimpleButton(text = "Example") {}
+            SimpleOutlinedButton(text = "Example") {}
             SimpleButtonWithStartIcon(
+                text = "Example",
+                icon = painterResource(id = R.drawable.app_icon_primary),
+            ) {}
+            SimpleOutlinedButtonWithStartIcon(
                 text = "Example",
                 icon = painterResource(id = R.drawable.app_icon_primary),
             ) {}

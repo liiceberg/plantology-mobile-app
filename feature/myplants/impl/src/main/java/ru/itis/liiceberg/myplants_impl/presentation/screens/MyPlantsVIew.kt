@@ -40,6 +40,7 @@ import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
+import ru.itis.liiceberg.ui.components.SimpleOutlinedButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SmallCard
 import ru.itis.liiceberg.ui.components.TitleMediumText
 import ru.itis.liiceberg.ui.theme.AppTheme
@@ -49,6 +50,7 @@ import ru.itis.liiceberg.ui.R as R_UI
 fun MyPlantsView(
     viewModel: MyPlantsViewModel = hiltViewModel(),
     goToSettings: () -> Unit,
+    goToExplore: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
     val error by viewModel.error().collectAsStateWithLifecycle()
@@ -57,6 +59,7 @@ fun MyPlantsView(
         state = state,
         goToSettings = goToSettings,
         onRemove = { viewModel.obtainEvent(MyPlantsEvent.RemovePlant(it)) },
+        toExplore = goToExplore,
         error = error,
     )
 
@@ -77,6 +80,7 @@ private fun MyPlantsView(
     state: MyPlantsState,
     goToSettings: () -> Unit,
     onRemove: (String) -> Unit,
+    toExplore: () -> Unit,
     error: String?,
 ) {
     Box(Modifier.fillMaxSize()) {
@@ -95,21 +99,31 @@ private fun MyPlantsView(
                 )
             },
         ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(top = 16.dp)
-            ) {
-                items(state.myPlants) {
-                    PlantItem(
-                        it.name,
-                        it.scientificName,
-                        it.image,
-                        it.watering,
-                        it.fertilizer
-                    ) { onRemove.invoke(it.id) }
+            Column {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(top = 16.dp)
+                ) {
+                    items(state.myPlants) {
+                        PlantItem(
+                            it.name,
+                            it.scientificName,
+                            it.image,
+                            it.watering,
+                            it.fertilizer
+                        ) { onRemove.invoke(it.id) }
+                    }
                 }
+                SimpleOutlinedButtonWithStartIcon(
+                    text = stringResource(R.string.more_plants),
+                    icon = painterResource(id = R_UI.drawable.plus),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .padding(top = 20.dp),
+                    onClick = toExplore,
+                )
             }
         }
         error?.let {
@@ -163,26 +177,29 @@ private fun PlantItem(
                     }
                 }
             }
-            Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                if (watering <= 0 || fertilizer <= 0) {
-                    SimpleButtonWithStartIcon(
-                        text = stringResource(R.string.add_reminder),
-                        icon = painterResource(id = R_UI.drawable.alarm),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    ) {}
-                } else {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp), horizontalArrangement = Arrangement.Start
+            ) {
+                if (watering > 0 && fertilizer > 0) {
                     SmallCard(
                         title = stringResource(R.string.water),
                         icon = painterResource(id = R_UI.drawable.water_drops),
                         text = stringResource(R.string.water_in_days, watering),
-                        modifier = Modifier.padding(12.dp)
                     )
                     SmallCard(
                         title = stringResource(R.string.fertilizer),
                         icon = painterResource(R_UI.drawable.fertilizer),
                         text = stringResource(R.string.fertilizer_in_week, fertilizer),
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier.padding(start = 32.dp)
                     )
+                } else {
+                    SimpleButtonWithStartIcon(
+                        text = stringResource(R.string.add_reminder),
+                        icon = painterResource(id = R_UI.drawable.alarm),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    ) {}
                 }
             }
         }
@@ -208,7 +225,7 @@ private fun MyPlantsPreview() {
                             2,
                         )
                     )
-                ), {}, {}, null
+                ), {}, {}, {}, null
             )
         }
     }

@@ -3,6 +3,8 @@ package ru.itis.liiceberg.myplants_impl.presentation.screens
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
+import ru.itis.liiceberg.common.exceptions.runCatching
 import ru.itis.liiceberg.myplants_impl.domain.usecase.GetMyPlantsUseCase
 import ru.itis.liiceberg.myplants_impl.domain.usecase.RemoveFavouriteUseCase
 import ru.itis.liiceberg.ui.base.BaseViewModel
@@ -12,6 +14,7 @@ import javax.inject.Inject
 class MyPlantsViewModel @Inject constructor(
     private val getMyPlantsUseCase: GetMyPlantsUseCase,
     private val removeFavouriteUseCase: RemoveFavouriteUseCase,
+    private val exceptionHandler: ExceptionHandlerDelegate,
 ) : BaseViewModel<MyPlantsState, MyPlantsEvent, MyPlantsAction>(
     MyPlantsState()
 ) {
@@ -28,7 +31,7 @@ class MyPlantsViewModel @Inject constructor(
 
     private fun getPlants() {
         viewModelScope.launch {
-            runCatching {
+            runCatching(exceptionHandler) {
                 getMyPlantsUseCase.invoke()
             }.onSuccess {
                 viewState = viewState.copy(myPlants = it)
@@ -40,7 +43,7 @@ class MyPlantsViewModel @Inject constructor(
 
     private fun removeMyPlant(id: String) {
         viewModelScope.launch {
-            runCatching {
+            runCatching(exceptionHandler) {
                 removeFavouriteUseCase.invoke(id)
             }.onSuccess {
                 val newList = viewState.myPlants.filter { it.id != id }.toList()

@@ -15,6 +15,7 @@
     <string name="sign_up">Sign up</string>
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="have_account">Have an account?</string>
+    <string name="success_create_account">Account was successfully created</string>
 
     <string name="username_label">Username</string>
     <string name="email_label">Email</string>

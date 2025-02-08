@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.itis.liiceberg.common.util.showShortToast
 import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
 import ru.itis.liiceberg.ui.components.ErrorMessage
@@ -48,9 +50,13 @@ fun ChangePasswordView(
         error = error,
     )
 
+    val ctx = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.viewActions().collect { action ->
             when (action) {
+                is ChangePasswordAction.ShowSuccessResult -> {
+                    ctx.showShortToast(R.string.change_password_success_message)
+                }
                 else -> {}
             }
         }

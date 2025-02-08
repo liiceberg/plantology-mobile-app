@@ -21,8 +21,15 @@ class ExploreRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPlant(id: String): PlantModel {
+        val saved = userDataStore.getUserId()
+            ?.let { userId ->
+                favouritesFirebaseDao.getFavorites(userId)
+            }
+            ?.map { fav -> fav.plantId }
+            ?.contains(id)
+
         return exploreMapper.mapFirebasePlantToPlantModel(
-            plantFirebaseDao.getPlantById(id)
+            plantFirebaseDao.getPlantById(id), saved
         )
     }
 

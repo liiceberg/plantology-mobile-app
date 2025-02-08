@@ -7,5 +7,6 @@
     <string name="fertilizer">Fertilizer</string>
     <string name="water">Water</string>
     <string name="fertilizer_in_week">in %1$s week</string>
+    <string name="more_plants">More plants</string>
 
 </resources>

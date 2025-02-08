@@ -38,7 +38,7 @@ fun SmallCard(
     text: String
     ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        SimpleIcon(painter = icon, size = 32.dp, modifier = Modifier.padding(end = 8.dp))
+        DarkIcon(painter = icon, modifier = Modifier.padding(end = 16.dp))
         Column {
             TitleSmallText(text = title)
             BodySmallText(text = text)
@@ -116,7 +116,7 @@ fun PreviewCard() {
 
     AppTheme {
         Column {
-            SmallCard(title = "title", icon = painterResource(id = R.drawable.app_icon_primary), text = "description")
+            SmallCard(title = "title", icon = painterResource(id = R.drawable.globe), text = "description")
             }
         }
 }

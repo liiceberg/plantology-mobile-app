@@ -137,7 +137,7 @@ private fun SettingsItem(
                 value?.let {
                     TitleSmallText(
                         text = value,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
                 onClick?.let {

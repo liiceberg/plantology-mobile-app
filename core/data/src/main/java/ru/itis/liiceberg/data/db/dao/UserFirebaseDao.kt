@@ -6,9 +6,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import ru.itis.liiceberg.common.exceptions.AppException
 import ru.itis.liiceberg.data.db.FirestoreCollections
 import ru.itis.liiceberg.data.db.model.User
-import ru.itis.liiceberg.common.exceptions.AppException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,6 +28,7 @@ class UserFirebaseDao @Inject constructor(
                 is FirebaseAuthInvalidCredentialsException -> {
                     AppException.InvalidCredentials(ex.message ?: "")
                 }
+
                 else -> ex
             }
         }
@@ -36,21 +37,21 @@ class UserFirebaseDao @Inject constructor(
     suspend fun createUserWithEmailAndPassword(email: String, password: String, username: String) {
         runCatching {
             auth.createUserWithEmailAndPassword(email, password).await()
-            getCurrentUserId()?.let { id ->
-                saveUser(
-                    userId = id,
-                    email = email,
-                    password = password,
-                    username = username
-                )
-            }
         }.getOrElse { ex ->
             when (ex) {
                 is FirebaseAuthUserCollisionException -> {
-                    AppException.SuchEmailAlreadyRegistered(ex.message ?: "")
+                    throw AppException.SuchEmailAlreadyRegistered(ex.message ?: "")
                 }
                 else -> throw ex
             }
+        }
+        getCurrentUserId()?.let { id ->
+            saveUser(
+                userId = id,
+                email = email,
+                password = password,
+                username = username
+            )
         }
     }
 
@@ -86,8 +87,8 @@ class UserFirebaseDao @Inject constructor(
         val user = getCurrentUser()
         val credential = EmailAuthProvider.getCredential(user!!.email, user.password)
         auth.currentUser?.run {
-            reauthenticate(credential)
-            updatePassword(newPassword)
+            reauthenticate(credential).await()
+            updatePassword(newPassword).await()
             currentUser = currentUser?.copy(password = newPassword)
             firestore.collection(FirestoreCollections.USERS)
                 .document(uid)

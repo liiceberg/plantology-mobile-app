@@ -54,7 +54,7 @@ class SignInViewModel @Inject constructor(
             }.onFailure { ex ->
                 if (ex is AppException.InvalidCredentials) {
                     viewState = viewState.copy(
-                        emailValidation = ValidationResult(
+                        passwordValidation = ValidationResult(
                             isValid = false,
                             error = resManager.getString(R.string.invalid_credentials_error)
                         )

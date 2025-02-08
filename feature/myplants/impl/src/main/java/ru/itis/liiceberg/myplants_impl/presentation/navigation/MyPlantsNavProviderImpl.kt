@@ -17,7 +17,8 @@ class MyPlantsNavProviderImpl @Inject constructor() : MyPlantsNavProvider {
         composable<Route.BottomMenu.MyPlants> {
             onBottomBarVisibilityChanged(true)
             MyPlantsView(
-                goToSettings = { controller.navigate(Route.Settings.Main) }
+                goToSettings = { controller.navigate(Route.Settings.Main) },
+                goToExplore = { controller.navigate(Route.BottomMenu.Explore) }
             )
         }
 

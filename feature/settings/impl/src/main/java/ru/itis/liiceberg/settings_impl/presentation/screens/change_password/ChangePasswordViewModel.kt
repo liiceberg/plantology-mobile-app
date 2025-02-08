@@ -4,12 +4,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
+import ru.itis.liiceberg.common.exceptions.runCatching
 import ru.itis.liiceberg.common.resources.ResourceManager
 import ru.itis.liiceberg.common.validation.UserDataValidator
 import ru.itis.liiceberg.common.validation.ValidationResult
+import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.settings_impl.domain.usecase.ChangePasswordUseCase
 import ru.itis.liiceberg.settings_impl.domain.usecase.VerifyCredentialsUseCase
-import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import javax.inject.Inject
 
@@ -19,6 +21,7 @@ class ChangePasswordViewModel @Inject constructor(
     private val verifyCredentialsUseCase: VerifyCredentialsUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase,
     private val resManager: ResourceManager,
+    private val exceptionHandler: ExceptionHandlerDelegate,
 ) : BaseViewModel<ChangePasswordState, ChangePasswordEvent, ChangePasswordAction>(
     ChangePasswordState()
 ) {
@@ -46,12 +49,11 @@ class ChangePasswordViewModel @Inject constructor(
 
     private fun changePassword() {
         viewModelScope.launch {
-            runCatching {
+            runCatching(exceptionHandler) {
                 changePasswordUseCase.invoke(viewState.newPassword)
             }.onSuccess {
-                viewAction = ChangePasswordAction.ShowPasswordChangedResults(true)
+                viewAction = ChangePasswordAction.ShowSuccessResult
             }.onFailure { ex ->
-                viewAction = ChangePasswordAction.ShowPasswordChangedResults(false)
                 showError(ex.message)
             }
         }
@@ -59,7 +61,7 @@ class ChangePasswordViewModel @Inject constructor(
 
     private fun validateCurrentPassword(password: String) {
         runBlocking {
-            runCatching {
+            runCatching(exceptionHandler) {
                 verifyCredentialsUseCase.invoke(password)
             }.onSuccess { isValid ->
                 viewState = viewState.copy(

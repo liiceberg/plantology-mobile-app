@@ -60,7 +60,7 @@ class SignUpViewModel @Inject constructor(
             runCatching(exceptionHandler) {
                 registerUseCase.invoke(username, email, password)
             }.onSuccess {
-                viewAction = SignUpAction.GoToSignIn
+                viewAction = SignUpAction.RedirectOnSuccess
             }.onFailure { ex ->
                 if (ex is AppException.SuchEmailAlreadyRegistered) {
                     viewState = viewState.copy(

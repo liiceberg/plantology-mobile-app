@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.auth_impl.R
+import ru.itis.liiceberg.common.util.showShortToast
 import ru.itis.liiceberg.ui.components.AppPrimaryIcon
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
@@ -53,10 +55,14 @@ fun SignUpView(
         error = error,
     )
 
+    val ctx = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.viewActions().collect { action ->
             when (action) {
-                is SignUpAction.GoToSignIn -> toSignIn()
+                is SignUpAction.RedirectOnSuccess -> {
+                    ctx.showShortToast(R.string.success_create_account)
+                    toSignIn()
+                }
                 else -> {}
             }
         }

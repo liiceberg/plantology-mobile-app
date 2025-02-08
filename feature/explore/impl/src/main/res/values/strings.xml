@@ -20,4 +20,6 @@
     <string name="toxicity_toxic">Toxic</string>
     <string name="toxicity_non_toxic">Non toxic</string>
     <string name="explore_top_bar_text">Explore</string>
+
+    <string name="success_add_favourite">Plant was added to favourites</string>
 </resources>

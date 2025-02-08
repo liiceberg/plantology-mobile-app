@@ -16,7 +16,7 @@ class ExploreMapper @Inject constructor() {
         )
     }
 
-    fun mapFirebasePlantToPlantModel(plant: Plant?): PlantModel {
+    fun mapFirebasePlantToPlantModel(plant: Plant?, saved: Boolean?): PlantModel {
         plant?.run {
             return PlantModel(
                 id = id ?: "",
@@ -37,7 +37,7 @@ class ExploreMapper @Inject constructor() {
                 maxTemperature = temperature?.max,
                 minTemperature = temperature?.min,
                 toxicity = toxicity,
-                saved = false
+                saved = saved ?: false
             )
         }
         throw NullPointerException()

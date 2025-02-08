@@ -12,9 +12,11 @@ class MyPlantsMapper @Inject constructor() {
             name = plant?.name ?: "",
             scientificName = plant?.scientificName ?: "",
             image = plant?.image?.firstOrNull() ?: "",
-            fertilizer = favourite?.fertilizer ?: 0,
-            watering = favourite?.watering ?: 0,
-            location = ""
+//            fertilizer = favourite?.fertilizer ?: 0,
+//            watering = favourite?.watering ?: 0,
+            fertilizer = 4,
+            watering = 1,
+            location = "",
         )
     }
 }

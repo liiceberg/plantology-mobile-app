@@ -14,5 +14,4 @@
     <string name="password_lower_case_char_error">Password must contain lower case character</string>
     <string name="password_digit_char_error">Password must contain digit</string>
     <string name="passwords_not_equals_error">Passwords not equals</string>
-    <string name="account_created">Account was successfully created</string>
 </resources>
