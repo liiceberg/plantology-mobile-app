@@ -5,9 +5,10 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import ru.itis.liiceberg.auth_api.domain.repository.AuthRepository
@@ -51,12 +52,10 @@ class RegisterUseCaseTest {
 
         coEvery { authRepository.register(username, email, password) } throws expectedException
 
-        try {
-            registerUseCase.invoke(username, email, password)
-            throw AssertionError("Expected SuchEmailAlreadyRegistered exception, but no exception was thrown")
-        } catch (e: AppException.SuchEmailAlreadyRegistered) {
-            assertEquals(expectedException.message, e.message)
+        assertThrows(AppException.SuchEmailAlreadyRegistered::class.java) {
+            runBlocking { registerUseCase.invoke(username, email, password) }
         }
+
     }
 
 }

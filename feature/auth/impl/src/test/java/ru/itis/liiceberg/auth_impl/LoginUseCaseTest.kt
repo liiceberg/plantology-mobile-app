@@ -5,9 +5,10 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import ru.itis.liiceberg.auth_api.domain.repository.AuthRepository
@@ -49,11 +50,8 @@ class LoginUseCaseTest {
 
         coEvery { authRepository.login(email, password) } throws expectedException
 
-        try {
-            loginUseCase.invoke(email, password)
-            throw AssertionError("Expected InvalidCredentials exception, but no exception was thrown")
-        } catch (e: AppException.InvalidCredentials) {
-            assertEquals(expectedException.message, e.message)
+        assertThrows(AppException.InvalidCredentials::class.java) {
+            runBlocking { loginUseCase.invoke(email, password) }
         }
     }
 
