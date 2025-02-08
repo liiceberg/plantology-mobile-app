@@ -1,6 +1,7 @@
 plugins {
     id(Libs.plugin.gradleVersionsPlugin) version (Libs.gradleVersionsPluginVersion)
     id(Libs.plugin.compose) version (Libs.composeVersion)
+    id(Libs.plugin.detect) version (Libs.detectVersion)
 }
 
 buildscript {
@@ -18,7 +19,6 @@ buildscript {
         classpath(Libs.classpath.google_services)
         classpath(Libs.classpath.crashlytics_gradle)
         classpath(Libs.classpath.performance)
-
     }
 }
 

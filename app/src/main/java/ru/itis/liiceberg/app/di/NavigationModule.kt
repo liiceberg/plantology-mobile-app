@@ -4,14 +4,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.itis.liiceberg.auth_impl.navigation.AuthNavProviderImpl
+import ru.itis.liiceberg.auth_impl.presentation.navigation.AuthNavProviderImpl
 import ru.itis.liiceberg.common.navigation.AuthNavProvider
 import ru.itis.liiceberg.common.navigation.ExploreNavProvider
 import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
 import ru.itis.liiceberg.common.navigation.SettingsNavProvider
-import ru.itis.liiceberg.explore_impl.navigation.ExploreNavProviderImpl
-import ru.itis.liiceberg.myplants_impl.navigation.MyPlantsNavProviderImpl
-import ru.itis.liiceberg.settings_impl.navigation.SettingsNavProviderImpl
+import ru.itis.liiceberg.explore_impl.presentation.navigation.ExploreNavProviderImpl
+import ru.itis.liiceberg.myplants_impl.presentation.navigation.MyPlantsNavProviderImpl
+import ru.itis.liiceberg.settings_impl.presentation.navigation.SettingsNavProviderImpl
 import javax.inject.Singleton
 
 @Module
