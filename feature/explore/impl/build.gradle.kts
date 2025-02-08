@@ -9,4 +9,6 @@ dependencies {
     implementation(projects.coreData)
     implementation(projects.coreUi)
     implementation(projects.featureExploreApi)
+
+    testImplementation(*Libs.bundle.unitTests)
 }

@@ -92,13 +92,6 @@ fun Project.lifecycle() {
     }
 }
 
-fun Project.room() {
-    dependencies {
-        implementation(*Libs.bundle.room)
-        kapt(*Libs.bundle.roomKapt)
-    }
-}
-
 fun Project.android(namespace: String) {
     common(namespace)
     uiComponents()

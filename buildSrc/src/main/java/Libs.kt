@@ -47,8 +47,9 @@ object Libs {
     const val navVersion = "2.8.2"
 
     const val junitVersion = "4.12"
-    const val mockitoVersion = "2.23.0"
-    const val robolectricVersion = "4.1"
+    const val mockitoVersion = "1.13.16"
+    const val coroutinesTest = "1.10.1"
+    const val mockitoKotlinVersion = "5.1.0"
 
     const val gradleVersionsPluginVersion = "0.51.0"
 
@@ -180,7 +181,9 @@ object Libs {
 
         val unitTests = arrayOf(
             "junit:junit:$junitVersion",
-            "org.mockito:mockito-inline:$mockitoVersion"
+            "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTest",
+            "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion",
+            "io.mockk:mockk:$mockitoVersion"
         )
 
         val coil = arrayOf(
