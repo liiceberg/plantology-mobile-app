@@ -14,10 +14,10 @@ val bottomNavItems = listOf(
     BottomNavItem(
         label = R.string.label_my_plants,
         icon = R.drawable.leaf,
-        route = getRoute(Route.BottomMenu.MyPlants) ,
+        route = getRoute(Route.BottomMenu.MyPlants),
     ),
 )
 
-private fun getRoute(route: Route) : String {
+private fun getRoute(route: Route): String {
     return route::class.qualifiedName.toString()
 }

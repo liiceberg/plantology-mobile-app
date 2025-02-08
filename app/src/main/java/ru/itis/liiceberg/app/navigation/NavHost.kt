@@ -17,19 +17,18 @@ fun NavHostContainer(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        ) {
-            with(navigator.auth) {
-                registerGraph(navController, onBottomBarVisibilityChanged)
-            }
-            with(navigator.explore) {
-                registerGraph(navController, onBottomBarVisibilityChanged)
-            }
-            with(navigator.myPlants) {
-                registerGraph(navController, onBottomBarVisibilityChanged)
-            }
-            with(navigator.settings) {
-                registerGraph(navController, onBottomBarVisibilityChanged)
-            }
+    ) {
+        with(navigator.auth) {
+            registerGraph(navController, onBottomBarVisibilityChanged)
         }
-
+        with(navigator.explore) {
+            registerGraph(navController, onBottomBarVisibilityChanged)
+        }
+        with(navigator.myPlants) {
+            registerGraph(navController, onBottomBarVisibilityChanged)
+        }
+        with(navigator.settings) {
+            registerGraph(navController, onBottomBarVisibilityChanged)
+        }
+    }
 }

@@ -12,7 +12,7 @@ class MainViewModel @Inject constructor(
     private val userDataStore: UserDataStore,
 ) : ViewModel() {
 
-    fun getStartDestination() : Route {
+    fun getStartDestination(): Route {
         return runBlocking {
             if (userDataStore.getUserId() != null) {
                 Route.BottomMenu.MyPlants

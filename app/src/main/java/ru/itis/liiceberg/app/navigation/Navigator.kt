@@ -9,5 +9,5 @@ data class Navigator(
     val auth: AuthNavProvider,
     val explore: ExploreNavProvider,
     val myPlants: MyPlantsNavProvider,
-    val settings: SettingsNavProvider
+    val settings: SettingsNavProvider,
 )
