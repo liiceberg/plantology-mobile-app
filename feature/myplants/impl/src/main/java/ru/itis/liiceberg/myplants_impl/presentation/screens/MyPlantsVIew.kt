@@ -37,12 +37,14 @@ import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
 import ru.itis.liiceberg.ui.components.ErrorMediumText
 import ru.itis.liiceberg.ui.components.ErrorMessage
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.SimpleOutlinedButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SmallCard
 import ru.itis.liiceberg.ui.components.TitleMediumText
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
@@ -53,25 +55,16 @@ fun MyPlantsView(
     goToExplore: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
     MyPlantsView(
         state = state,
         goToSettings = goToSettings,
         onRemove = { viewModel.obtainEvent(MyPlantsEvent.RemovePlant(it)) },
         toExplore = goToExplore,
-        error = error,
     )
 
     LaunchedEffect(Unit) {
         viewModel.init()
-
-        viewModel.viewActions().collect { action ->
-            when (action) {
-
-                else -> {}
-            }
-        }
     }
 }
 
@@ -81,7 +74,6 @@ private fun MyPlantsView(
     goToSettings: () -> Unit,
     onRemove: (String) -> Unit,
     toExplore: () -> Unit,
-    error: String?,
 ) {
     Box(Modifier.fillMaxSize()) {
         Scaffold(
@@ -126,8 +118,10 @@ private fun MyPlantsView(
                 )
             }
         }
-        error?.let {
-            ErrorMessage(errorText = it)
+        when(state.loadState){
+            is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
+            LoadState.Loading -> LoadingView()
+            else -> {}
         }
     }
 }
@@ -225,7 +219,7 @@ private fun MyPlantsPreview() {
                             2,
                         )
                     )
-                ), {}, {}, {}, null
+                ), {}, {}, {}
             )
         }
     }

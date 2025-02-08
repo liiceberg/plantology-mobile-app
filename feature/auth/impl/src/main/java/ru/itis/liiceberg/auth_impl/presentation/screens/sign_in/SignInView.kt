@@ -21,10 +21,12 @@ import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
 import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleTextField
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
@@ -34,7 +36,6 @@ fun SignInView(
     toMainPage: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
     SignInView(
         state = state,
@@ -43,7 +44,6 @@ fun SignInView(
         onSignInClicked = { viewModel.obtainEvent(SignInEvent.OnSignIn) },
         onSignInWithGoogleClicked = { viewModel.obtainEvent(SignInEvent.OnSignInWithGoogle) },
         toSignUp = toSignUp,
-        error = error,
     )
 
     LaunchedEffect(Unit) {
@@ -64,7 +64,6 @@ private fun SignInView(
     onSignInClicked: () -> Unit,
     onSignInWithGoogleClicked: () -> Unit,
     toSignUp: () -> Unit,
-    error: String?,
 ) {
     Box(Modifier.fillMaxSize()) {
         with(state) {
@@ -123,8 +122,10 @@ private fun SignInView(
                     toSignUp()
                 }
             }
-            error?.let {
-                ErrorMessage(errorText = error)
+            when(loadState){
+                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
+                LoadState.Loading -> LoadingView()
+                else -> {}
             }
         }
     }
@@ -134,6 +135,6 @@ private fun SignInView(
 @Composable
 private fun SignInPreview() {
     AppTheme {
-        SignInView(SignInState(), {}, {}, {}, {}, {}, null)
+        SignInView(SignInState(), {}, {}, {}, {}, {})
     }
 }

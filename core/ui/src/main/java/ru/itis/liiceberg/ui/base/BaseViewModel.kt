@@ -1,16 +1,13 @@
 package ru.itis.liiceberg.ui.base
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import ru.itis.liiceberg.ui.model.UiAction
 import ru.itis.liiceberg.ui.model.UiEvent
 import ru.itis.liiceberg.ui.model.UiState
@@ -34,21 +31,11 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Action : UiAction
             _viewActions.tryEmit(value)
         }
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-
     fun viewActions(): SharedFlow<Action?> = _viewActions.asSharedFlow()
     fun viewStates(): StateFlow<State> = _viewStates.asStateFlow()
 
-    fun error(): StateFlow<String?> = _errorMessage.asStateFlow()
-
     open fun obtainEvent(event: Event) {}
     open fun init() {}
+    open fun onError(message: String) {}
 
-    fun showError(message: String?) {
-        _errorMessage.value = message
-        viewModelScope.launch {
-            delay(3_000)
-            _errorMessage.value = null
-        }
-    }
 }

@@ -28,11 +28,13 @@ import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
 import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.SimpleTextField
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
@@ -41,7 +43,6 @@ fun SignUpView(
     toSignIn: () -> Unit
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
     SignUpView(
         state = state,
@@ -52,7 +53,6 @@ fun SignUpView(
         onSignUpClicked = { viewModel.obtainEvent(SignUpEvent.OnSignUp) },
         onSignUpWithGoogleClicked = { viewModel.obtainEvent(SignUpEvent.OnSignUpWithGoogle) },
         toSignIn = toSignIn,
-        error = error,
     )
 
     val ctx = LocalContext.current
@@ -63,6 +63,7 @@ fun SignUpView(
                     ctx.showShortToast(R.string.success_create_account)
                     toSignIn()
                 }
+
                 else -> {}
             }
         }
@@ -76,19 +77,19 @@ private fun SignUpView(
     onEmailFilled: (email: String) -> Unit,
     onPasswordFilled: (password: String) -> Unit,
     onConfirmPasswordFilled: (password: String) -> Unit,
-    error: String?,
     onSignUpClicked: () -> Unit,
     onSignUpWithGoogleClicked: () -> Unit,
     toSignIn: () -> Unit,
 ) {
     Box(Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            with(state) {
+        with(state) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -169,9 +170,11 @@ private fun SignUpView(
                     toSignIn()
                 }
             }
-        }
-        error?.let {
-            ErrorMessage(errorText = error)
+            when(loadState){
+                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
+                LoadState.Loading -> LoadingView()
+                else -> {}
+            }
         }
     }
 }
@@ -186,7 +189,6 @@ private fun SigUpPreview() {
             {},
             {},
             {},
-            null,
             {},
             {},
             {},

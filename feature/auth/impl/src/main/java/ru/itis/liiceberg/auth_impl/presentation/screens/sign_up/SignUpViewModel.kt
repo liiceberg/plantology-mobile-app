@@ -2,6 +2,7 @@ package ru.itis.liiceberg.auth_impl.presentation.screens.sign_up
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.auth_impl.domain.usecase.RegisterUseCase
 import ru.itis.liiceberg.auth_impl.R
@@ -12,6 +13,7 @@ import ru.itis.liiceberg.common.resources.ResourceManager
 import ru.itis.liiceberg.common.validation.UserDataValidator
 import ru.itis.liiceberg.common.validation.ValidationResult
 import ru.itis.liiceberg.ui.base.BaseViewModel
+import ru.itis.liiceberg.ui.model.LoadState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,14 +57,25 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    override fun onError(message: String) {
+        viewModelScope.launch {
+            viewState = viewState.copy(loadState = LoadState.Error(message))
+            delay(3_000)
+            viewState = viewState.copy(loadState = LoadState.Success)
+        }
+    }
+
     private fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
+                viewState = viewState.copy(loadState = LoadState.Loading)
                 registerUseCase.invoke(username, email, password)
             }.onSuccess {
+                viewState = viewState.copy(loadState = LoadState.Success)
                 viewAction = SignUpAction.RedirectOnSuccess
             }.onFailure { ex ->
                 if (ex is AppException.SuchEmailAlreadyRegistered) {
+                    viewState = viewState.copy(loadState = LoadState.Success)
                     viewState = viewState.copy(
                         emailValidation = ValidationResult(
                             isValid = false,
@@ -70,7 +83,7 @@ class SignUpViewModel @Inject constructor(
                         )
                     )
                 } else {
-                    showError(ex.message)
+                    ex.message?.let { onError(it) }
                 }
             }
         }

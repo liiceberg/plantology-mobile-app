@@ -2,6 +2,7 @@ package ru.itis.liiceberg.settings_impl.presentation.screens.change_password
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
@@ -13,6 +14,7 @@ import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.settings_impl.domain.usecase.ChangePasswordUseCase
 import ru.itis.liiceberg.settings_impl.domain.usecase.VerifyCredentialsUseCase
 import ru.itis.liiceberg.ui.base.BaseViewModel
+import ru.itis.liiceberg.ui.model.LoadState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,14 +49,24 @@ class ChangePasswordViewModel @Inject constructor(
         }
     }
 
+    override fun onError(message: String) {
+        viewModelScope.launch {
+            viewState = viewState.copy(loadState = LoadState.Error(message))
+            delay(3_000)
+            viewState = viewState.copy(loadState = LoadState.Success)
+        }
+    }
+
     private fun changePassword() {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
+                viewState = viewState.copy(loadState = LoadState.Loading)
                 changePasswordUseCase.invoke(viewState.newPassword)
             }.onSuccess {
+                viewState = viewState.copy(loadState = LoadState.Success)
                 viewAction = ChangePasswordAction.ShowSuccessResult
             }.onFailure { ex ->
-                showError(ex.message)
+                ex.message?.let { onError(it) }
             }
         }
     }
@@ -71,6 +83,8 @@ class ChangePasswordViewModel @Inject constructor(
                         error = if (isValid) null else resManager.getString(R.string.invalid_current_password),
                     )
                 )
+            }.onFailure { ex ->
+                ex.message?.let { onError(it) }
             }
         }
     }

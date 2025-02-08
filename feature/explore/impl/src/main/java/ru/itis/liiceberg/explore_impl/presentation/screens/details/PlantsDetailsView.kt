@@ -46,12 +46,14 @@ import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.HeadlineSmallText
 import ru.itis.liiceberg.ui.components.KeyValueText
 import ru.itis.liiceberg.ui.components.LightIcon
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleFloatingActionButton
 import ru.itis.liiceberg.ui.components.SimpleImage
 import ru.itis.liiceberg.ui.components.TitleMediumText
 import ru.itis.liiceberg.ui.components.TitleSmallText
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
@@ -63,9 +65,8 @@ fun PlantsDetailsView(
 ) {
 
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
-    PlantsDetailsView(state, error, onBackClick, viewModel::addFavourite)
+    PlantsDetailsView(state, onBackClick, viewModel::addFavourite)
 
     val ctx = LocalContext.current
     LaunchedEffect(Unit) {
@@ -86,7 +87,6 @@ fun PlantsDetailsView(
 @Composable
 fun PlantsDetailsView(
     state: PlantsDetailsState,
-    error: String?,
     onBackClick: () -> Unit,
     addToFavorite: (String) -> Unit,
 ) {
@@ -224,8 +224,10 @@ fun PlantsDetailsView(
                 }
             }
 
-            error?.let {
-                ErrorMessage(errorText = it)
+            when(state.loadState){
+                is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
+                LoadState.Loading -> LoadingView()
+                else -> {}
             }
         }
     }
@@ -306,7 +308,7 @@ private fun PlantsDetailsPreview() {
                 minTemperature = 10,
                 saved = false
             )
-            PlantsDetailsView(PlantsDetailsState(plant), null, {}) {}
+            PlantsDetailsView(PlantsDetailsState(plant), {}) {}
         }
     }
 }

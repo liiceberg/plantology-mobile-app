@@ -27,8 +27,10 @@ import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
 import ru.itis.liiceberg.ui.components.ErrorMessage
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.TitleSmallText
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
@@ -39,14 +41,12 @@ fun SettingsView(
     onBack: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
     SettingsView(
         state,
         toChangePassword,
         viewModel::logout,
         onBack,
-        error,
     )
 
     LaunchedEffect(Unit) {
@@ -67,18 +67,18 @@ private fun SettingsView(
     onChangePassword: () -> Unit,
     logOut: () -> Unit,
     onBack: () -> Unit,
-    error: String?,
 ) {
     Box(Modifier.fillMaxSize()) {
-        Scaffold(
-            topBar = {
-                DarkTopAppBar(
-                    title = stringResource(R.string.settings_top_bar_text),
-                    onNavigate = onBack
-                )
-            },
-        ) { innerPadding ->
-            with(state) {
+        with(state) {
+            Scaffold(
+                topBar = {
+                    DarkTopAppBar(
+                        title = stringResource(R.string.settings_top_bar_text),
+                        onNavigate = onBack
+                    )
+                },
+            ) { innerPadding ->
+
                 Column(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -102,9 +102,11 @@ private fun SettingsView(
                     )
                 }
             }
-        }
-        error?.let {
-            ErrorMessage(errorText = it)
+            when (loadState) {
+                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
+                LoadState.Loading -> LoadingView()
+                else -> {}
+            }
         }
     }
 }
@@ -158,7 +160,7 @@ private fun SettingsItem(
 private fun SettingsPreview() {
     AppTheme {
         Column {
-            SettingsView(SettingsState("a@gmail.com", "Aisylu"), {}, {}, {}, null)
+            SettingsView(SettingsState("a@gmail.com", "Aisylu"), {}, {}, {})
         }
 
     }

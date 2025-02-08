@@ -2,6 +2,7 @@ package ru.itis.liiceberg.auth_impl.presentation.screens.sign_in
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.auth_impl.domain.usecase.LoginUseCase
 import ru.itis.liiceberg.auth_impl.R
@@ -12,6 +13,7 @@ import ru.itis.liiceberg.common.exceptions.AppException
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
 import ru.itis.liiceberg.ui.base.BaseViewModel
+import ru.itis.liiceberg.ui.model.LoadState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,14 +47,25 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    override fun onError(message: String) {
+        viewModelScope.launch {
+            viewState = viewState.copy(loadState = LoadState.Error(message))
+            delay(3_000)
+            viewState = viewState.copy(loadState = LoadState.Success)
+        }
+    }
+
     private fun login(email: String, password: String) {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
+                viewState = viewState.copy(loadState = LoadState.Loading)
                 loginUseCase.invoke(email, password)
             }.onSuccess {
+                viewState = viewState.copy(loadState = LoadState.Success)
                 viewAction = SignInAction.GoToMainPage
             }.onFailure { ex ->
                 if (ex is AppException.InvalidCredentials) {
+                    viewState = viewState.copy(loadState = LoadState.Success)
                     viewState = viewState.copy(
                         passwordValidation = ValidationResult(
                             isValid = false,
@@ -60,7 +73,7 @@ class SignInViewModel @Inject constructor(
                         )
                     )
                 } else {
-                    showError(ex.message)
+                    ex.message?.let { onError(it) }
                 }
             }
         }

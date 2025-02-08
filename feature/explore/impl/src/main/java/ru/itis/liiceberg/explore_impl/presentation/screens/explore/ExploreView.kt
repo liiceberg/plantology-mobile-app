@@ -32,10 +32,12 @@ import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.CardWithImageAndInfo
 import ru.itis.liiceberg.ui.components.ErrorMessage
 import ru.itis.liiceberg.ui.components.LightTopAppBar
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SearchView
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.TitleMediumText
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
@@ -45,21 +47,14 @@ fun ExploreView(
     navigateToDetails: (plantId: String) -> Unit
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
     ExploreView(
         state,
         navigateToDetails,
-        error,
     )
 
     LaunchedEffect(Unit) {
         viewModel.init()
-        viewModel.viewActions().collect { action ->
-            when (action) {
-                else -> {}
-            }
-        }
     }
 }
 
@@ -67,7 +62,6 @@ fun ExploreView(
 fun ExploreView(
     state: ExploreState,
     navigateToDetails: (plantId: String) -> Unit,
-    error: String?,
 ) {
     Box(Modifier.fillMaxSize()) {
         Scaffold(
@@ -95,8 +89,10 @@ fun ExploreView(
             }
         }
 
-        error?.let {
-            ErrorMessage(errorText = it)
+        when(state.loadState){
+            is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
+            LoadState.Loading -> LoadingView()
+            else -> {}
         }
     }
 }
@@ -165,7 +161,7 @@ private fun ExplorePreview() {
                 "some name",
                 ""
             )
-            ExploreView(ExploreState(listOf(item, item, item, item)), {}, null)
+            ExploreView(ExploreState(listOf(item, item, item, item)), {})
         }
     }
 }

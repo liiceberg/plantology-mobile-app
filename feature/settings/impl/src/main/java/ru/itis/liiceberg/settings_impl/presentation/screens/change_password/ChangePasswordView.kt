@@ -20,8 +20,10 @@ import ru.itis.liiceberg.common.util.showShortToast
 import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
 import ru.itis.liiceberg.ui.components.ErrorMessage
+import ru.itis.liiceberg.ui.components.LoadingView
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.AppTheme
 
 @Composable
@@ -30,7 +32,6 @@ fun ChangePasswordView(
     goBack: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
-    val error by viewModel.error().collectAsStateWithLifecycle()
 
     ChangePasswordView(
         state = state,
@@ -47,7 +48,6 @@ fun ChangePasswordView(
             viewModel.obtainEvent(ChangePasswordEvent.OnConfirm)
         },
         goBack = goBack,
-        error = error,
     )
 
     val ctx = LocalContext.current
@@ -57,6 +57,7 @@ fun ChangePasswordView(
                 is ChangePasswordAction.ShowSuccessResult -> {
                     ctx.showShortToast(R.string.change_password_success_message)
                 }
+
                 else -> {}
             }
         }
@@ -71,18 +72,18 @@ private fun ChangePasswordView(
     onNewPasswordConfirmFilled: (password: String) -> Unit,
     onConfirm: () -> Unit,
     goBack: () -> Unit,
-    error: String?,
 ) {
-    Box(Modifier.fillMaxSize()) {
-        Scaffold(
-            topBar = {
-                DarkTopAppBar(
-                    title = stringResource(R.string.change_password_top_bar_text),
-                    onNavigate = goBack
-                )
-            },
-        ) { innerPadding ->
-            with(state) {
+    with(state) {
+        Box(Modifier.fillMaxSize()) {
+            Scaffold(
+                topBar = {
+                    DarkTopAppBar(
+                        title = stringResource(R.string.change_password_top_bar_text),
+                        onNavigate = goBack
+                    )
+                },
+            ) { innerPadding ->
+
                 Column(
                     Modifier
                         .fillMaxSize()
@@ -124,9 +125,11 @@ private fun ChangePasswordView(
                 }
             }
 
-        }
-        error?.let {
-            ErrorMessage(errorText = it)
+            when (loadState) {
+                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
+                LoadState.Loading -> LoadingView()
+                else -> {}
+            }
         }
     }
 }
@@ -135,6 +138,6 @@ private fun ChangePasswordView(
 @Composable
 private fun ChangePasswordPreview() {
     AppTheme {
-        ChangePasswordView(ChangePasswordState(), {}, {}, {}, {}, {}, null)
+        ChangePasswordView(ChangePasswordState(), {}, {}, {}, {}, {})
     }
 }
