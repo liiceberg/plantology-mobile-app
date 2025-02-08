@@ -3,6 +3,7 @@ plugins {
     id(Libs.plugin.google_services)
     id(Libs.plugin.crashlytics)
     id(Libs.plugin.performance)
+    id(Libs.plugin.detect)
 }
 
 android("ru.itis.liiceberg.app")
@@ -21,4 +22,10 @@ dependencies {
     implementation(*Libs.bundle.firebase_auth)
     implementation(*Libs.bundle.firebase)
     implementation(*Libs.bundle.coil)
+}
+
+detekt {
+    toolVersion = Libs.detectVersion
+    config.setFrom(File("${project.rootDir}/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
 }

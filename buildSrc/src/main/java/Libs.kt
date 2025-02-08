@@ -59,6 +59,8 @@ object Libs {
 
     const val googleServicesVersion = "4.4.2"
 
+    const val detectVersion = "1.23.7"
+
     object plugin {
         const val application = "com.android.application"
         const val library = "com.android.library"
@@ -75,6 +77,7 @@ object Libs {
         const val compose = "org.jetbrains.kotlin.plugin.compose"
         const val crashlytics = "com.google.firebase.crashlytics"
         const val performance = "com.google.firebase.firebase-perf"
+        const val detect = "io.gitlab.arturbosch.detekt"
     }
 
     object classpath {
