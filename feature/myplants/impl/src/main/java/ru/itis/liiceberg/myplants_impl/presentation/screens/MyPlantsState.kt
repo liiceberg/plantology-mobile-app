@@ -8,5 +8,5 @@ import ru.itis.liiceberg.ui.model.UiState
 @Immutable
 data class MyPlantsState(
     val myPlants: List<MyPlant> = emptyList(),
-    val loadState: LoadState = LoadState.Success,
+    val loadState: LoadState = LoadState.Initial,
 ) : UiState

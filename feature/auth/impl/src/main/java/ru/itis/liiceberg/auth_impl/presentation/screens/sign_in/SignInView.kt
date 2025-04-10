@@ -19,9 +19,9 @@ import ru.itis.liiceberg.auth_impl.R
 import ru.itis.liiceberg.ui.components.AppLightIcon
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodyTextWithLink
-import ru.itis.liiceberg.ui.components.ErrorMessage
+import ru.itis.liiceberg.ui.components.ErrorView
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
-import ru.itis.liiceberg.ui.components.LoadingView
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
@@ -65,7 +65,7 @@ private fun SignInView(
     onSignInWithGoogleClicked: () -> Unit,
     toSignUp: () -> Unit,
 ) {
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         with(state) {
             Column(
                 modifier = Modifier
@@ -123,8 +123,8 @@ private fun SignInView(
                 }
             }
             when(loadState){
-                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
-                LoadState.Loading -> LoadingView()
+                is LoadState.Error -> ErrorView(errorText = loadState.message)
+                is LoadState.Loading -> LoadingIndicator()
                 else -> {}
             }
         }

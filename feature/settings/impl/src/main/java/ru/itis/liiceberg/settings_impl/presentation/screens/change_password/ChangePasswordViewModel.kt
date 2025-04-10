@@ -49,13 +49,7 @@ class ChangePasswordViewModel @Inject constructor(
         }
     }
 
-    override fun onError(message: String) {
-        viewModelScope.launch {
-            viewState = viewState.copy(loadState = LoadState.Error(message))
-            delay(3_000)
-            viewState = viewState.copy(loadState = LoadState.Success)
-        }
-    }
+
 
     private fun changePassword() {
         viewModelScope.launch {
@@ -66,7 +60,7 @@ class ChangePasswordViewModel @Inject constructor(
                 viewState = viewState.copy(loadState = LoadState.Success)
                 viewAction = ChangePasswordAction.ShowSuccessResult
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }
@@ -84,7 +78,7 @@ class ChangePasswordViewModel @Inject constructor(
                     )
                 )
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }

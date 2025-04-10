@@ -15,5 +15,5 @@ data class SignUpState(
     val passwordValidation: ValidationResult = ValidationResult.empty(),
     val confirmPassword: String = "",
     val confirmPasswordValidation: ValidationResult = ValidationResult.empty(),
-    val loadState: LoadState = LoadState.Success,
+    val loadState: LoadState = LoadState.Initial,
 ) : UiState

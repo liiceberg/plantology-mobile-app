@@ -13,5 +13,5 @@ data class ChangePasswordState(
     val newPasswordValidation: ValidationResult = ValidationResult.empty(),
     val confirmNewPassword: String = "",
     val confirmNewPasswordValidation: ValidationResult = ValidationResult.empty(),
-    val loadState: LoadState = LoadState.Success,
+    val loadState: LoadState = LoadState.Initial,
 ) : UiState

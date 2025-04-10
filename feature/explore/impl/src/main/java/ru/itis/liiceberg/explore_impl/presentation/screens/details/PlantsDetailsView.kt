@@ -41,12 +41,12 @@ import ru.itis.liiceberg.explore_impl.R
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.DarkIcon
-import ru.itis.liiceberg.ui.components.ErrorMessage
+import ru.itis.liiceberg.ui.components.ErrorView
 import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.HeadlineSmallText
 import ru.itis.liiceberg.ui.components.KeyValueText
 import ru.itis.liiceberg.ui.components.LightIcon
-import ru.itis.liiceberg.ui.components.LoadingView
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleFloatingActionButton
@@ -91,7 +91,7 @@ fun PlantsDetailsView(
     addToFavorite: (String) -> Unit,
 ) {
     state.plantModel?.run {
-        Box(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column {
 
                 Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart) {
@@ -225,8 +225,8 @@ fun PlantsDetailsView(
             }
 
             when(state.loadState){
-                is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
-                LoadState.Loading -> LoadingView()
+                is LoadState.Error -> ErrorView(errorText = state.loadState.message)
+                LoadState.Loading -> LoadingIndicator()
                 else -> {}
             }
         }

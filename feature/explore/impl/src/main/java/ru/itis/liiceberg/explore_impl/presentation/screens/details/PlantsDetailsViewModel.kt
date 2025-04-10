@@ -2,7 +2,6 @@ package ru.itis.liiceberg.explore_impl.presentation.screens.details
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
@@ -19,14 +18,6 @@ class PlantsDetailsViewModel @Inject constructor(
     private val exceptionHandler: ExceptionHandlerDelegate,
 ) : BaseViewModel<PlantsDetailsState, PlantsDetailsEvent, PlantsDetailsAction>(PlantsDetailsState()) {
 
-    override fun onError(message: String) {
-        viewModelScope.launch {
-            viewState = viewState.copy(loadState = LoadState.Error(message))
-            delay(3_000)
-            viewState = viewState.copy(loadState = LoadState.Success)
-        }
-    }
-
     fun addFavourite(plantId: String) {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
@@ -38,7 +29,7 @@ class PlantsDetailsViewModel @Inject constructor(
                 viewState = viewState.copy(plantModel = newPlantModel)
                 viewAction = PlantsDetailsAction.ShowSuccessAddToFavoriteMessage
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }
@@ -54,7 +45,7 @@ class PlantsDetailsViewModel @Inject constructor(
                     plantModel = it
                 )
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }

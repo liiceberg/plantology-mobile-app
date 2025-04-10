@@ -36,8 +36,8 @@ import ru.itis.liiceberg.myplants_impl.R
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
 import ru.itis.liiceberg.ui.components.ErrorMediumText
-import ru.itis.liiceberg.ui.components.ErrorMessage
-import ru.itis.liiceberg.ui.components.LoadingView
+import ru.itis.liiceberg.ui.components.ErrorView
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
@@ -75,7 +75,7 @@ private fun MyPlantsView(
     onRemove: (String) -> Unit,
     toExplore: () -> Unit,
 ) {
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Scaffold(
             topBar = {
                 DarkTopAppBar(
@@ -119,8 +119,8 @@ private fun MyPlantsView(
             }
         }
         when(state.loadState){
-            is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
-            LoadState.Loading -> LoadingView()
+            is LoadState.Error -> ErrorView(errorText = state.loadState.message)
+            LoadState.Loading -> LoadingIndicator()
             else -> {}
         }
     }

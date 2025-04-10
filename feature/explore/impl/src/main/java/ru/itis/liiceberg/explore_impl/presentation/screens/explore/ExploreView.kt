@@ -33,9 +33,9 @@ import ru.itis.liiceberg.explore_impl.R
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.CardWithImageAndInfo
-import ru.itis.liiceberg.ui.components.ErrorMessage
+import ru.itis.liiceberg.ui.components.ErrorView
 import ru.itis.liiceberg.ui.components.LightTopAppBar
-import ru.itis.liiceberg.ui.components.LoadingView
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.RoundedImage
 import ru.itis.liiceberg.ui.components.SearchView
 import ru.itis.liiceberg.ui.components.SimpleIconButton
@@ -74,7 +74,7 @@ fun ExploreView(
     onSearch: () -> Unit,
     navigateToDetails: (plantId: String) -> Unit,
 ) {
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Scaffold(
             topBar = {
                 LightTopAppBar(
@@ -125,8 +125,8 @@ fun ExploreView(
         }
 
         when (state.loadState) {
-            is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
-            LoadState.Loading -> LoadingView()
+            is LoadState.Error -> ErrorView(errorText = state.loadState.message)
+            LoadState.Loading -> LoadingIndicator()
             else -> {}
         }
     }

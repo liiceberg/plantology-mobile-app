@@ -10,5 +10,5 @@ data class ExploreState(
     val items: List<ExplorePlantModel> = emptyList(),
     val searchQuery: String = "",
     val searchResult: List<ExplorePlantModel> = emptyList(),
-    val loadState: LoadState = LoadState.Success,
+    val loadState: LoadState = LoadState.Initial,
 ) : UiState

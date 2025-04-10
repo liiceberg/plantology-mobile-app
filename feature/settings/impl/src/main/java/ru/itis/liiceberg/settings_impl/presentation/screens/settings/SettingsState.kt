@@ -8,5 +8,5 @@ import ru.itis.liiceberg.ui.model.UiState
 data class SettingsState(
     val email: String = "",
     val username: String = "",
-    val loadState: LoadState = LoadState.Success,
+    val loadState: LoadState = LoadState.Initial,
 ) : UiState

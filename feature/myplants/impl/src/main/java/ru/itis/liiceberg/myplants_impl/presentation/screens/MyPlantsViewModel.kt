@@ -2,7 +2,6 @@ package ru.itis.liiceberg.myplants_impl.presentation.screens
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
@@ -31,14 +30,6 @@ class MyPlantsViewModel @Inject constructor(
         }
     }
 
-    override fun onError(message: String) {
-        viewModelScope.launch {
-            viewState = viewState.copy(loadState = LoadState.Error(message))
-            delay(3_000)
-            viewState = viewState.copy(loadState = LoadState.Success)
-        }
-    }
-
     private fun getPlants() {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
@@ -48,7 +39,9 @@ class MyPlantsViewModel @Inject constructor(
                 viewState = viewState.copy(loadState = LoadState.Success)
                 viewState = viewState.copy(myPlants = it)
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let {
+                    viewState = viewState.copy(loadState = LoadState.Error(it))
+                }
             }
         }
     }
@@ -63,7 +56,9 @@ class MyPlantsViewModel @Inject constructor(
                 val newList = viewState.myPlants.filter { it.id != id }.toList()
                 viewState = viewState.copy(myPlants = newList)
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let {
+                    viewState = viewState.copy(loadState = LoadState.Error(it))
+                }
             }
         }
     }

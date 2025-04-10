@@ -57,13 +57,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    override fun onError(message: String) {
-        viewModelScope.launch {
-            viewState = viewState.copy(loadState = LoadState.Error(message))
-            delay(3_000)
-            viewState = viewState.copy(loadState = LoadState.Success)
-        }
-    }
+
 
     private fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
@@ -83,7 +77,7 @@ class SignUpViewModel @Inject constructor(
                         )
                     )
                 } else {
-                    ex.message?.let { onError(it) }
+                    ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
                 }
             }
         }

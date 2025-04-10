@@ -1,6 +1,5 @@
 package ru.itis.liiceberg.explore_impl.presentation.screens.explore
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -41,13 +40,7 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
-    override fun onError(message: String) {
-        viewModelScope.launch {
-            viewState = viewState.copy(loadState = LoadState.Error(message))
-            delay(3_000)
-            viewState = viewState.copy(loadState = LoadState.Success)
-        }
-    }
+
 
     private fun getPlants() {
         viewModelScope.launch {
@@ -58,7 +51,7 @@ class ExploreViewModel @Inject constructor(
                 viewState = viewState.copy(loadState = LoadState.Success, items = it)
                 allPlants.addAll(it)
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }

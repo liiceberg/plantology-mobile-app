@@ -8,10 +8,34 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+
+@Composable
+fun ErrorView(
+    errorText: String,
+    modifier: Modifier = Modifier,
+    visibleDuration: Long = 3_000L
+) {
+    var isVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(visibleDuration)
+        isVisible = false
+    }
+
+    if (isVisible) {
+        ErrorMessage(errorText, modifier)
+    }
+}
 
 @Composable
 fun ErrorMessage(
@@ -42,5 +66,5 @@ fun ErrorMessage(
 @Preview
 @Composable
 private fun ErrorPreview() {
-    ErrorMessage(errorText = "error")
+    ErrorView(errorText = "error")
 }

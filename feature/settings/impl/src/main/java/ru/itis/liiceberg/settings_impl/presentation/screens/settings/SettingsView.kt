@@ -26,8 +26,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
-import ru.itis.liiceberg.ui.components.ErrorMessage
-import ru.itis.liiceberg.ui.components.LoadingView
+import ru.itis.liiceberg.ui.components.ErrorView
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.TitleSmallText
 import ru.itis.liiceberg.ui.model.LoadState
@@ -68,7 +68,7 @@ private fun SettingsView(
     logOut: () -> Unit,
     onBack: () -> Unit,
 ) {
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         with(state) {
             Scaffold(
                 topBar = {
@@ -103,8 +103,8 @@ private fun SettingsView(
                 }
             }
             when (loadState) {
-                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
-                LoadState.Loading -> LoadingView()
+                is LoadState.Error -> ErrorView(errorText = loadState.message)
+                LoadState.Loading -> LoadingIndicator()
                 else -> {}
             }
         }

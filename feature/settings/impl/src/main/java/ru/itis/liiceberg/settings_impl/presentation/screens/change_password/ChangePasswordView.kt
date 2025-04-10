@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,8 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.common.util.showShortToast
 import ru.itis.liiceberg.settings_impl.R
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
-import ru.itis.liiceberg.ui.components.ErrorMessage
-import ru.itis.liiceberg.ui.components.LoadingView
+import ru.itis.liiceberg.ui.components.ErrorView
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.model.LoadState
@@ -74,7 +75,7 @@ private fun ChangePasswordView(
     goBack: () -> Unit,
 ) {
     with(state) {
-        Box(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Scaffold(
                 topBar = {
                     DarkTopAppBar(
@@ -126,8 +127,8 @@ private fun ChangePasswordView(
             }
 
             when (loadState) {
-                is LoadState.Error -> ErrorMessage(errorText = loadState.message)
-                LoadState.Loading -> LoadingView()
+                is LoadState.Error -> ErrorView(errorText = loadState.message)
+                LoadState.Loading -> LoadingIndicator()
                 else -> {}
             }
         }

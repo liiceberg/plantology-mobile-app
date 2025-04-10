@@ -32,18 +32,12 @@ class SettingsViewModel @Inject constructor(
             }.onSuccess {
                 viewAction = SettingsAction.GoToSignIn
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }
 
-    override fun onError(message: String) {
-        viewModelScope.launch {
-            viewState = viewState.copy(loadState = LoadState.Error(message))
-            delay(3_000)
-            viewState = viewState.copy(loadState = LoadState.Success)
-        }
-    }
+
 
     private fun loadUserInfo() {
         viewModelScope.launch {
@@ -57,7 +51,7 @@ class SettingsViewModel @Inject constructor(
                     email = it.email
                 )
             }.onFailure { ex ->
-                ex.message?.let { onError(it) }
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }
         }
     }
