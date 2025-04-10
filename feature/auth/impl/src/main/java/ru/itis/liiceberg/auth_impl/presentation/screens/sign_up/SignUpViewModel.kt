@@ -2,10 +2,9 @@ package ru.itis.liiceberg.auth_impl.presentation.screens.sign_up
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.itis.liiceberg.auth_impl.domain.usecase.RegisterUseCase
 import ru.itis.liiceberg.auth_impl.R
+import ru.itis.liiceberg.auth_impl.domain.usecase.RegisterUseCase
 import ru.itis.liiceberg.common.exceptions.AppException
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
