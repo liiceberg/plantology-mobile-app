@@ -22,4 +22,6 @@
     <string name="explore_top_bar_text">Explore</string>
 
     <string name="success_add_favourite">Plant was added to favourites</string>
+
+    <string name="no_results">No results</string>
 </resources>

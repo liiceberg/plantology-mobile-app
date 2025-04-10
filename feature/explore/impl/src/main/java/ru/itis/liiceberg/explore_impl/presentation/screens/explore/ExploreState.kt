@@ -8,5 +8,7 @@ import ru.itis.liiceberg.ui.model.UiState
 @Immutable
 data class ExploreState(
     val items: List<ExplorePlantModel> = emptyList(),
+    val searchQuery: String = "",
+    val searchResult: List<ExplorePlantModel> = emptyList(),
     val loadState: LoadState = LoadState.Success,
 ) : UiState

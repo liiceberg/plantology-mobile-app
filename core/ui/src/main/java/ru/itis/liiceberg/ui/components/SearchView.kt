@@ -1,11 +1,13 @@
 package ru.itis.liiceberg.ui.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
@@ -14,35 +16,62 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.itis.liiceberg.ui.R
 import ru.itis.liiceberg.ui.theme.AppTheme
-import ru.itis.liiceberg.ui.theme.Neutral600
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchView(
-    onSearch: (String) -> Unit,
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    searchResult: @Composable ColumnScope.() -> Unit,
+    onSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val textFieldState = rememberTextFieldState()
+
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
-                query = textFieldState.text.toString(),
+                query = searchQuery,
+                placeholder = { BodyMediumText(stringResource(R.string.search)) },
+                onQueryChange = { query ->
+                    onSearchQueryChange(query)
+                },
                 expanded = expanded,
-                leadingIcon = { SimpleIcon(Icons.Default.Search, 24.dp, tint = Neutral600) },
-                onExpandedChange = {},
-                onQueryChange = { query -> query.also { textFieldState.setTextAndPlaceCursorAtEnd(it) } },
-                onSearch = onSearch,
+                leadingIcon = {
+                    if (expanded.not()) {
+                        SimpleIcon(Icons.Default.Search, 24.dp, tint = MaterialTheme.colorScheme.onSurface)
+                    } else {
+                        SimpleIconButton(Icons.AutoMirrored.Default.ArrowBack, 24.dp, tint = MaterialTheme.colorScheme.onSurface) {
+                            onSearchQueryChange("")
+                            expanded = false
+                        }
+                    }
+                },
+                trailingIcon = {
+                    if (expanded) {
+                        SimpleIconButton(Icons.Default.Close, 24.dp, tint = MaterialTheme.colorScheme.onSurface) {
+                            onSearchQueryChange("")
+                        }
+                    }
+                },
+                onExpandedChange = { expanded = it },
+                onSearch = {
+                    expanded = false
+                    onSearch()
+                },
             )
         },
         expanded = expanded,
-        onExpandedChange = {},
-        modifier = modifier
+        onExpandedChange = { expanded = it },
+        modifier = if (expanded) Modifier else modifier,
     ) {
+        searchResult()
     }
 }
 
@@ -52,7 +81,7 @@ fun PreviewSearchView() {
 
     AppTheme {
         Column {
-            SearchView({})
+            SearchView("", {}, {}, {})
         }
     }
 }

@@ -14,19 +14,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.itis.liiceberg.ui.R
 
 @Composable
 fun LoadingView(
     modifier: Modifier = Modifier,
-    loadingText: String = "Loading...",
+    loadingText: String = stringResource(R.string.loading),
 ) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(

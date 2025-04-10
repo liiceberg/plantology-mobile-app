@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -19,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.itis.liiceberg.explore_api.domain.model.ExplorePlantModel
 import ru.itis.liiceberg.explore_impl.R
+import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.BodySmallText
 import ru.itis.liiceberg.ui.components.CardWithImageAndInfo
 import ru.itis.liiceberg.ui.components.ErrorMessage
@@ -50,6 +53,12 @@ fun ExploreView(
 
     ExploreView(
         state,
+        onSearchFilled = {
+            viewModel.obtainEvent(ExploreEvent.OnSearchFieldFilled(it))
+        },
+        onSearch = {
+            viewModel.obtainEvent(ExploreEvent.OnSearch)
+        },
         navigateToDetails,
     )
 
@@ -61,6 +70,8 @@ fun ExploreView(
 @Composable
 fun ExploreView(
     state: ExploreState,
+    onSearchFilled: (String) -> Unit,
+    onSearch: () -> Unit,
     navigateToDetails: (plantId: String) -> Unit,
 ) {
     Box(Modifier.fillMaxSize()) {
@@ -80,16 +91,40 @@ fun ExploreView(
             },
         ) { innerPadding ->
             Column(
-                Modifier
-                    .padding(innerPadding)
-                    .padding(16.dp)
+                Modifier.padding(top = innerPadding.calculateTopPadding())
             ) {
-                SearchView(onSearch = {}, Modifier.padding(bottom = 36.dp))
+                SearchView(
+                    searchQuery = state.searchQuery,
+                    onSearchQueryChange = { query ->
+                        onSearchFilled(query)
+                    },
+                    searchResult = {
+                        state.searchResult.let { resultsList ->
+                            Box(Modifier.align(Alignment.CenterHorizontally)) {
+                                if (resultsList.isEmpty()) {
+                                    BodyMediumText(stringResource(R.string.no_results), modifier = Modifier.padding(top = 16.dp))
+                                } else {
+                                    LazyColumn {
+                                        items(resultsList.size) { idx ->
+                                            SearchResultPlantCard(resultsList[idx]) {
+                                                navigateToDetails(resultsList[idx].id)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    onSearch = { onSearch() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 36.dp),
+                )
                 AllPlantsList(state.items, navigateToDetails)
             }
         }
 
-        when(state.loadState){
+        when (state.loadState) {
             is LoadState.Error -> ErrorMessage(errorText = state.loadState.message)
             LoadState.Loading -> LoadingView()
             else -> {}
@@ -106,7 +141,9 @@ private fun AllPlantsList(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         items(items) { plant ->
             ExplorePlantCard(plant, navigateToDetails)
@@ -136,7 +173,8 @@ private fun SearchResultPlantCard(plant: ExplorePlantModel, onClick: (plantId: S
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(14.dp),
+            .padding(14.dp)
+            .clickable(onClick = { onClick(plant.id) }),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row {
@@ -161,7 +199,7 @@ private fun ExplorePreview() {
                 "some name",
                 ""
             )
-            ExploreView(ExploreState(listOf(item, item, item, item)), {})
+            ExploreView(ExploreState(items = listOf(item, item, item, item)), {}, {}, {})
         }
     }
 }
