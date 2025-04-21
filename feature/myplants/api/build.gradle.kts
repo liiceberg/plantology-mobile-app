@@ -3,3 +3,8 @@ plugins {
 }
 
 android("ru.itis.liiceberg.myplants_api")
+
+dependencies {
+    implementation(projects.coreCommon)
+}
+

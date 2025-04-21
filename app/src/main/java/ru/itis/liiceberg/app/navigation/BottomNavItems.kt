@@ -7,6 +7,11 @@ import ru.itis.liiceberg.ui.components.BottomNavItem
 
 val bottomNavItems = listOf(
     BottomNavItem(
+        label = R.string.label_reminder,
+        icon = R.drawable.alarm,
+        route = getRoute(Route.BottomMenu.Reminder),
+    ),
+    BottomNavItem(
         label = R.string.label_explore,
         icon = R.drawable.search,
         route = getRoute(Route.BottomMenu.Explore),

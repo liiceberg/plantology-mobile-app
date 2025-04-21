@@ -16,6 +16,7 @@ dependencies {
     implementation(projects.featureExploreImpl)
     implementation(projects.featureMyplantsImpl)
     implementation(projects.featureSettingsImpl)
+    implementation(projects.featureReminderImpl)
 
     implementation(*Libs.bundle.navigation)
     implementation(*Libs.bundle.splashScreen)

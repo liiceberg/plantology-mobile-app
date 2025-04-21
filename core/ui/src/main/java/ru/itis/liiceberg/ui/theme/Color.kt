@@ -2,7 +2,7 @@ package ru.itis.liiceberg.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary50 = Color(0xFF89d6ad)
+val Primary50 = Color(0x1E89d6ad)
 val Primary100 = Color(0xFF72ce9d)
 val Primary200 = Color(0xFF5ac68c)
 val Primary300 = Color(0xFF42be7c)
@@ -32,3 +32,6 @@ val Warning400 = Color(0xFFFBBF24)
 
 val Destructive500 = Color(0xFFEF4444)
 val Destructive600 = Color(0xFFDC2626)
+
+val WaterBlue = Color(0xFF02A1FB)
+val Green = Color(0x1E67C895)

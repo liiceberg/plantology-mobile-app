@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun SimpleTextField(
@@ -91,7 +91,7 @@ private fun ShowHidePasswordIcon(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewTextInput() {
-    AppTheme {
+    PlantologyTheme {
         Column {
             SimpleTextField(value = "", label = "Email", onValueChange = {})
             PasswordTextField(value = "", label = "Email", onValueChange = {})

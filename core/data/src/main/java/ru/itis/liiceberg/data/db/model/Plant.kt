@@ -19,7 +19,8 @@ data class Plant(
     val rank: String? = null,
     val sunlight: String? = null,
     val temperature: Temperature? = null,
-    val toxicity: Boolean? = null
+    val toxicity: Boolean? = null,
+    val fertilization: String? = null,
 )
 
 enum class FloraCategory {

@@ -11,12 +11,13 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun DisplayLargeText(text: String, modifier: Modifier = Modifier) {
@@ -55,7 +56,12 @@ fun TitleLargeText(text: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun TitleMediumText(text: String, modifier: Modifier = Modifier) {
-    Text(text = text, modifier = modifier, style = MaterialTheme.typography.titleMedium)
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.titleMedium,
+        textAlign = TextAlign.Center
+    )
 }
 
 @Composable
@@ -64,7 +70,8 @@ fun TitleSmallText(text: String, modifier: Modifier = Modifier, color: Color? = 
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.titleSmall,
-        color = color ?: Color.Unspecified
+        color = color ?: Color.Unspecified,
+        textAlign = TextAlign.Center,
     )
 }
 
@@ -89,12 +96,16 @@ fun BodyMediumText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BodySmallText(text: String, modifier: Modifier = Modifier) {
+fun BodySmallText(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onBackground
+) {
     Text(
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onBackground
+        color = color
     )
 }
 
@@ -178,7 +189,7 @@ fun ErrorMediumText(text: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewText() {
-    AppTheme {
+    PlantologyTheme {
         Column(Modifier.fillMaxSize()) {
             TitleLargeText("example 2")
             TitleSmallText("example 2")

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_top_bar_text">Reminder</string>
+    <string name="get_started_title">Let\'s get started</string>
+    <string name="reminder_empty_screen_description">Get professional plant care guidance to keep your plant alive!</string>
+    <string name="add_plant_button">Add plant</string>
+    <string name="reminder_title">Tasks for you</string>
+    <string name="tasks_today">Today</string>
+    <string name="tasks_upcoming">Upcoming</string>
+    <string name="watering_tasks">Watering your plants</string>
+    <string name="fertilizer_tasks">Fertilizer your plants</string>
+
+    <string name="tab_all">All</string>
+    <string name="tab_watering">Watering</string>
+    <string name="tab_fertilizer">Fertilizer</string>
+    
+    <string name="late_care">%1$s Day late</string>
+    <string name="today_care">Today</string>
+    <string name="future_care">In %1$s days</string>
+</resources>

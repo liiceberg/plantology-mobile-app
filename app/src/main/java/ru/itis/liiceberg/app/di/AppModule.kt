@@ -8,6 +8,7 @@ import ru.itis.liiceberg.app.navigation.Navigator
 import ru.itis.liiceberg.common.navigation.AuthNavProvider
 import ru.itis.liiceberg.common.navigation.ExploreNavProvider
 import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
+import ru.itis.liiceberg.common.navigation.ReminderNavProvider
 import ru.itis.liiceberg.common.navigation.SettingsNavProvider
 
 @Module
@@ -20,8 +21,9 @@ object AppModule {
         explore: ExploreNavProvider,
         myPlants: MyPlantsNavProvider,
         settings: SettingsNavProvider,
+        reminder: ReminderNavProvider,
     ): Navigator {
-        return Navigator(auth, explore, myPlants, settings)
+        return Navigator(auth, explore, myPlants, settings, reminder)
     }
 
 }

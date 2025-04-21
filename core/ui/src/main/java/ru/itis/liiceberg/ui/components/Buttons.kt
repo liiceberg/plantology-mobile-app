@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.itis.liiceberg.ui.R
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun SimpleButton(
@@ -75,19 +75,19 @@ fun SimpleOutlinedButtonWithStartIcon(
 @Composable
 fun SimpleButtonWithStartIcon(
     text: String,
-    icon: Painter,
+    painter: Painter,
+    iconSize: Dp,
     modifier: Modifier = Modifier,
     tint: Color = Color.Unspecified,
     enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Button(onClick = onClick, modifier.fillMaxWidth(), enabled = enabled) {
-        Icon(
-            painter = icon,
-            contentDescription = null,
+        SimpleIcon(
+            painter = painter,
+            size = iconSize,
             modifier = Modifier
-                .padding(end = 8.dp)
-                .size(24.dp),
+                .padding(end = 8.dp),
             tint = tint
         )
         TitleSmallText(text = text)
@@ -138,14 +138,14 @@ fun SimpleFloatingActionButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewButton() {
-
-    AppTheme {
+    PlantologyTheme {
         Column {
             SimpleButton(text = "Example") {}
             SimpleOutlinedButton(text = "Example") {}
             SimpleButtonWithStartIcon(
                 text = "Example",
-                icon = painterResource(id = R.drawable.app_icon_primary),
+                painter = painterResource(id = R.drawable.app_icon_primary),
+                iconSize = 24.dp
             ) {}
             SimpleOutlinedButtonWithStartIcon(
                 text = "Example",

@@ -31,7 +31,7 @@ import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.TitleSmallText
 import ru.itis.liiceberg.ui.model.LoadState
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun SettingsView(
@@ -158,7 +158,7 @@ private fun SettingsItem(
 @Preview(showBackground = true)
 @Composable
 private fun SettingsPreview() {
-    AppTheme {
+    PlantologyTheme {
         Column {
             SettingsView(SettingsState("a@gmail.com", "Aisylu"), {}, {}, {})
         }

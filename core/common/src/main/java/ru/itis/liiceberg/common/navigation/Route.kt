@@ -9,6 +9,8 @@ sealed class Route {
         data object Explore : Route()
         @Serializable
         data object MyPlants : Route()
+        @Serializable
+        data object Reminder : Route()
     }
 
     object Auth {

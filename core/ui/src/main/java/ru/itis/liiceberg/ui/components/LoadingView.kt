@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.itis.liiceberg.ui.R
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun LoadingIndicator() {
@@ -65,5 +66,7 @@ fun LoadingView(
 @Preview(showBackground = true)
 @Composable
 private fun LoadingPreview() {
-    LoadingIndicator()
+    PlantologyTheme {
+        LoadingIndicator()
+    }
 }

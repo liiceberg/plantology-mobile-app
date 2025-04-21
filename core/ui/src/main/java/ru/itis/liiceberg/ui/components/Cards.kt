@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.toBitmap
 import ru.itis.liiceberg.ui.R
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun SmallCard(
@@ -114,7 +114,7 @@ private fun calculateAverageLuminance(bitmap: Bitmap): Float {
 @Composable
 fun PreviewCard() {
 
-    AppTheme {
+    PlantologyTheme {
         Column {
             SmallCard(title = "title", icon = painterResource(id = R.drawable.globe), text = "description")
             }

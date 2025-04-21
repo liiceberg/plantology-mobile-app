@@ -4,4 +4,5 @@ object FirestoreCollections {
     const val USERS = "users"
     const val PLANTS = "plants"
     const val FAVOURITES = "favourites"
+    const val TASKS = "tasks"
 }

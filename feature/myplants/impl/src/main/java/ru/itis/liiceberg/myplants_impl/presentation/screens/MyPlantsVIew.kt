@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.itis.liiceberg.myplants_api.domain.model.MyPlant
+import ru.itis.liiceberg.myplants_api.presenatation.MyPlantUiModel
 import ru.itis.liiceberg.myplants_impl.R
 import ru.itis.liiceberg.ui.components.BodyMediumText
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
@@ -45,7 +45,7 @@ import ru.itis.liiceberg.ui.components.SimpleOutlinedButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SmallCard
 import ru.itis.liiceberg.ui.components.TitleMediumText
 import ru.itis.liiceberg.ui.model.LoadState
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
 @Composable
@@ -131,8 +131,8 @@ private fun PlantItem(
     name: String,
     scientificName: String,
     image: String,
-    watering: Int,
-    fertilizer: Int,
+    watering: String?,
+    fertilizer: String?,
     onRemove: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
@@ -176,22 +176,24 @@ private fun PlantItem(
                     .fillMaxWidth()
                     .padding(top = 16.dp), horizontalArrangement = Arrangement.Start
             ) {
-                if (watering > 0 && fertilizer > 0) {
+                if (watering != null || fertilizer != null) {
                     SmallCard(
                         title = stringResource(R.string.water),
                         icon = painterResource(id = R_UI.drawable.water_drops),
-                        text = stringResource(R.string.water_in_days, watering),
+                        text = watering ?: stringResource(R.string.no_schedule),
                     )
                     SmallCard(
                         title = stringResource(R.string.fertilizer),
                         icon = painterResource(R_UI.drawable.fertilizer),
-                        text = stringResource(R.string.fertilizer_in_week, fertilizer),
+                        text = fertilizer ?: stringResource(R.string.no_schedule),
                         modifier = Modifier.padding(start = 32.dp)
                     )
+
                 } else {
                     SimpleButtonWithStartIcon(
                         text = stringResource(R.string.add_reminder),
-                        icon = painterResource(id = R_UI.drawable.alarm),
+                        painter = painterResource(id = R_UI.drawable.alarm),
+                        iconSize = 18.dp,
                         tint = MaterialTheme.colorScheme.onPrimary
                     ) {}
                 }
@@ -204,19 +206,18 @@ private fun PlantItem(
 @Preview(showBackground = true)
 @Composable
 private fun MyPlantsPreview() {
-    AppTheme {
+    PlantologyTheme {
         Column {
             MyPlantsView(
                 MyPlantsState(
                     listOf(
-                        MyPlant(
+                        MyPlantUiModel(
                             "",
                             "Wild mint",
                             "Mentha arvensis",
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREHjj0QVmfJLo5BrdEKQZ5td36QsOqjgTQFg&s",
                             "",
-                            1,
-                            2,
+                            "",
                         )
                     )
                 ), {}, {}, {}

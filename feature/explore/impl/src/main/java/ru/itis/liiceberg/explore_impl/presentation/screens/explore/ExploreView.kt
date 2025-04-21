@@ -41,7 +41,7 @@ import ru.itis.liiceberg.ui.components.SearchView
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.TitleMediumText
 import ru.itis.liiceberg.ui.model.LoadState
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
 @Composable
@@ -191,7 +191,7 @@ private fun SearchResultPlantCard(plant: ExplorePlantModel, onClick: (plantId: S
 @Preview(showBackground = false)
 @Composable
 private fun ExplorePreview() {
-    AppTheme {
+    PlantologyTheme {
         Column(Modifier.fillMaxSize()) {
             val item = ExplorePlantModel(
                 "",

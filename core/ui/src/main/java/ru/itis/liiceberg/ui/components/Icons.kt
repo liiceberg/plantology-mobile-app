@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.itis.liiceberg.ui.R
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun SimpleIcon(
@@ -102,7 +102,7 @@ fun AppPrimaryIcon(size: Dp, modifier: Modifier = Modifier) {
 @Composable
 fun PreviewIcons() {
 
-    AppTheme {
+    PlantologyTheme {
         Column {
             LightIcon(painter = painterResource(id = R.drawable.water_drops))
             DarkIcon(painter = painterResource(id = R.drawable.water_drops))

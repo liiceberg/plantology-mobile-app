@@ -25,7 +25,7 @@ import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.PasswordTextField
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.model.LoadState
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun ChangePasswordView(
@@ -138,7 +138,7 @@ private fun ChangePasswordView(
 @Preview(showBackground = true)
 @Composable
 private fun ChangePasswordPreview() {
-    AppTheme {
+    PlantologyTheme {
         ChangePasswordView(ChangePasswordState(), {}, {}, {}, {}, {})
     }
 }

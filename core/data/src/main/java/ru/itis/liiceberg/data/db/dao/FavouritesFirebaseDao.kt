@@ -15,7 +15,12 @@ class FavouritesFirebaseDao @Inject constructor(
     private val favReference = firestore.collection(FirestoreCollections.FAVOURITES)
 
     fun addToFavorites(userId: String, plantId: String) {
-        val fav = FavouritePlant(userId = userId, plantId = plantId)
+        val fav = FavouritePlant(
+            userId = userId,
+            plantId = plantId,
+            wateringPeriod = null,
+            fertilizerPeriod = null
+        )
         favReference.add(fav)
     }
 

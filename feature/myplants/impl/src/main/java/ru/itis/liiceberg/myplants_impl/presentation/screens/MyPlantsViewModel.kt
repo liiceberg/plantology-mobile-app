@@ -7,6 +7,7 @@ import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
 import ru.itis.liiceberg.myplants_impl.domain.usecase.GetMyPlantsUseCase
 import ru.itis.liiceberg.myplants_impl.domain.usecase.RemoveFavouriteUseCase
+import ru.itis.liiceberg.myplants_impl.presentation.MyPlantUiMapper
 import ru.itis.liiceberg.ui.base.BaseViewModel
 import ru.itis.liiceberg.ui.model.LoadState
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class MyPlantsViewModel @Inject constructor(
     private val getMyPlantsUseCase: GetMyPlantsUseCase,
     private val removeFavouriteUseCase: RemoveFavouriteUseCase,
     private val exceptionHandler: ExceptionHandlerDelegate,
+    private val mapper: MyPlantUiMapper,
 ) : BaseViewModel<MyPlantsState, MyPlantsEvent, MyPlantsAction>(
     MyPlantsState()
 ) {
@@ -26,7 +28,9 @@ class MyPlantsViewModel @Inject constructor(
 
     override fun obtainEvent(event: MyPlantsEvent) {
         when (event) {
-            is MyPlantsEvent.RemovePlant -> { removeMyPlant(event.id) }
+            is MyPlantsEvent.RemovePlant -> {
+                removeMyPlant(event.id)
+            }
         }
     }
 
@@ -35,9 +39,10 @@ class MyPlantsViewModel @Inject constructor(
             runCatching(exceptionHandler) {
                 viewState = viewState.copy(loadState = LoadState.Loading)
                 getMyPlantsUseCase.invoke()
-            }.onSuccess {
-                viewState = viewState.copy(loadState = LoadState.Success)
-                viewState = viewState.copy(myPlants = it)
+            }.onSuccess { result ->
+                viewState = viewState.copy(
+                    loadState = LoadState.Success,
+                    myPlants = result.map { mapper.mapMyPlantToMyPlantUiModel(it) })
             }.onFailure { ex ->
                 ex.message?.let {
                     viewState = viewState.copy(loadState = LoadState.Error(it))

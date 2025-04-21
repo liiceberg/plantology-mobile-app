@@ -63,7 +63,7 @@ private val ExperimentalColorScheme = lightColorScheme(
 )
 
 @Composable
-fun AppTheme(
+fun PlantologyTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

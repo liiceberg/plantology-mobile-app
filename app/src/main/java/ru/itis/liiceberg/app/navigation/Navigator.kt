@@ -3,6 +3,7 @@ package ru.itis.liiceberg.app.navigation
 import ru.itis.liiceberg.common.navigation.AuthNavProvider
 import ru.itis.liiceberg.common.navigation.ExploreNavProvider
 import ru.itis.liiceberg.common.navigation.MyPlantsNavProvider
+import ru.itis.liiceberg.common.navigation.ReminderNavProvider
 import ru.itis.liiceberg.common.navigation.SettingsNavProvider
 
 data class Navigator(
@@ -10,4 +11,5 @@ data class Navigator(
     val explore: ExploreNavProvider,
     val myPlants: MyPlantsNavProvider,
     val settings: SettingsNavProvider,
+    val reminder: ReminderNavProvider,
 )

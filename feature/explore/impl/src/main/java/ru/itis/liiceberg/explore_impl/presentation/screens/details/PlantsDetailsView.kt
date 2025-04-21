@@ -54,7 +54,7 @@ import ru.itis.liiceberg.ui.components.SimpleImage
 import ru.itis.liiceberg.ui.components.TitleMediumText
 import ru.itis.liiceberg.ui.components.TitleSmallText
 import ru.itis.liiceberg.ui.model.LoadState
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
 @Composable
@@ -215,6 +215,7 @@ fun PlantsDetailsView(
                         SimpleButtonWithStartIcon(
                             stringResource(R.string.add_to_my_plants),
                             painterResource(id = R_UI.drawable.save),
+                            iconSize = 24.dp,
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
                         ) {
@@ -272,7 +273,7 @@ private fun CareGuideItem(@DrawableRes drawable: Int, title: String, description
 @Preview(showBackground = false)
 @Composable
 private fun PlantsDetailsPreview() {
-    AppTheme {
+    PlantologyTheme {
         Column {
             val plant = PlantModel(
                 name = "Wild mint",

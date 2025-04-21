@@ -27,7 +27,7 @@ import ru.itis.liiceberg.app.navigation.NavHostContainer
 import ru.itis.liiceberg.app.navigation.Navigator
 import ru.itis.liiceberg.app.navigation.bottomNavItems
 import ru.itis.liiceberg.ui.components.BottomNavigationBar
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContent {
-            AppTheme {
+            PlantologyTheme {
                 Loggers()
 
                 val navController = rememberNavController()

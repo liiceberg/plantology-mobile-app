@@ -35,7 +35,7 @@ import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
 import ru.itis.liiceberg.ui.components.SimpleTextField
 import ru.itis.liiceberg.ui.model.LoadState
-import ru.itis.liiceberg.ui.theme.AppTheme
+import ru.itis.liiceberg.ui.theme.PlantologyTheme
 
 @Composable
 fun SignUpView(
@@ -157,7 +157,8 @@ private fun SignUpView(
                 )
                 SimpleButtonWithStartIcon(
                     text = stringResource(id = R.string.sign_up_with_google),
-                    icon = painterResource(id = R.drawable.icons8_google),
+                    painter = painterResource(id = R.drawable.icons8_google),
+                    iconSize = 24.dp,
                     enabled = enableButtons,
                 ) {
                     onSignUpWithGoogleClicked()
@@ -182,7 +183,7 @@ private fun SignUpView(
 @Preview(showBackground = true)
 @Composable
 private fun SigUpPreview() {
-    AppTheme {
+    PlantologyTheme {
         SignUpView(
             SignUpState(),
             {},
