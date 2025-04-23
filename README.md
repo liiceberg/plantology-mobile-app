@@ -1,14 +1,14 @@
 features
 
-1) auth
+1) auth  
 Авторизация и регистрация через Firebase.
-2) explore
+2) explore  
 Поиск по растениям. На детальном экране можно добавить в избранное. Данные берутся из Cloud Firestore.
-3) settings
+3) settings  
 Смена пароля, выход из аккаунта.
-4) my plants
+4) my plants  
 Избранные растения: информация о поливе и удобрении растения.
-5) reminder
+5) reminder  
 Напоминания о поливе/удобрении растения.
 
 unit-tests: auth, explore, settings
