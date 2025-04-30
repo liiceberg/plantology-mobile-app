@@ -20,9 +20,4 @@ data class PlantModel(
     val minTemperature: Int?,
     val toxicity: Boolean?,
     val saved: Boolean,
-) {
-//    fun empty(): PlantModel {
-//        return PlantModel(
-//        )
-//    }
-}
+)

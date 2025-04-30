@@ -44,7 +44,7 @@ object Libs {
 
     private const val dataStoreVersion = "1.1.2"
 
-    const val navVersion = "2.8.2"
+    const val navVersion = "2.8.9"
 
     const val junitVersion = "4.12"
     const val mockitoVersion = "1.13.16"

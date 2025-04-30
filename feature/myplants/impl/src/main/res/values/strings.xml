@@ -3,12 +3,6 @@
     <string name="my_plants_top_bar_text">My Plants</string>
     <string name="remove_plant">Remove plant</string>
     <string name="add_reminder">Add reminder</string>
-    <string name="care_in_days">in %1$s days</string>
-    <string name="care_in_week">in %1$s week</string>
-    <string name="care_in_month">in %1$s month</string>
-    <string name="no_schedule">No schedule</string>
-    <string name="fertilizer">Fertilizer</string>
-    <string name="water">Water</string>
     <string name="more_plants">More plants</string>
 
 </resources>

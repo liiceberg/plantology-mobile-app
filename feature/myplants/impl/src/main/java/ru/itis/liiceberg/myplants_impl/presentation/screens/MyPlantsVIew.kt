@@ -53,6 +53,7 @@ fun MyPlantsView(
     viewModel: MyPlantsViewModel = hiltViewModel(),
     goToSettings: () -> Unit,
     goToExplore: () -> Unit,
+    goToEditSchedule: (String) -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
 
@@ -61,6 +62,7 @@ fun MyPlantsView(
         goToSettings = goToSettings,
         onRemove = { viewModel.obtainEvent(MyPlantsEvent.RemovePlant(it)) },
         toExplore = goToExplore,
+        onAddReminder = goToEditSchedule,
     )
 
     LaunchedEffect(Unit) {
@@ -74,6 +76,7 @@ private fun MyPlantsView(
     goToSettings: () -> Unit,
     onRemove: (String) -> Unit,
     toExplore: () -> Unit,
+    onAddReminder: (String) -> Unit,
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Scaffold(
@@ -100,12 +103,14 @@ private fun MyPlantsView(
                 ) {
                     items(state.myPlants) {
                         PlantItem(
-                            it.name,
-                            it.scientificName,
-                            it.image,
-                            it.watering,
-                            it.fertilizer
-                        ) { onRemove.invoke(it.id) }
+                            name = it.name,
+                            scientificName = it.scientificName,
+                            image = it.image,
+                            watering = it.watering,
+                            fertilizer = it.fertilizer,
+                            onRemove = { onRemove(it.id) },
+                            onAddReminder = { onAddReminder(it.id) },
+                        )
                     }
                 }
                 SimpleOutlinedButtonWithStartIcon(
@@ -133,7 +138,8 @@ private fun PlantItem(
     image: String,
     watering: String?,
     fertilizer: String?,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    onAddReminder: () -> Unit,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
@@ -178,14 +184,14 @@ private fun PlantItem(
             ) {
                 if (watering != null || fertilizer != null) {
                     SmallCard(
-                        title = stringResource(R.string.water),
+                        title = stringResource(R_UI.string.water),
                         icon = painterResource(id = R_UI.drawable.water_drops),
-                        text = watering ?: stringResource(R.string.no_schedule),
+                        text = watering ?: stringResource(R_UI.string.no_schedule),
                     )
                     SmallCard(
-                        title = stringResource(R.string.fertilizer),
+                        title = stringResource(R_UI.string.fertilizer),
                         icon = painterResource(R_UI.drawable.fertilizer),
-                        text = fertilizer ?: stringResource(R.string.no_schedule),
+                        text = fertilizer ?: stringResource(R_UI.string.no_schedule),
                         modifier = Modifier.padding(start = 32.dp)
                     )
 
@@ -195,7 +201,7 @@ private fun PlantItem(
                         painter = painterResource(id = R_UI.drawable.alarm),
                         iconSize = 18.dp,
                         tint = MaterialTheme.colorScheme.onPrimary
-                    ) {}
+                    ) { onAddReminder() }
                 }
             }
         }
@@ -220,7 +226,7 @@ private fun MyPlantsPreview() {
                             "",
                         )
                     )
-                ), {}, {}, {}
+                ), {}, {}, {}, {}
             )
         }
     }

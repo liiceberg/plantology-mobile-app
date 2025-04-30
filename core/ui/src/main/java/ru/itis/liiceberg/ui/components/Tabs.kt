@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.itis.liiceberg.ui.theme.PlantologyTheme
+import ru.itis.liiceberg.ui.theme.Primary100
 
 @Composable
 fun PrimaryTabs(
@@ -80,7 +81,7 @@ private fun PrimaryTabItem(
 @Composable
 fun SimpleTabs(
     selectedItemIndex: Int,
-    tabItems: Array<String>,
+    tabItems: List<String>,
     modifier: Modifier = Modifier,
     onTabSelected: (index: Int) -> Unit,
 ) {
@@ -91,7 +92,7 @@ fun SimpleTabs(
     ) {
         tabItems.forEachIndexed { index, name ->
             val color =
-                if (selectedItemIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                if (selectedItemIndex == index) MaterialTheme.colorScheme.primary else Primary100
             Tab(
                 selectedItemIndex == index,
                 onClick = { onTabSelected(index) },
@@ -109,7 +110,7 @@ private fun TabsPreview() {
             PrimaryTabs(selectedTab, listOf("First", "Second", "Third")) {
                 selectedTab = it
             }
-            SimpleTabs(selectedTab, arrayOf("First", "Second", "Third")) {
+            SimpleTabs(selectedTab, listOf("First", "Second", "Third")) {
                 selectedTab = it
             }
         }

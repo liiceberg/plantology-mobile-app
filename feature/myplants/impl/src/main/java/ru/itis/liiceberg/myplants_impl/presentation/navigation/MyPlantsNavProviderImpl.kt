@@ -18,7 +18,8 @@ class MyPlantsNavProviderImpl @Inject constructor() : MyPlantsNavProvider {
             onBottomBarVisibilityChanged(true)
             MyPlantsView(
                 goToSettings = { controller.navigate(Route.Settings.Main) },
-                goToExplore = { controller.navigate(Route.BottomMenu.Explore) }
+                goToExplore = { controller.navigate(Route.BottomMenu.Explore) },
+                goToEditSchedule = { controller.navigate(Route.EditSchedule(it)) },
             )
         }
 

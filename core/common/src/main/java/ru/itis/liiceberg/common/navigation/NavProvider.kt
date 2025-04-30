@@ -21,3 +21,5 @@ interface MyPlantsNavProvider : NavProvider
 interface SettingsNavProvider : NavProvider
 
 interface ReminderNavProvider: NavProvider
+
+interface ScheduleNavProvider: NavProvider

@@ -43,6 +43,16 @@ class FavouritesFirebaseDao @Inject constructor(
             .toObjects(FavouritePlant::class.java)
     }
 
+    suspend fun getFavouriteInfo(userId: String, plantId: String) : FavouritePlant? {
+        return favReference
+            .whereEqualTo(USER_ID_FILED, userId)
+            .whereEqualTo(PLANT_ID_FILED, plantId)
+            .get()
+            .await()
+            .firstOrNull()
+            ?.toObject(FavouritePlant::class.java)
+    }
+
     companion object {
         private const val USER_ID_FILED = "userId"
         private const val PLANT_ID_FILED = "plantId"

@@ -25,11 +25,14 @@ sealed class Route {
     data class PlantDetails(val plantId: String) : Route()
 
     object Settings {
-
         @Serializable
         data object Main : Route()
 
         @Serializable
         data object ChangePassword : Route()
     }
+
+    @Serializable
+    data class EditSchedule(val plantId: String) : Route()
+
 }

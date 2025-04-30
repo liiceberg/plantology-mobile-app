@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="schedule_top_bar_text">Edit</string>
+
+    <string name="recommended">Recommended</string>
+    <string name="suggest_water">Suggest Water </string>
+    <string name="suggest_fertilizer">Suggest Fertilizer </string>
+
+    <string name="day_tab">Days</string>
+    <string name="week_tab">Weeks</string>
+    <string name="months_tab">Months</string>
+
+    <string name="done_button">Done</string>
+    <string name="change_schedule_button">Change schedule</string>
+</resources>

@@ -33,5 +33,8 @@ fun NavHostContainer(
         with(navigator.reminder) {
             registerGraph(navController, onBottomBarVisibilityChanged)
         }
+        with(navigator.schedule) {
+            registerGraph(navController, onBottomBarVisibilityChanged)
+        }
     }
 }
