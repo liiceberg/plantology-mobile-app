@@ -22,7 +22,7 @@ class MyPlantsViewModel @Inject constructor(
     MyPlantsState()
 ) {
 
-    override fun init() {
+    init {
         getPlants()
     }
 
@@ -30,9 +30,6 @@ class MyPlantsViewModel @Inject constructor(
         when (event) {
             is MyPlantsEvent.RemovePlant -> {
                 removeMyPlant(event.id)
-            }
-            is MyPlantsEvent.AddReminder -> {
-
             }
         }
     }

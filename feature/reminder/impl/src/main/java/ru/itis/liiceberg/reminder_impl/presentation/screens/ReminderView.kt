@@ -82,87 +82,95 @@ private fun ReminderView(
     onTabSelected: (id: Int) -> Unit,
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Scaffold(
-            topBar = {
-                DarkTopAppBar(
-                    title = stringResource(R.string.reminder_top_bar_text),
-                    action = {
-                        SimpleIconButton(
-                            icon = painterResource(id = R_UI.drawable.notifications),
-                            size = 24.dp,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            onClick = {}
+        when (state.loadState) {
+            LoadState.Initial, LoadState.Loading -> LoadingIndicator()
+            else -> {
+
+                Scaffold(
+                    topBar = {
+                        DarkTopAppBar(
+                            title = stringResource(R.string.reminder_top_bar_text),
+                            action = {
+                                SimpleIconButton(
+                                    icon = painterResource(id = R_UI.drawable.notifications),
+                                    size = 24.dp,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    onClick = {}
+                                )
+                            }
                         )
-                    }
-                )
-            },
-        ) { innerPadding ->
-            Column(Modifier.padding(innerPadding)) {
+                    },
+                ) { innerPadding ->
+                    Column(Modifier.padding(innerPadding)) {
 
-                if (state.loadState != LoadState.Initial && state.tasks.isEmpty()) {
+                        if (state.loadState != LoadState.Initial && state.tasks.isEmpty()) {
 
-                    DisplaySmallText(
-                        stringResource(R.string.reminder_title),
-                        modifier = Modifier.padding(top = 36.dp, start = 16.dp, bottom = 28.dp)
-                    )
-
-                    PrimaryTabs(
-                        selectedItemIndex = state.selectedTab,
-                        tabItems = reminderTabs.map { stringResource(it) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
-                    ) {
-                        onTabSelected(it)
-                    }
-
-                    when (reminderTabs[state.selectedTab]) {
-                        R.string.tab_all -> {
-                            val todayTasks = state.tasks.indexOfFirst { it.time == Time.FUTURE }
-
-                            HeadlineLargeText(
-                                stringResource(R.string.tasks_today),
-                                Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
+                            DisplaySmallText(
+                                stringResource(R.string.reminder_title),
+                                modifier = Modifier.padding(
+                                    top = 36.dp,
+                                    start = 16.dp,
+                                    bottom = 28.dp
+                                )
                             )
-                            if (todayTasks + 1 > 0) {
-                                TasksList(state.tasks.subList(0, todayTasks + 1))
+
+                            PrimaryTabs(
+                                selectedItemIndex = state.selectedTab,
+                                tabItems = reminderTabs.map { stringResource(it) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp)
+                            ) {
+                                onTabSelected(it)
                             }
-                            HeadlineLargeText(
-                                stringResource(R.string.tasks_upcoming),
-                                Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                            )
-                            if (todayTasks != -1) {
-                                TasksList(state.tasks.subList(todayTasks, state.tasks.size))
+
+                            when (reminderTabs[state.selectedTab]) {
+                                R.string.tab_all -> {
+                                    val todayTasks =
+                                        state.tasks.indexOfFirst { it.time == Time.FUTURE }
+
+                                    HeadlineLargeText(
+                                        stringResource(R.string.tasks_today),
+                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
+                                    )
+                                    if (todayTasks + 1 > 0) {
+                                        TasksList(state.tasks.subList(0, todayTasks + 1))
+                                    }
+                                    HeadlineLargeText(
+                                        stringResource(R.string.tasks_upcoming),
+                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
+                                    )
+                                    if (todayTasks != -1) {
+                                        TasksList(state.tasks.subList(todayTasks, state.tasks.size))
+                                    }
+                                }
+
+                                R.string.tab_watering -> {
+                                    HeadlineLargeText(
+                                        stringResource(R.string.watering_tasks),
+                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
+                                    )
+                                    TasksList(state.tasks)
+                                }
+
+                                R.string.tab_fertilizer -> {
+                                    HeadlineLargeText(
+                                        stringResource(R.string.fertilizer_tasks),
+                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
+                                    )
+                                    TasksList(state.tasks)
+                                }
                             }
-                        }
 
-                        R.string.tab_watering -> {
-                            HeadlineLargeText(
-                                stringResource(R.string.watering_tasks),
-                                Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                            )
-                            TasksList(state.tasks)
-                        }
-
-                        R.string.tab_fertilizer -> {
-                            HeadlineLargeText(
-                                stringResource(R.string.fertilizer_tasks),
-                                Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                            )
-                            TasksList(state.tasks)
+                        } else {
+                            EmptyScreen(navigateToExplore = navigateToExplore)
                         }
                     }
-
-                } else {
-                    EmptyScreen(navigateToExplore = navigateToExplore)
+                }
+                if (state.loadState is LoadState.Error) {
+                    ErrorView(errorText = state.loadState.message)
                 }
             }
-        }
-        when (state.loadState) {
-            is LoadState.Error -> ErrorView(errorText = state.loadState.message)
-            LoadState.Loading -> LoadingIndicator()
-            else -> {}
-
         }
     }
 }

@@ -23,7 +23,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +47,9 @@ import ru.itis.liiceberg.schedule_impl.R
 import ru.itis.liiceberg.ui.components.BodyLargeText
 import ru.itis.liiceberg.ui.components.DarkIcon
 import ru.itis.liiceberg.ui.components.DarkTopAppBar
+import ru.itis.liiceberg.ui.components.ErrorView
 import ru.itis.liiceberg.ui.components.KeyValueText
+import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.SimpleButton
 import ru.itis.liiceberg.ui.components.SimpleImage
 import ru.itis.liiceberg.ui.components.SimpleOutlinedButton
@@ -57,6 +58,7 @@ import ru.itis.liiceberg.ui.components.SimpleTabs
 import ru.itis.liiceberg.ui.components.SmallCard
 import ru.itis.liiceberg.ui.components.TitleLargeText
 import ru.itis.liiceberg.ui.components.TitleSmallText
+import ru.itis.liiceberg.ui.model.LoadState
 import ru.itis.liiceberg.ui.theme.PlantologyTheme
 import ru.itis.liiceberg.ui.R as R_UI
 
@@ -69,11 +71,14 @@ fun ChangeScheduleView(
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) { viewModel.loadInfo(plantId) }
+    LaunchedEffect(plantId) { viewModel.obtainEvent(ChangeScheduleEvent.ScreenOpened(plantId)) }
 
     ChangeScheduleView(
         state = state,
         goBack = goBack,
+        saveResults = { watering, fertilizer ->
+            viewModel.obtainEvent(ChangeScheduleEvent.OnSave(watering, fertilizer))
+        }
     )
 }
 
@@ -82,58 +87,69 @@ fun ChangeScheduleView(
 private fun ChangeScheduleView(
     state: ChangeScheduleState,
     goBack: () -> Unit,
+    saveResults: (watering: TimeValues?, fertilizer: TimeValues?) -> Unit,
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        with(state.plant) {
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetContent = {
-                    ChangeScheduleSheetContent(
-                        wateringSchedule = wateringSchedule,
-                        fertilizerSchedule = fertilizerSchedule,
-                        onSaveResults = {
-                            scope.launch { scaffoldState.bottomSheetState.partialExpand() }
-                        }
-                    )
-                },
-                topBar = {
-                    DarkTopAppBar(
-                        title = stringResource(R.string.schedule_top_bar_text),
-                        onNavigate = goBack,
-                    )
-                },
-                sheetPeekHeight = 0.dp,
-                sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            ) { innerPadding ->
+        when (state.loadingState) {
+            LoadState.Initial, LoadState.Loading -> LoadingIndicator()
+            else -> {
+                with(state.plant) {
+                    BottomSheetScaffold(
+                        scaffoldState = scaffoldState,
+                        sheetContent = {
+                            ChangeScheduleSheetContent(
+                                wateringSchedule = wateringSchedule,
+                                fertilizerSchedule = fertilizerSchedule,
+                                onSaveResults = { watering, fertilizer ->
+                                    saveResults(watering, fertilizer)
+                                    scope.launch { scaffoldState.bottomSheetState.partialExpand() }
+                                }
+                            )
+                        },
+                        topBar = {
+                            DarkTopAppBar(
+                                title = stringResource(R.string.schedule_top_bar_text),
+                                onNavigate = goBack,
+                            )
+                        },
+                        sheetPeekHeight = 0.dp,
+                        sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    ) { innerPadding ->
 
-                Column(
-                    Modifier
-                        .padding(innerPadding)
-                        .padding(start = 16.dp, end = 16.dp, top = 40.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(74.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        SimpleImage(image)
-                        Column(Modifier.padding(start = 14.dp, top = 12.dp, bottom = 12.dp)) {
-                            TitleLargeText(plantName)
-                            TitleSmallText(scientificName)
+                        Column(
+                            Modifier
+                                .padding(innerPadding)
+                                .padding(start = 16.dp, end = 16.dp, top = 40.dp),
+                            verticalArrangement = Arrangement.spacedBy(24.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(74.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                            ) {
+                                SimpleImage(image)
+                                Column(Modifier.padding(start = 14.dp, top = 12.dp, bottom = 12.dp)) {
+                                    TitleLargeText(plantName)
+                                    TitleSmallText(scientificName)
+                                }
+                            }
+                            ScheduleInfo(wateringSchedule.stringValue, fertilizerSchedule.stringValue) {
+                                scope.launch { scaffoldState.bottomSheetState.expand() }
+                            }
                         }
                     }
-                    ScheduleInfo(wateringSchedule.stringValue, fertilizerSchedule.stringValue) {
-                        scope.launch { scaffoldState.bottomSheetState.expand() }
+                    if (state.loadingState is LoadState.Error) {
+                        ErrorView(errorText = state.loadingState.message)
                     }
                 }
             }
         }
+
     }
 }
 
@@ -168,7 +184,7 @@ fun ScheduleInfo(
 private fun ChangeScheduleSheetContent(
     wateringSchedule: ScheduleItem,
     fertilizerSchedule: ScheduleItem,
-    onSaveResults: () -> Unit,
+    onSaveResults: (watering: TimeValues?, fertilizer: TimeValues?) -> Unit,
 ) {
     var tempWateringSchedule by remember { mutableStateOf(wateringSchedule.value) }
     var tempFertilizerSchedule by remember { mutableStateOf(fertilizerSchedule.value) }
@@ -185,7 +201,10 @@ private fun ChangeScheduleSheetContent(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             KeyValueText(stringResource(R.string.suggest_water), wateringSchedule.description)
-            KeyValueText(stringResource(R.string.suggest_fertilizer), fertilizerSchedule.description)
+            KeyValueText(
+                stringResource(R.string.suggest_fertilizer),
+                fertilizerSchedule.description
+            )
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -201,7 +220,7 @@ private fun ChangeScheduleSheetContent(
             stringResource(R.string.done_button),
             Modifier.padding(horizontal = 4.dp, vertical = 48.dp)
         ) {
-            onSaveResults()
+            onSaveResults(tempWateringSchedule, tempFertilizerSchedule)
         }
     }
 }
@@ -212,8 +231,6 @@ private fun ScheduleItemView(
     type: TaskType,
     onValueChange: (TimeValues?) -> Unit
 ) {
-    val isActive by remember(value) { derivedStateOf { value != null } }
-
     Card(
         colors = CardDefaults.cardColors()
             .copy(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
@@ -248,7 +265,7 @@ private fun ScheduleItemView(
                     BodyLargeText(stringResource(stringId))
                 }
                 Switch(
-                    checked = isActive,
+                    checked = value != null,
                     onCheckedChange = { checked ->
                         if (checked) {
                             val unit = value?.periodUnit ?: TimeUnit.DAYS
@@ -259,7 +276,7 @@ private fun ScheduleItemView(
                     })
             }
 
-            if (isActive && value != null) {
+            if (value != null) {
 
                 val currentTabIndex = tabs.indexOfFirst { it.unit == value.periodUnit }
 
@@ -295,7 +312,7 @@ private fun ScheduleItemView(
 private fun ChangeScheduleBottomSheetPreview() {
     PlantologyTheme {
         Column {
-            ChangeScheduleView(ChangeScheduleState()) {}
+            ChangeScheduleView(ChangeScheduleState(), goBack = {}, saveResults = { _, _ ->})
         }
     }
 }

@@ -63,7 +63,7 @@ fun ExploreView(
     )
 
     LaunchedEffect(Unit) {
-        viewModel.init()
+        viewModel.obtainEvent(ExploreEvent.ScreenOpened)
     }
 }
 
@@ -75,59 +75,65 @@ fun ExploreView(
     navigateToDetails: (plantId: String) -> Unit,
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Scaffold(
-            topBar = {
-                LightTopAppBar(
-                    title = stringResource(R.string.explore_top_bar_text),
-                    action = {
-                        SimpleIconButton(
-                            icon = painterResource(id = R_UI.drawable.notifications),
-                            size = 24.dp,
-                            tint = MaterialTheme.colorScheme.onSecondary,
-                            onClick = {}
+        when(state.loadState) {
+            LoadState.Initial, LoadState.Loading -> LoadingIndicator()
+            else -> {
+                Scaffold(
+                    topBar = {
+                        LightTopAppBar(
+                            title = stringResource(R.string.explore_top_bar_text),
+                            action = {
+                                SimpleIconButton(
+                                    icon = painterResource(id = R_UI.drawable.notifications),
+                                    size = 24.dp,
+                                    tint = MaterialTheme.colorScheme.onSecondary,
+                                    onClick = {}
+                                )
+                            }
                         )
-                    }
-                )
-            },
-        ) { innerPadding ->
-            Column(
-                Modifier.padding(top = innerPadding.calculateTopPadding())
-            ) {
-                SearchView(
-                    searchQuery = state.searchQuery,
-                    onSearchQueryChange = { query ->
-                        onSearchFilled(query)
                     },
-                    searchResult = {
-                        state.searchResult.let { resultsList ->
-                            Box(Modifier.align(Alignment.CenterHorizontally)) {
-                                if (resultsList.isEmpty()) {
-                                    BodyMediumText(stringResource(R.string.no_results), modifier = Modifier.padding(top = 16.dp))
-                                } else {
-                                    LazyColumn {
-                                        items(resultsList.size) { idx ->
-                                            SearchResultPlantCard(resultsList[idx]) {
-                                                navigateToDetails(resultsList[idx].id)
+                ) { innerPadding ->
+                    Column(
+                        Modifier.padding(top = innerPadding.calculateTopPadding())
+                    ) {
+                        SearchView(
+                            searchQuery = state.searchQuery,
+                            onSearchQueryChange = { query ->
+                                onSearchFilled(query)
+                            },
+                            searchResult = {
+                                state.searchResult.let { resultsList ->
+                                    Box(Modifier.align(Alignment.CenterHorizontally)) {
+                                        if (resultsList.isEmpty()) {
+                                            BodyMediumText(
+                                                stringResource(R.string.no_results),
+                                                modifier = Modifier.padding(top = 16.dp)
+                                            )
+                                        } else {
+                                            LazyColumn {
+                                                items(resultsList.size) { idx ->
+                                                    SearchResultPlantCard(resultsList[idx]) {
+                                                        navigateToDetails(resultsList[idx].id)
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                        }
-                    },
-                    onSearch = { onSearch() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 36.dp),
-                )
-                AllPlantsList(state.items, navigateToDetails)
-            }
-        }
+                            },
+                            onSearch = { onSearch() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 36.dp),
+                        )
+                        AllPlantsList(state.items, navigateToDetails)
+                    }
+                }
 
-        when (state.loadState) {
-            is LoadState.Error -> ErrorView(errorText = state.loadState.message)
-            LoadState.Loading -> LoadingIndicator()
-            else -> {}
+                if (state.loadState is LoadState.Error) {
+                    ErrorView(errorText = state.loadState.message)
+                }
+            }
         }
     }
 }

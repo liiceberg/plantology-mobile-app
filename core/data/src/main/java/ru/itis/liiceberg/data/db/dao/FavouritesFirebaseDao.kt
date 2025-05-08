@@ -2,6 +2,7 @@ package ru.itis.liiceberg.data.db.dao
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import ru.itis.liiceberg.common.model.TimeValues
 import ru.itis.liiceberg.data.db.FirestoreCollections
 import ru.itis.liiceberg.data.db.model.FavouritePlant
 import javax.inject.Inject
@@ -36,6 +37,23 @@ class FavouritesFirebaseDao @Inject constructor(
             }
     }
 
+    fun updateFavouriteInfo(
+        favId: String,
+        wateringPeriod: TimeValues?,
+        fertilizerPeriod: TimeValues?,
+    ) {
+        favReference.document(favId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                querySnapshot.reference.update(
+                    buildMap {
+                        wateringPeriod?.let { put(WATERING_PERIOD, it) }
+                        fertilizerPeriod?.let { put(FERTILIZER_PERIOD, it) }
+                    }
+                )
+            }
+    }
+
     suspend fun getFavorites(userId: String): List<FavouritePlant> {
         return favReference
             .whereEqualTo(USER_ID_FILED, userId)
@@ -43,18 +61,22 @@ class FavouritesFirebaseDao @Inject constructor(
             .toObjects(FavouritePlant::class.java)
     }
 
-    suspend fun getFavouriteInfo(userId: String, plantId: String) : FavouritePlant? {
-        return favReference
+    suspend fun getFavouriteInfo(userId: String, plantId: String): FavouritePlant? {
+
+        val res = favReference
             .whereEqualTo(USER_ID_FILED, userId)
             .whereEqualTo(PLANT_ID_FILED, plantId)
             .get()
             .await()
             .firstOrNull()
-            ?.toObject(FavouritePlant::class.java)
+
+        return res?.toObject(FavouritePlant::class.java).apply { this?.id = res?.id }
     }
 
     companion object {
         private const val USER_ID_FILED = "userId"
         private const val PLANT_ID_FILED = "plantId"
+        private const val WATERING_PERIOD = "wateringPeriod"
+        private const val FERTILIZER_PERIOD = "fertilizerPeriod"
     }
 }

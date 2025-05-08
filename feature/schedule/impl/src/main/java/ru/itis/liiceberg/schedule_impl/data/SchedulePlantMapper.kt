@@ -9,7 +9,7 @@ class SchedulePlantMapper @Inject constructor() {
 
     fun mapPlantAndFavouriteToSchedulePlant(plant: Plant?, favourite: FavouritePlant?) : SchedulePlant {
         return SchedulePlant(
-            plant?.id ?: "",
+            favourite?.id ?: "",
             plant?.name ?: "",
             plant?.scientificName ?: "",
             plant?.image?.firstOrNull() ?: "",

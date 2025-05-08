@@ -50,7 +50,7 @@ fun SettingsView(
     )
 
     LaunchedEffect(Unit) {
-        viewModel.init()
+        viewModel.obtainEvent(SettingsEvent.ScreenOpened)
 
         viewModel.viewActions().collect { action ->
             when (action) {

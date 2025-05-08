@@ -25,6 +25,8 @@ class ExploreViewModel @Inject constructor(
 
     override fun obtainEvent(event: ExploreEvent) {
         when (event) {
+            ExploreEvent.ScreenOpened -> init()
+
             is ExploreEvent.OnSearchFieldFilled -> {
                 val results = filterSearchResults(event.input.trim())
                 viewState = viewState.copy(

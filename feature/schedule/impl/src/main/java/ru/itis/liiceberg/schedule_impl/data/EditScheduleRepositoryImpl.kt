@@ -1,5 +1,6 @@
 package ru.itis.liiceberg.schedule_impl.data
 
+import ru.itis.liiceberg.common.model.TimeValues
 import ru.itis.liiceberg.data.db.dao.FavouritesFirebaseDao
 import ru.itis.liiceberg.data.db.dao.PlantFirebaseDao
 import ru.itis.liiceberg.data.storage.UserDataStore
@@ -13,11 +14,16 @@ class EditScheduleRepositoryImpl @Inject constructor(
     private val userDataStore: UserDataStore,
     private val mapper: SchedulePlantMapper,
 ) : EditScheduleRepository {
-    override suspend fun saveSchedule() {
-        TODO("Not yet implemented")
+
+    override suspend fun saveSchedule(
+        favId: String,
+        wateringPeriod: TimeValues?,
+        fertilizerPeriod: TimeValues?,
+    ) {
+        favouritesFirebaseDao.updateFavouriteInfo(favId, wateringPeriod, fertilizerPeriod)
     }
 
-    override suspend fun getPlantInfo(plantId: String) : SchedulePlant {
+    override suspend fun getPlantInfo(plantId: String): SchedulePlant {
         val plant = plantFirebaseDao.getPlantById(plantId)
         val userId = userDataStore.getUserId() ?: throw NullPointerException()
         val fav = favouritesFirebaseDao.getFavouriteInfo(userId = userId, plantId = plantId)

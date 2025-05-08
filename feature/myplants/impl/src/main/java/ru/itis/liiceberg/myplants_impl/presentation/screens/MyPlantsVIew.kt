@@ -18,7 +18,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,12 +61,9 @@ fun MyPlantsView(
         goToSettings = goToSettings,
         onRemove = { viewModel.obtainEvent(MyPlantsEvent.RemovePlant(it)) },
         toExplore = goToExplore,
-        onAddReminder = goToEditSchedule,
+        goToEditSchedule = goToEditSchedule,
     )
 
-    LaunchedEffect(Unit) {
-        viewModel.init()
-    }
 }
 
 @Composable
@@ -76,57 +72,60 @@ private fun MyPlantsView(
     goToSettings: () -> Unit,
     onRemove: (String) -> Unit,
     toExplore: () -> Unit,
-    onAddReminder: (String) -> Unit,
+    goToEditSchedule: (String) -> Unit,
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Scaffold(
-            topBar = {
-                DarkTopAppBar(
-                    title = stringResource(R.string.my_plants_top_bar_text),
-                    action = {
-                        SimpleIconButton(
-                            icon = painterResource(id = R_UI.drawable.settings),
-                            size = 24.dp,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            onClick = goToSettings
+        when(state.loadState) {
+            is LoadState.Initial, LoadState.Loading -> LoadingIndicator()
+            else -> {
+                Scaffold(
+                    topBar = {
+                        DarkTopAppBar(
+                            title = stringResource(R.string.my_plants_top_bar_text),
+                            action = {
+                                SimpleIconButton(
+                                    icon = painterResource(id = R_UI.drawable.settings),
+                                    size = 24.dp,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    onClick = goToSettings
+                                )
+                            }
                         )
-                    }
-                )
-            },
-        ) { innerPadding ->
-            Column {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(top = 16.dp)
-                ) {
-                    items(state.myPlants) {
-                        PlantItem(
-                            name = it.name,
-                            scientificName = it.scientificName,
-                            image = it.image,
-                            watering = it.watering,
-                            fertilizer = it.fertilizer,
-                            onRemove = { onRemove(it.id) },
-                            onAddReminder = { onAddReminder(it.id) },
+                    },
+                ) { innerPadding ->
+                    Column {
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(top = 16.dp)
+                        ) {
+                            items(state.myPlants) {
+                                PlantItem(
+                                    name = it.name,
+                                    scientificName = it.scientificName,
+                                    image = it.image,
+                                    watering = it.watering,
+                                    fertilizer = it.fertilizer,
+                                    onRemove = { onRemove(it.id) },
+                                    onAddReminder = { goToEditSchedule(it.id) },
+                                )
+                            }
+                        }
+                        SimpleOutlinedButtonWithStartIcon(
+                            text = stringResource(R.string.more_plants),
+                            icon = painterResource(id = R_UI.drawable.plus),
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .padding(top = 20.dp),
+                            onClick = toExplore,
                         )
                     }
                 }
-                SimpleOutlinedButtonWithStartIcon(
-                    text = stringResource(R.string.more_plants),
-                    icon = painterResource(id = R_UI.drawable.plus),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .padding(top = 20.dp),
-                    onClick = toExplore,
-                )
+                if (state.loadState is LoadState.Error) {
+                    ErrorView(errorText = state.loadState.message)
+                }
             }
-        }
-        when(state.loadState){
-            is LoadState.Error -> ErrorView(errorText = state.loadState.message)
-            LoadState.Loading -> LoadingIndicator()
-            else -> {}
         }
     }
 }
@@ -173,6 +172,12 @@ private fun PlantItem(
                                 ErrorMediumText(text = stringResource(R.string.remove_plant))
                             },
                             onClick = onRemove,
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                BodyMediumText(text = stringResource(R.string.edit_schedule))
+                            },
+                            onClick = onAddReminder,
                         )
                     }
                 }

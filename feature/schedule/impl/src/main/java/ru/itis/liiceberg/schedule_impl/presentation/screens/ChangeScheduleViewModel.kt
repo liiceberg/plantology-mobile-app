@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.itis.liiceberg.common.exceptions.ExceptionHandlerDelegate
 import ru.itis.liiceberg.common.exceptions.runCatching
+import ru.itis.liiceberg.common.model.TimeValues
 import ru.itis.liiceberg.schedule_impl.domain.usecase.EditScheduleUseCase
 import ru.itis.liiceberg.schedule_impl.domain.usecase.GetPlantInfoUseCase
 import ru.itis.liiceberg.schedule_impl.presentation.mapper.SchedulePlantUiModelMapper
@@ -24,17 +25,25 @@ class ChangeScheduleViewModel @Inject constructor(
 
     override fun obtainEvent(event: ChangeScheduleEvent) {
         when (event) {
-            ChangeScheduleEvent.OnSave -> {
-                editSchedule()
+            is ChangeScheduleEvent.ScreenOpened -> loadInfo(event.plantId)
+            is ChangeScheduleEvent.OnSave -> {
+                with(viewState.plant) {
+                    editSchedule()
+                    saveSchedule(id, event.watering, event.fertilizer)
+                }
             }
         }
     }
 
-    private fun editSchedule() {
+    private fun saveSchedule(
+        id: String,
+        wateringPeriod: TimeValues?,
+        fertilizerPeriod: TimeValues?
+    ) {
         viewModelScope.launch {
             runCatching(exceptionHandlerDelegate) {
                 viewState = viewState.copy(loadingState = LoadState.Loading)
-                editScheduleUseCase.invoke()
+                editScheduleUseCase.invoke(id, wateringPeriod, fertilizerPeriod)
             }.onSuccess {
                 viewState = viewState.copy(loadingState = LoadState.Success)
             }.onFailure { ex ->
@@ -45,7 +54,11 @@ class ChangeScheduleViewModel @Inject constructor(
         }
     }
 
-    fun loadInfo(plantId: String) {
+    private fun editSchedule() {
+        viewState = viewState.copy()
+    }
+
+    private fun loadInfo(plantId: String) {
         viewModelScope.launch {
             runCatching(exceptionHandlerDelegate) {
                 viewState = viewState.copy(loadingState = LoadState.Loading)
