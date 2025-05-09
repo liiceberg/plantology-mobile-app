@@ -45,7 +45,7 @@ fun SettingsView(
     SettingsView(
         state,
         toChangePassword,
-        viewModel::logout,
+        { viewModel.obtainEvent(SettingsEvent.OnLogout) },
         onBack,
     )
 

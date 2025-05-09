@@ -21,27 +21,9 @@ class ReminderViewModel @Inject constructor(
     private val exceptionHandler: ExceptionHandlerDelegate,
 ) : BaseViewModel<ReminderState, ReminderEvent, ReminderAction>(ReminderState()) {
 
-    init {
-        init()
-    }
-
     private var allTasks = listOf<TaskUiModel>()
 
     override fun init() {
-        getTasks()
-    }
-
-    override fun obtainEvent(event: ReminderEvent) {
-        when (event) {
-            is ReminderEvent.OnTabSelected -> {
-                with(event.index) {
-                    viewState = viewState.copy(selectedTab = this, tasks = filterTasks(this))
-                }
-            }
-        }
-    }
-
-    private fun getTasks() {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
                 viewState = viewState.copy(loadState = LoadState.Loading)
@@ -52,6 +34,17 @@ class ReminderViewModel @Inject constructor(
             }.onFailure { ex ->
                 ex.message?.let {
                     viewState = viewState.copy(loadState = LoadState.Error(it))
+                }
+            }
+        }
+    }
+
+    override fun obtainEvent(event: ReminderEvent) {
+        when (event) {
+            ReminderEvent.ScreenOpened -> init()
+            is ReminderEvent.OnTabSelected -> {
+                with(event.index) {
+                    viewState = viewState.copy(selectedTab = this, tasks = filterTasks(this))
                 }
             }
         }

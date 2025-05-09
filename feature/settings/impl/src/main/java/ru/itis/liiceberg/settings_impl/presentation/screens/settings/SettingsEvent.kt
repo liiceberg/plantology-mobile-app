@@ -4,4 +4,5 @@ import ru.itis.liiceberg.ui.model.UiEvent
 
 sealed interface SettingsEvent : UiEvent {
     data object ScreenOpened: SettingsEvent
+    data object OnLogout: SettingsEvent
 }

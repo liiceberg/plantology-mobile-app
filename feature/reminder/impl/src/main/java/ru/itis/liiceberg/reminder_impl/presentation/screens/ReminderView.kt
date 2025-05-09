@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,11 +69,16 @@ fun ReminderView(
     navigateToExplore: () -> Unit,
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
+
     ReminderView(
         state = state,
         onTabSelected = { id -> viewModel.obtainEvent(ReminderEvent.OnTabSelected(id)) },
         navigateToExplore = navigateToExplore
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.obtainEvent(ReminderEvent.ScreenOpened)
+    }
 }
 
 @Composable

@@ -20,25 +20,14 @@ class SettingsViewModel @Inject constructor(
     SettingsState()
 ) {
 
-    override fun init() {
-        loadUserInfo()
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            runCatching(exceptionHandler) {
-                logOutUseCase.invoke()
-            }.onSuccess {
-                viewAction = SettingsAction.GoToSignIn
-            }.onFailure { ex ->
-                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
-            }
+    override fun obtainEvent(event: SettingsEvent) {
+        when(event) {
+            SettingsEvent.ScreenOpened -> init()
+            SettingsEvent.OnLogout -> logout()
         }
     }
 
-
-
-    private fun loadUserInfo() {
+    override fun init() {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
                 viewState = viewState.copy(loadState = LoadState.Loading)
@@ -49,6 +38,18 @@ class SettingsViewModel @Inject constructor(
                     username = it.username,
                     email = it.email
                 )
+            }.onFailure { ex ->
+                ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
+            }
+        }
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            runCatching(exceptionHandler) {
+                logOutUseCase.invoke()
+            }.onSuccess {
+                viewAction = SettingsAction.GoToSignIn
             }.onFailure { ex ->
                 ex.message?.let { viewState = viewState.copy(loadState = LoadState.Error(it)) }
             }

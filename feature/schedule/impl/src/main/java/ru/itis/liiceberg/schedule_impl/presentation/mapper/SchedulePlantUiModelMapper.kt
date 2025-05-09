@@ -1,5 +1,6 @@
 package ru.itis.liiceberg.schedule_impl.presentation.mapper
 
+import ru.itis.liiceberg.common.model.TimeValues
 import ru.itis.liiceberg.common.resources.ResourceManager
 import ru.itis.liiceberg.common.util.getValueInString
 import ru.itis.liiceberg.schedule_api.domain.model.SchedulePlant
@@ -12,16 +13,16 @@ class SchedulePlantUiModelMapper @Inject constructor(
     private val resourceManager: ResourceManager,
 ) {
     fun mapSchedulePlantToSchedulePlantUiModel(schedulePlant: SchedulePlant): SchedulePlantUiModel {
-        val noScheduleText = resourceManager.getString(R.string.no_schedule)
+
         return with(schedulePlant) {
             val wateringScheduleItem = ScheduleItem(
                 wateringSchedule,
-                wateringSchedule?.getValueInString(resourceManager) ?: noScheduleText,
+                getScheduleText(wateringSchedule),
                 wateringInfo
             )
             val fertilizerScheduleItem = ScheduleItem(
                 fertilizerSchedule,
-                fertilizerSchedule?.getValueInString(resourceManager) ?: noScheduleText,
+                getScheduleText(fertilizerSchedule),
                 fertilizerInfo
             )
             SchedulePlantUiModel(
@@ -33,5 +34,10 @@ class SchedulePlantUiModelMapper @Inject constructor(
                 fertilizerScheduleItem,
             )
         }
+    }
+
+    fun getScheduleText(period: TimeValues?) : String {
+        val noScheduleText = resourceManager.getString(R.string.no_schedule)
+        return period?.getValueInString(resourceManager) ?: noScheduleText
     }
 }

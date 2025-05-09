@@ -22,19 +22,16 @@ class MyPlantsViewModel @Inject constructor(
     MyPlantsState()
 ) {
 
-    init {
-        getPlants()
-    }
-
     override fun obtainEvent(event: MyPlantsEvent) {
         when (event) {
+            MyPlantsEvent.ScreenOpened -> init()
             is MyPlantsEvent.RemovePlant -> {
                 removeMyPlant(event.id)
             }
         }
     }
 
-    private fun getPlants() {
+    override fun init() {
         viewModelScope.launch {
             runCatching(exceptionHandler) {
                 viewState = viewState.copy(loadState = LoadState.Loading)

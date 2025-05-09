@@ -28,7 +28,6 @@ class ChangeScheduleViewModel @Inject constructor(
             is ChangeScheduleEvent.ScreenOpened -> loadInfo(event.plantId)
             is ChangeScheduleEvent.OnSave -> {
                 with(viewState.plant) {
-                    editSchedule()
                     saveSchedule(id, event.watering, event.fertilizer)
                 }
             }
@@ -45,6 +44,7 @@ class ChangeScheduleViewModel @Inject constructor(
                 viewState = viewState.copy(loadingState = LoadState.Loading)
                 editScheduleUseCase.invoke(id, wateringPeriod, fertilizerPeriod)
             }.onSuccess {
+                editSchedule(wateringPeriod, fertilizerPeriod)
                 viewState = viewState.copy(loadingState = LoadState.Success)
             }.onFailure { ex ->
                 ex.message?.let {
@@ -54,8 +54,26 @@ class ChangeScheduleViewModel @Inject constructor(
         }
     }
 
-    private fun editSchedule() {
-        viewState = viewState.copy()
+    private fun editSchedule(
+        wateringPeriod: TimeValues?,
+        fertilizerPeriod: TimeValues?
+    ) {
+        with(viewState.plant) {
+            val newWateringSchedule = wateringSchedule.copy(
+                value = wateringPeriod,
+                stringValue = mapper.getScheduleText(wateringPeriod)
+            )
+            val newFertilizerSchedule = fertilizerSchedule.copy(
+                value = fertilizerPeriod,
+                stringValue = mapper.getScheduleText(fertilizerPeriod)
+            )
+            viewState = viewState.copy(
+                plant = this.copy(
+                    wateringSchedule = newWateringSchedule,
+                    fertilizerSchedule = newFertilizerSchedule
+                )
+            )
+        }
     }
 
     private fun loadInfo(plantId: String) {
