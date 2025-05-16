@@ -19,26 +19,29 @@ class TaskModelMapper @Inject constructor(
             val nextCaringDate = getNextCaringDate()
             val daysDifference = ChronoUnit.DAYS.between(nextCaringDate, today)
             val dateText: String
-            val completed: Boolean
-            if (lastCaringDate == today) {
-                dateText = resourceManager.getString(R.string.today_care)
-                completed = true
-            } else {
-                completed = false
-                dateText = when {
-                    daysDifference == 0L -> resourceManager.getString(R.string.today_care)
-                    daysDifference > 0 -> resourceManager.getString(R.string.late_care, daysDifference)
-                    else -> resourceManager.getString(R.string.future_care, -daysDifference)
+            val time: Time
+            when {
+                daysDifference == 0L -> {
+                    time = Time.PRESENT
+                    dateText = resourceManager.getString(R.string.today_care)
+                }
+                daysDifference > 0 -> {
+                    time = Time.PAST
+                    dateText = resourceManager.getString(R.string.late_care, daysDifference)
+                }
+                else -> {
+                    time = Time.FUTURE
+                    dateText = resourceManager.getString(R.string.future_care, -daysDifference)
                 }
             }
-
             return TaskUiModel(
+                id = id,
                 type = type,
                 plantName = plantName,
                 imageUrl = imageUrl,
                 dateText = dateText,
-                completed = completed,
-                time = Time.PRESENT,
+                completed = false,
+                time = time,
             )
         }
     }

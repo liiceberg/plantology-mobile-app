@@ -93,6 +93,7 @@ class UserFirebaseDao @Inject constructor(
             firestore.collection(FirestoreCollections.USERS)
                 .document(uid)
                 .update(PASSWORD_FIELD, newPassword)
+                .await()
         }
     }
 

@@ -16,6 +16,6 @@
     <string name="passwords_not_equals_error">Passwords not equals</string>
 
     <string name="care_in_days">in %1$s days</string>
-    <string name="care_in_week">in %1$s week</string>
-    <string name="care_in_month">in %1$s month</string>
+    <string name="care_in_week">in %1$s weeks</string>
+    <string name="care_in_month">in %1$s months</string>
 </resources>

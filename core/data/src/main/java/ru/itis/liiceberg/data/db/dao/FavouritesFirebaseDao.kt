@@ -15,54 +15,57 @@ class FavouritesFirebaseDao @Inject constructor(
 
     private val favReference = firestore.collection(FirestoreCollections.FAVOURITES)
 
-    fun addToFavorites(userId: String, plantId: String) {
+    suspend fun addToFavorites(userId: String, plantId: String) {
         val fav = FavouritePlant(
             userId = userId,
             plantId = plantId,
             wateringPeriod = null,
             fertilizerPeriod = null
         )
-        favReference.add(fav)
+        favReference.add(fav).await()
     }
 
-    fun removeFromFavorites(userId: String, plantId: String) {
+    suspend fun removeFromFavorites(userId: String, plantId: String) {
         favReference
             .whereEqualTo(USER_ID_FILED, userId)
             .whereEqualTo(PLANT_ID_FILED, plantId)
             .get()
-            .addOnSuccessListener { documents ->
-                for (doc in documents) {
-                    favReference.document(doc.id).delete()
-                }
+            .await()
+            .forEach { doc ->
+                favReference.document(doc.id).delete()
             }
     }
 
-    fun updateFavouriteInfo(
+    suspend fun updateFavouriteInfo(
         favId: String,
         wateringPeriod: TimeValues?,
         fertilizerPeriod: TimeValues?,
     ) {
         favReference.document(favId)
             .get()
-            .addOnSuccessListener { querySnapshot ->
-                querySnapshot.reference.update(
-                    buildMap {
-                        wateringPeriod?.let { put(WATERING_PERIOD, it) }
-                        fertilizerPeriod?.let { put(FERTILIZER_PERIOD, it) }
-                    }
-                )
-            }
+            .await()
+            .reference.update(
+                buildMap {
+                    wateringPeriod?.let { put(WATERING_PERIOD, it) }
+                    fertilizerPeriod?.let { put(FERTILIZER_PERIOD, it) }
+                }
+            )
     }
 
     suspend fun getFavorites(userId: String): List<FavouritePlant> {
-        return favReference
+        val items = mutableListOf<FavouritePlant>()
+        val result = favReference
             .whereEqualTo(USER_ID_FILED, userId)
-            .get().await()
-            .toObjects(FavouritePlant::class.java)
+            .get()
+            .await()
+
+        items.addAll(result.toObjects(FavouritePlant::class.java))
+        result.documents.forEachIndexed { i, doc -> items[i].id = doc.id }
+
+        return items
     }
 
     suspend fun getFavouriteInfo(userId: String, plantId: String): FavouritePlant? {
-
         val res = favReference
             .whereEqualTo(USER_ID_FILED, userId)
             .whereEqualTo(PLANT_ID_FILED, plantId)

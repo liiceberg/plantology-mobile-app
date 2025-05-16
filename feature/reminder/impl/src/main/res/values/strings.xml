@@ -17,4 +17,5 @@
     <string name="late_care">%1$s Day late</string>
     <string name="today_care">Today</string>
     <string name="future_care">In %1$s days</string>
+    <string name="no_tasks_message">There are no tasks yet</string>
 </resources>

@@ -16,6 +16,7 @@ class ReminderMapper @Inject constructor() {
             ?.atZone(ZoneId.systemDefault())
             ?.toLocalDate()
         return TaskModel(
+            id = task.id ?: "",
             type = task.type,
             plantName = plant?.name ?: "",
             imageUrl = plant?.image?.firstOrNull() ?: "",

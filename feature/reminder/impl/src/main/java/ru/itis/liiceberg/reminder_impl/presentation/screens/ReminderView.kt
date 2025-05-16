@@ -2,14 +2,15 @@ package ru.itis.liiceberg.reminder_impl.presentation.screens
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -73,7 +74,10 @@ fun ReminderView(
     ReminderView(
         state = state,
         onTabSelected = { id -> viewModel.obtainEvent(ReminderEvent.OnTabSelected(id)) },
-        navigateToExplore = navigateToExplore
+        navigateToExplore = navigateToExplore,
+        onTaskClick = { key, id ->
+            viewModel.obtainEvent(ReminderEvent.OnTaskClick(id = id, key = key))
+        }
     )
 
     LaunchedEffect(Unit) {
@@ -81,11 +85,13 @@ fun ReminderView(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ReminderView(
     state: ReminderState,
     navigateToExplore: () -> Unit,
     onTabSelected: (id: Int) -> Unit,
+    onTaskClick: (key: Time, id: String) -> Unit,
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when (state.loadState) {
@@ -108,9 +114,9 @@ private fun ReminderView(
                     },
                 ) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-
-                        if (state.loadState != LoadState.Initial && state.tasks.isEmpty()) {
-
+                        if (state.selectedTab == 0 && state.tasks.isEmpty()) {
+                            EmptyScreen(navigateToExplore = navigateToExplore)
+                        } else {
                             DisplaySmallText(
                                 stringResource(R.string.reminder_title),
                                 modifier = Modifier.padding(
@@ -125,51 +131,90 @@ private fun ReminderView(
                                 tabItems = reminderTabs.map { stringResource(it) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 20.dp)
+                                    .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
                             ) {
                                 onTabSelected(it)
                             }
 
-                            when (reminderTabs[state.selectedTab]) {
+
+                            val headers = when (reminderTabs[state.selectedTab]) {
+                                R.string.tab_all -> listOf(
+                                    R.string.tasks_today,
+                                    R.string.tasks_upcoming
+                                )
+
+                                R.string.tab_watering -> listOf(R.string.watering_tasks)
+                                R.string.tab_fertilizer -> listOf(R.string.fertilizer_tasks)
+                                else -> listOf()
+                            }
+
+                            val tasks = when (reminderTabs[state.selectedTab]) {
                                 R.string.tab_all -> {
-                                    val todayTasks =
-                                        state.tasks.indexOfFirst { it.time == Time.FUTURE }
-
-                                    HeadlineLargeText(
-                                        stringResource(R.string.tasks_today),
-                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                                    )
-                                    if (todayTasks + 1 > 0) {
-                                        TasksList(state.tasks.subList(0, todayTasks + 1))
-                                    }
-                                    HeadlineLargeText(
-                                        stringResource(R.string.tasks_upcoming),
-                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                                    )
-                                    if (todayTasks != -1) {
-                                        TasksList(state.tasks.subList(todayTasks, state.tasks.size))
-                                    }
+                                    val todayTasks = state.tasks.filterKeys { it != Time.FUTURE }
+                                    val upcomingTasks = state.tasks.filterKeys { it == Time.FUTURE }
+                                    listOf(todayTasks, upcomingTasks)
                                 }
 
-                                R.string.tab_watering -> {
-                                    HeadlineLargeText(
-                                        stringResource(R.string.watering_tasks),
-                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                                    )
-                                    TasksList(state.tasks)
-                                }
-
-                                R.string.tab_fertilizer -> {
-                                    HeadlineLargeText(
-                                        stringResource(R.string.fertilizer_tasks),
-                                        Modifier.padding(top = 36.dp, start = 16.dp, bottom = 16.dp)
-                                    )
-                                    TasksList(state.tasks)
+                                else -> {
+                                    listOf(state.tasks)
                                 }
                             }
 
-                        } else {
-                            EmptyScreen(navigateToExplore = navigateToExplore)
+                            LazyColumn(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.surface),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                for (i in headers.indices) {
+                                    stickyHeader {
+                                        Box(
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .background(MaterialTheme.colorScheme.secondary)
+                                        ) {
+                                            HeadlineLargeText(
+                                                stringResource(headers[i]),
+                                                Modifier.padding(
+                                                    top = 36.dp,
+                                                    start = 16.dp,
+                                                    bottom = 16.dp
+                                                )
+                                            )
+                                        }
+                                    }
+
+                                    item {
+                                        Spacer(Modifier.height(20.dp))
+                                    }
+                                    if (tasks[i].isNotEmpty()) {
+                                        tasks[i].forEach { (_, list) ->
+                                            items(list.size) { idx ->
+                                                val task = list[idx]
+                                                Task(
+                                                    task,
+                                                    Modifier.padding(horizontal = 16.dp)
+                                                ) {
+                                                    onTaskClick(task.time, task.id)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        item {
+                                            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                                                BodyLargeText(
+                                                    stringResource(R.string.no_tasks_message),
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    item {
+                                        Spacer(Modifier.height(20.dp))
+                                    }
+
+                                }
+                            }
                         }
                     }
                 }
@@ -182,27 +227,13 @@ private fun ReminderView(
 }
 
 @Composable
-private fun TasksList(tasks: List<TaskUiModel>) {
-    LazyColumn(
-        Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 16.dp, vertical = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(tasks.size) { idx ->
-            Task(tasks[idx]) {}
-        }
-    }
-}
-
-@Composable
 private fun Task(
-    task: TaskUiModel, onClick: () -> Unit
+    task: TaskUiModel, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
 
     with(task) {
-        val background = if (completed) MaterialTheme.colorScheme.surface else Color.Unspecified
+        val background =
+            if (completed) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.secondary
         val borderColor = when (time) {
             Time.PAST -> Destructive600
             Time.PRESENT -> Primary600
@@ -210,13 +241,12 @@ private fun Task(
         }
         val shape = RoundedCornerShape(12.dp)
         Row(
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .height(102.dp)
                 .clip(shape)
                 .background(background)
-                .border(2.dp, borderColor, shape)
-                .clickable { onClick() },
+                .border(2.dp, borderColor, shape),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         )
@@ -251,7 +281,7 @@ private fun Task(
                 }
             }
             Box(Modifier.padding(end = 20.dp), Alignment.Center) {
-                TaskIconButton(task) { }
+                TaskIconButton(task) { onClick() }
             }
         }
     }
@@ -354,6 +384,6 @@ private fun EmptyScreen(navigateToExplore: () -> Unit) {
 @Composable
 private fun ReminderPreview() {
     PlantologyTheme {
-        ReminderView(ReminderState(), {}) { }
+        ReminderView(ReminderState(loadState = LoadState.Success), {}, {}, {_, _ ->})
     }
 }

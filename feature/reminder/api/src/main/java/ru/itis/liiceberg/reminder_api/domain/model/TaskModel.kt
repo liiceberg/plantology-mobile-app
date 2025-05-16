@@ -6,6 +6,7 @@ import ru.itis.liiceberg.common.model.TimeValues
 import java.time.LocalDate
 
 data class TaskModel(
+    val id: String,
     val type: TaskType,
     val plantName: String,
     val imageUrl: String,

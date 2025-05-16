@@ -4,4 +4,5 @@ import ru.itis.liiceberg.reminder_api.domain.model.TaskModel
 
 interface ReminderRepository {
     suspend fun getTasks() : List<TaskModel>
+    suspend fun completeTask(id: String)
 }
