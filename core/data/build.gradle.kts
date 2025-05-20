@@ -10,4 +10,5 @@ dependencies {
     implementation(projects.coreCommon)
     implementation(*Libs.bundle.firebase_auth)
     implementation(*Libs.bundle.dataStore)
+    implementation(*Libs.bundle.work)
 }

@@ -24,6 +24,7 @@ dependencies {
     implementation(*Libs.bundle.firebase_auth)
     implementation(*Libs.bundle.firebase)
     implementation(*Libs.bundle.coil)
+    implementation(*Libs.bundle.work)
 }
 
 detekt {

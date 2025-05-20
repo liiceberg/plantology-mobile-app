@@ -1,5 +1,7 @@
 package ru.itis.liiceberg.reminder_impl.presentation.screens
 
+import android.Manifest
+import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -49,6 +51,7 @@ import ru.itis.liiceberg.ui.components.HeadlineLargeText
 import ru.itis.liiceberg.ui.components.LoadingIndicator
 import ru.itis.liiceberg.ui.components.PrimaryTabs
 import ru.itis.liiceberg.ui.components.RoundedImage
+import ru.itis.liiceberg.ui.components.RuntimePermissionDialog
 import ru.itis.liiceberg.ui.components.SimpleButtonWithStartIcon
 import ru.itis.liiceberg.ui.components.SimpleIcon
 import ru.itis.liiceberg.ui.components.SimpleIconButton
@@ -71,6 +74,8 @@ fun ReminderView(
 ) {
     val state by viewModel.viewStates().collectAsStateWithLifecycle()
 
+    RequestNotificationsPermission()
+
     ReminderView(
         state = state,
         onTabSelected = { id -> viewModel.obtainEvent(ReminderEvent.OnTabSelected(id)) },
@@ -82,6 +87,18 @@ fun ReminderView(
 
     LaunchedEffect(Unit) {
         viewModel.obtainEvent(ReminderEvent.ScreenOpened)
+    }
+}
+
+@Composable
+private fun RequestNotificationsPermission() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RuntimePermissionDialog(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+            rationaleText = stringResource(R.string.notifications_permission_rationale_text),
+            onPermissionGranted = {},
+            onPermissionPermanentlyDenied = {}
+        )
     }
 }
 
@@ -384,6 +401,6 @@ private fun EmptyScreen(navigateToExplore: () -> Unit) {
 @Composable
 private fun ReminderPreview() {
     PlantologyTheme {
-        ReminderView(ReminderState(loadState = LoadState.Success), {}, {}, {_, _ ->})
+        ReminderView(ReminderState(loadState = LoadState.Success), {}, {}, { _, _ -> })
     }
 }

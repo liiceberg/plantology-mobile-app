@@ -1,6 +1,7 @@
 package ru.itis.liiceberg.reminder_impl.presentation.mapper
 
 import ru.itis.liiceberg.common.resources.ResourceManager
+import ru.itis.liiceberg.common.util.getNextDate
 import ru.itis.liiceberg.reminder_api.domain.model.TaskModel
 import ru.itis.liiceberg.reminder_api.presentation.model.TaskUiModel
 import ru.itis.liiceberg.reminder_api.presentation.model.Time
@@ -16,7 +17,7 @@ class TaskModelMapper @Inject constructor(
         with(task) {
 
             val today = LocalDate.now()
-            val nextCaringDate = getNextCaringDate()
+            val nextCaringDate = lastCaringDate.getNextDate(period)
             val daysDifference = ChronoUnit.DAYS.between(nextCaringDate, today)
             val dateText: String
             val time: Time

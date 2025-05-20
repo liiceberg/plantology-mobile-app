@@ -6,4 +6,9 @@
     <string name="water">Water</string>
     <string name="fertilizer">Fertilizer</string>
     <string name="no_schedule">No schedule</string>
+
+    <string name="notification_title">It\'s time to take care of your plant!</string>
+    <string name="notification_watering_text">Don\'t forget to water %s today!</string>
+    <string name="notification_fertilizer_text">Don\'t forget to fertilizer %s today!</string>
+    <string name="permission_needed">We need your permission</string>
 </resources>

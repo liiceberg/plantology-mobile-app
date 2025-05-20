@@ -18,4 +18,6 @@
     <string name="today_care">Today</string>
     <string name="future_care">In %1$s days</string>
     <string name="no_tasks_message">There are no tasks yet</string>
+
+    <string name="notifications_permission_rationale_text">If you do not grant permission, we will not be able to send you reminder notifications. Enable notifications?</string>
 </resources>

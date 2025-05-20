@@ -21,8 +21,8 @@ object Libs {
 
     private const val daggerVersion = "2.44.2"
 
-    private const val hiltVersion = "2.51"
-    private const val hiltJetpackVersion = "1.2.0"
+    private const val daggerHiltVersion = "2.51"
+    private const val hiltVersion = "1.2.0"
 
     private const val firebaseCommonVersion = "21.0.0"
     private const val crashlyticsGradleVersion = "2.9.9"
@@ -43,6 +43,8 @@ object Libs {
     private const val serializationVersion = "1.7.1"
 
     private const val dataStoreVersion = "1.1.2"
+
+    private const val workVersion = "2.9.0"
 
     const val navVersion = "2.8.9"
 
@@ -87,7 +89,7 @@ object Libs {
         const val crashlytics_gradle =
             "com.google.firebase:firebase-crashlytics-gradle:$crashlyticsGradleVersion"
         const val performance = "com.google.firebase:perf-plugin:$performancePluginVersion"
-        const val hilt_gradle = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+        const val hilt_gradle = "com.google.dagger:hilt-android-gradle-plugin:$daggerHiltVersion"
         const val navigation_safeArgs_gradle =
             "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         const val kotlinter = "org.jmailen.gradle:kotlinter-gradle:$kotlinterVersion"
@@ -125,10 +127,12 @@ object Libs {
         val daggerKapt = arrayOf("com.google.dagger:dagger-compiler:$daggerVersion")
 
         val hilt = arrayOf(
-            "com.google.dagger:hilt-android:$hiltVersion",
-            "androidx.hilt:hilt-navigation-compose:$hiltJetpackVersion"
-        )
-        val hiltKapt = arrayOf("com.google.dagger:hilt-compiler:$hiltVersion")
+            "com.google.dagger:hilt-android:$daggerHiltVersion",
+            "androidx.hilt:hilt-navigation-compose:$hiltVersion",
+            "androidx.hilt:hilt-common:$hiltVersion",
+
+            )
+        val hiltKapt = arrayOf("com.google.dagger:hilt-compiler:$daggerHiltVersion")
 
         val lifecycle = arrayOf(
             "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion",
@@ -149,7 +153,8 @@ object Libs {
             "androidx.navigation:navigation-compose:$navVersion"
         )
 
-        val firebase_common = arrayOf("com.google.firebase:firebase-common-ktx:$firebaseCommonVersion")
+        val firebase_common =
+            arrayOf("com.google.firebase:firebase-common-ktx:$firebaseCommonVersion")
 
         val firebase = arrayOf(
             "com.google.firebase:firebase-crashlytics-ktx:$crashlyticsVersion",
@@ -192,6 +197,11 @@ object Libs {
         val coil = arrayOf(
             "io.coil-kt.coil3:coil-compose:$coilVersion",
             "io.coil-kt.coil3:coil-network-okhttp:$coilVersion"
+        )
+
+        val work = arrayOf(
+            "androidx.work:work-runtime-ktx:$workVersion",
+            "androidx.hilt:hilt-work:1.2.0"
         )
     }
 }
