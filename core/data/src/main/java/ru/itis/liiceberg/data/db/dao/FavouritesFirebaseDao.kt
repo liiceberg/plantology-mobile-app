@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FavouritesFirebaseDao @Inject constructor(
-    private val firestore: FirebaseFirestore
+    firestore: FirebaseFirestore
 ) {
 
     private val favReference = firestore.collection(FirestoreCollections.FAVOURITES)
@@ -25,15 +25,8 @@ class FavouritesFirebaseDao @Inject constructor(
         favReference.add(fav).await()
     }
 
-    suspend fun removeFromFavorites(userId: String, plantId: String) {
-        favReference
-            .whereEqualTo(USER_ID_FILED, userId)
-            .whereEqualTo(PLANT_ID_FILED, plantId)
-            .get()
-            .await()
-            .forEach { doc ->
-                favReference.document(doc.id).delete()
-            }
+    suspend fun removeFromFavorites(favId: String) {
+        favReference.document(favId).delete().await()
     }
 
     suspend fun updateFavouriteInfo(
@@ -46,10 +39,10 @@ class FavouritesFirebaseDao @Inject constructor(
             .await()
             .reference.update(
                 buildMap {
-                    wateringPeriod?.let { put(WATERING_PERIOD, it) }
-                    fertilizerPeriod?.let { put(FERTILIZER_PERIOD, it) }
+                    put(WATERING_PERIOD, wateringPeriod)
+                    put(FERTILIZER_PERIOD, fertilizerPeriod)
                 }
-            )
+            ).await()
     }
 
     suspend fun getFavorites(userId: String): List<FavouritePlant> {

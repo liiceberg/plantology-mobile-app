@@ -12,7 +12,8 @@ class MyPlantUiMapper @Inject constructor(
     fun mapMyPlantToMyPlantUiModel(plant: MyPlant): MyPlantUiModel {
         with(plant) {
             return MyPlantUiModel(
-                id,
+                favId,
+                plantId,
                 name,
                 scientificName,
                 image,

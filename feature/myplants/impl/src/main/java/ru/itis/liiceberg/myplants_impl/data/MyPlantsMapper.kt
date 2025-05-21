@@ -8,7 +8,8 @@ import javax.inject.Inject
 class MyPlantsMapper @Inject constructor() {
     fun mapPlantAndFavouritePlantToMyPlant(plant: Plant?, favourite: FavouritePlant?) : MyPlant {
         return MyPlant(
-            id = plant?.id ?: "",
+            favId = favourite?.id ?: "",
+            plantId = plant?.id ?: "",
             name = plant?.name ?: "",
             scientificName = plant?.scientificName ?: "",
             image = plant?.image?.firstOrNull() ?: "",

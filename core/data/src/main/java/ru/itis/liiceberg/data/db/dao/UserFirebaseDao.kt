@@ -14,10 +14,11 @@ import javax.inject.Singleton
 
 @Singleton
 class UserFirebaseDao @Inject constructor(
+    firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
 ) {
 
+    private val usersReference = firestore.collection(FirestoreCollections.USERS)
     private var currentUser: User? = null
 
     suspend fun signInUser(email: String, password: String) {
@@ -69,7 +70,7 @@ class UserFirebaseDao @Inject constructor(
             return currentUser
         }
         val id = getCurrentUserId() ?: return null
-        currentUser = firestore.collection(FirestoreCollections.USERS)
+        currentUser = usersReference
             .document(id)
             .get()
             .await()
@@ -90,7 +91,7 @@ class UserFirebaseDao @Inject constructor(
             reauthenticate(credential).await()
             updatePassword(newPassword).await()
             currentUser = currentUser?.copy(password = newPassword)
-            firestore.collection(FirestoreCollections.USERS)
+            usersReference
                 .document(uid)
                 .update(PASSWORD_FIELD, newPassword)
                 .await()
@@ -99,7 +100,7 @@ class UserFirebaseDao @Inject constructor(
 
     private fun saveUser(userId: String, email: String, password: String, username: String) {
         val userCreated = User(username = username, email = email, password = password)
-        firestore.collection(FirestoreCollections.USERS).document(userId).set(userCreated)
+        usersReference.document(userId).set(userCreated)
         currentUser = userCreated
     }
 

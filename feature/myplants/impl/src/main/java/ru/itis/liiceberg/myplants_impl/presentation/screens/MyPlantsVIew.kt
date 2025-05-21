@@ -113,7 +113,7 @@ private fun MyPlantsView(
                                     watering = it.watering,
                                     fertilizer = it.fertilizer,
                                     onRemove = { onRemove(it.id) },
-                                    onAddReminder = { goToEditSchedule(it.id) },
+                                    onAddReminder = { goToEditSchedule(it.plantId) },
                                 )
                             }
                         }
@@ -228,6 +228,7 @@ private fun MyPlantsPreview() {
                 MyPlantsState(
                     listOf(
                         MyPlantUiModel(
+                            "",
                             "",
                             "Wild mint",
                             "Mentha arvensis",

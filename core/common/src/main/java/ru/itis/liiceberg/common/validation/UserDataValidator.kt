@@ -80,7 +80,7 @@ class UserDataValidator @Inject constructor(
 
     companion object {
         private const val ALPHABETIC_CHARACTERS_WITH_WHITESPACE_PATTERN = "[A-Za-z ]+"
-        private const val EIGHT_SYMBOLS_AND_MORE_PATTERN = "\\w{8,}"
+        private const val EIGHT_SYMBOLS_AND_MORE_PATTERN = ".{8,}"
         private const val CONTAIN_UPPER_CASE_CHARACTER_PATTERN = ".*[A-Z].*"
         private const val CONTAIN_LOWER_CASE_CHARACTER_PATTERN = ".*[a-z].*"
         private const val CONTAIN_DIGIT_PATTERN = ".*\\d.*"

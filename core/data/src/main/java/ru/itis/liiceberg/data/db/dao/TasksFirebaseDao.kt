@@ -9,7 +9,7 @@ import ru.itis.liiceberg.data.db.model.Task
 import javax.inject.Inject
 
 class TasksFirebaseDao @Inject constructor(
-    private val firestore: FirebaseFirestore,
+    firestore: FirebaseFirestore,
 ) {
 
     private val tasksReference = firestore.collection(FirestoreCollections.TASKS)
@@ -27,7 +27,7 @@ class TasksFirebaseDao @Inject constructor(
         return items
     }
 
-    suspend fun addOrUpdateTask(favId: String, type: TaskType) {
+    suspend fun addTask(favId: String, type: TaskType) {
         val query = tasksReference
             .whereEqualTo(FAV_ID_FILED, favId)
             .whereEqualTo(TYPE_FILED, type)
@@ -42,7 +42,6 @@ class TasksFirebaseDao @Inject constructor(
             )
             tasksReference.add(task).await()
         }
-
     }
 
     suspend fun completeTask(id: String) {
@@ -50,6 +49,15 @@ class TasksFirebaseDao @Inject constructor(
             LAST_CARING_DATE_FIELD,
             Timestamp.now()
         ).await()
+    }
+
+    suspend fun deleteTask(favId: String, type: TaskType) {
+        tasksReference
+            .whereEqualTo(FAV_ID_FILED, favId)
+            .whereEqualTo(TYPE_FILED, type)
+            .get()
+            .await()
+            .forEach { tasksReference.document(it.id).delete().await() }
     }
 
     suspend fun deleteTasksByFavourite(favId: String) {

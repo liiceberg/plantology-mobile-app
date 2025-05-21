@@ -24,12 +24,19 @@ class EditScheduleRepositoryImpl @Inject constructor(
         fertilizerPeriod: TimeValues?,
     ) {
         favouritesFirebaseDao.updateFavouriteInfo(favId, wateringPeriod, fertilizerPeriod)
-        wateringPeriod?.let {
-            tasksFirebaseDao.addOrUpdateTask(favId, TaskType.WATER)
+
+        if (wateringPeriod != null) {
+            tasksFirebaseDao.addTask(favId, TaskType.WATER)
+        } else {
+            tasksFirebaseDao.deleteTask(favId, TaskType.WATER)
         }
-        fertilizerPeriod?.let {
-            tasksFirebaseDao.addOrUpdateTask(favId, TaskType.FERTILIZER)
+
+        if (fertilizerPeriod != null) {
+            tasksFirebaseDao.addTask(favId, TaskType.FERTILIZER)
+        } else {
+            tasksFirebaseDao.deleteTask(favId, TaskType.FERTILIZER)
         }
+
     }
 
     override suspend fun getPlantInfo(plantId: String): SchedulePlant {

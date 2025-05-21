@@ -7,14 +7,14 @@ import ru.itis.liiceberg.data.db.model.Plant
 import javax.inject.Inject
 
 class PlantFirebaseDao @Inject constructor(
-    private val firestore: FirebaseFirestore,
+    firestore: FirebaseFirestore,
 ) {
+
+    private val plantsReference = firestore.collection(FirestoreCollections.PLANTS)
 
     suspend fun getAllPlants(): List<Plant> {
         val items = mutableListOf<Plant>()
-        val result = firestore.collection(FirestoreCollections.PLANTS)
-            .get()
-            .await()
+        val result = plantsReference.get().await()
         items.addAll(result.toObjects(Plant::class.java))
 
         result.documents.forEachIndexed { i, doc -> items[i].id = doc.id }
@@ -23,7 +23,7 @@ class PlantFirebaseDao @Inject constructor(
     }
 
     suspend fun getPlantById(id: String) : Plant? {
-        val result = firestore.collection(FirestoreCollections.PLANTS)
+        val result = plantsReference
             .document(id)
             .get()
             .await()
