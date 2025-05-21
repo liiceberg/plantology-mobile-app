@@ -58,11 +58,10 @@ class NotificationManagerWrapperImpl(
             id = id,
             channel = channel,
             title = resourceManager.getString(R.string.notification_title),
-            smallIcon = R.mipmap.icon_primary,
-            largeIcon = R.mipmap.icon_primary,
+            smallIcon = R.drawable.potted_plant,
+            largeIcon = R.drawable.app_icon_white,
             text = resourceManager.getString(textId, plantName),
             intent = intent)
-
         notificationManager.notify(id, notification)
     }
 

@@ -1,9 +1,9 @@
 package ru.itis.liiceberg.app
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import ru.itis.liiceberg.app.notification.NotificationWorkerFactory
 import javax.inject.Inject
 
 
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class App : Application(), Configuration.Provider {
 
     @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+    lateinit var workerFactory: NotificationWorkerFactory
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()

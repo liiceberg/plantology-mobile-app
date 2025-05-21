@@ -9,7 +9,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.itis.liiceberg.common.model.TaskType
 import ru.itis.liiceberg.common.notification.NotificationManagerWrapper
 import ru.itis.liiceberg.common.util.getNextDate
@@ -22,13 +21,13 @@ import java.time.LocalDate
 
 @HiltWorker
 class NotificationWorker @AssistedInject constructor(
+    @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    @ApplicationContext private val appContext: Context,
-    private val notificationManagerWrapper: NotificationManagerWrapper,
-    private val userDataStore: UserDataStore,
-    private val favouritesDao: FavouritesFirebaseDao,
-    private val tasksDao: TasksFirebaseDao,
-    private val plantDao: PlantFirebaseDao,
+    @Assisted private val notificationManagerWrapper: NotificationManagerWrapper,
+    @Assisted private val userDataStore: UserDataStore,
+    @Assisted private val favouritesDao: FavouritesFirebaseDao,
+    @Assisted private val tasksDao: TasksFirebaseDao,
+    @Assisted private val plantDao: PlantFirebaseDao,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
